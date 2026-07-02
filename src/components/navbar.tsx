@@ -6,6 +6,7 @@ import { SellItemDialog } from "./sell-item-dialog";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sellOpen, setSellOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
