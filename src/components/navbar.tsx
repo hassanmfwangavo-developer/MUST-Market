@@ -2,9 +2,11 @@ import { Link } from "@tanstack/react-router";
 import { Search, Plus, Menu, ShoppingBag } from "lucide-react";
 import { categories } from "@/lib/demo-data";
 import { useState } from "react";
+import { SellItemDialog } from "./sell-item-dialog";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [sellOpen, setSellOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -42,9 +44,9 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Sell CTA */}
         <button
           type="button"
+          onClick={() => setSellOpen(true)}
           className="btn-shine hidden shrink-0 items-center gap-1.5 rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:inline-flex"
         >
           <Plus className="h-4 w-4" strokeWidth={2.75} />
@@ -78,6 +80,10 @@ export function Navbar() {
           </div>
           <button
             type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              setSellOpen(true);
+            }}
             className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground shadow-[var(--shadow-amber)] sm:hidden"
           >
             <Plus className="h-4 w-4" strokeWidth={2.75} />
@@ -85,6 +91,7 @@ export function Navbar() {
           </button>
         </div>
       )}
+      <SellItemDialog open={sellOpen} onClose={() => setSellOpen(false)} />
     </header>
   );
 }
