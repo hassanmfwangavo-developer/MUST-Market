@@ -80,6 +80,10 @@ export function Navbar() {
           </div>
           <button
             type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              setSellOpen(true);
+            }}
             className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground shadow-[var(--shadow-amber)] sm:hidden"
           >
             <Plus className="h-4 w-4" strokeWidth={2.75} />
@@ -87,6 +91,7 @@ export function Navbar() {
           </button>
         </div>
       )}
+      <SellItemDialog open={sellOpen} onClose={() => setSellOpen(false)} />
     </header>
   );
 }
