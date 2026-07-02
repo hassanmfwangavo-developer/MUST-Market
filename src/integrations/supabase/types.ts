@@ -14,7 +14,125 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          condition: Database["public"]["Enums"]["product_condition"]
+          created_at: string
+          description: string
+          id: string
+          images: string[]
+          location: string
+          price_tsh: number
+          seller_id: string
+          status: Database["public"]["Enums"]["product_status"]
+          title: string
+          updated_at: string
+          view_count: number
+          whatsapp_number: string
+        }
+        Insert: {
+          category_id?: string | null
+          condition: Database["public"]["Enums"]["product_condition"]
+          created_at?: string
+          description: string
+          id?: string
+          images?: string[]
+          location: string
+          price_tsh: number
+          seller_id: string
+          status?: Database["public"]["Enums"]["product_status"]
+          title: string
+          updated_at?: string
+          view_count?: number
+          whatsapp_number: string
+        }
+        Update: {
+          category_id?: string | null
+          condition?: Database["public"]["Enums"]["product_condition"]
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          location?: string
+          price_tsh?: number
+          seller_id?: string
+          status?: Database["public"]["Enums"]["product_status"]
+          title?: string
+          updated_at?: string
+          view_count?: number
+          whatsapp_number?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          hostel: string | null
+          id: string
+          is_verified_student: boolean
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          hostel?: string | null
+          id: string
+          is_verified_student?: boolean
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          hostel?: string | null
+          id?: string
+          is_verified_student?: boolean
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +141,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      product_condition: "Like New" | "Good" | "Fair"
+      product_status: "active" | "sold" | "hidden"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +269,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      product_condition: ["Like New", "Good", "Fair"],
+      product_status: ["active", "sold", "hidden"],
+    },
   },
 } as const
