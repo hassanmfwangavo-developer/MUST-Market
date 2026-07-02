@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Search, Plus, Menu, ShoppingBag } from "lucide-react";
 import { categories } from "@/lib/demo-data";
 import { useState } from "react";
+import { SellItemDialog } from "./sell-item-dialog";
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
