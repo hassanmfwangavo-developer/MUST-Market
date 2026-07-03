@@ -56,7 +56,7 @@ export function Hero() {
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
             Sell an Item — it's free
           </Link>
-          <
+          <a
             href="#browse"
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-colors hover:border-primary/40 hover:text-primary sm:w-auto"
           >
