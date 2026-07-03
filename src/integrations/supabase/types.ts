@@ -46,6 +46,7 @@ export type Database = {
           category_id: string | null
           condition: Database["public"]["Enums"]["product_condition"]
           created_at: string
+          delivery_timeframe: string
           description: string
           id: string
           images: string[]
@@ -62,6 +63,7 @@ export type Database = {
           category_id?: string | null
           condition: Database["public"]["Enums"]["product_condition"]
           created_at?: string
+          delivery_timeframe?: string
           description: string
           id?: string
           images?: string[]
@@ -78,6 +80,7 @@ export type Database = {
           category_id?: string | null
           condition?: Database["public"]["Enums"]["product_condition"]
           created_at?: string
+          delivery_timeframe?: string
           description?: string
           id?: string
           images?: string[]
