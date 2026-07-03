@@ -1,0 +1,1 @@
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS delivery_timeframe text NOT NULL DEFAULT 'Same Day';

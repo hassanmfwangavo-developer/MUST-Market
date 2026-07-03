@@ -1,4 +1,5 @@
 import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
 
 export function Hero() {
@@ -48,13 +49,13 @@ export function Hero() {
 
         {/* CTAs */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <button
-            type="button"
+          <Link
+            to="/sell"
             className="btn-shine group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
             Sell an Item — it's free
-          </button>
+          </Link>
           <a
             href="#browse"
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-colors hover:border-primary/40 hover:text-primary sm:w-auto"
