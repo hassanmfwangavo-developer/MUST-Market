@@ -14,6 +14,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
 import { Navbar } from "@/components/navbar";
+import { sanitizeTzPhone } from "@/lib/phone";
+import { useEffect } from "react";
 
 const CONDITIONS = ["Like New", "Good", "Fair"] as const;
 type Condition = (typeof CONDITIONS)[number];
@@ -49,6 +51,14 @@ function SellPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        navigate({ to: "/auth", search: { next: "/sell" } });
+      }
+    });
+  }, [navigate]);
 
   const [title, setTitle] = useState("");
   const [categorySlug, setCategorySlug] = useState(categories[0]?.slug ?? "");
@@ -101,19 +111,18 @@ function SellPage() {
     if (!description.trim() || description.length > 2000)
       return toast.error("Add a description (max 2000 chars)");
     if (!location.trim()) return toast.error("Add your location on/near campus");
-    const waDigits = whatsapp.replace(/\D/g, "");
+    const waDigits = sanitizeTzPhone(whatsapp);
     if (waDigits.length < 9 || waDigits.length > 15)
       return toast.error("Enter a valid WhatsApp number");
 
     setSubmitting(true);
     try {
-      let { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData } = await supabase.auth.getSession();
       if (!sessionData.session) {
-        const { data, error } = await supabase.auth.signInAnonymously();
-        if (error || !data.session) throw new Error(error?.message || "Could not start session");
-        sessionData = { session: data.session };
+        navigate({ to: "/auth", search: { next: "/sell" } });
+        return;
       }
-      const userId = sessionData.session!.user.id;
+      const userId = sessionData.session.user.id;
 
       const { data: cat, error: catErr } = await supabase
         .from("categories")
@@ -130,8 +139,13 @@ function SellPage() {
           .from("product-images")
           .upload(path, img.file, { contentType: img.file.type, upsert: false });
         if (upErr) throw upErr;
-        const { data: pub } = supabase.storage.from("product-images").getPublicUrl(path);
-        imageUrls.push(pub.publicUrl);
+        // Bucket is private (workspace policy); create a long-lived signed URL.
+        const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
+        const { data: signed, error: signErr } = await supabase.storage
+          .from("product-images")
+          .createSignedUrl(path, TEN_YEARS);
+        if (signErr || !signed) throw signErr ?? new Error("Could not sign image URL");
+        imageUrls.push(signed.signedUrl);
       }
 
       const { error: insErr } = await supabase.from("products").insert({
