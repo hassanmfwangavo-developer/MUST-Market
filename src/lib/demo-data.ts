@@ -134,8 +134,8 @@ export const categories = [
   { name: "Electronics", slug: "electronics", emoji: "💻" },
   { name: "Room/Hostel Gear", slug: "room-hostel", emoji: "🛏️" },
   { name: "Books/Stationery", slug: "books", emoji: "📚" },
-  { name: "Fashion/Clothing", slug: "fashion", emoji: "👕" },
 ];
+
 
 export function formatTsh(n: number) {
   return `TSh ${n.toLocaleString("en-US")}`;
