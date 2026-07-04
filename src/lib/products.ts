@@ -81,8 +81,10 @@ export async function fetchProduct(id: string): Promise<MarketProduct | null> {
   return rowToProduct(data as unknown as DbProductRow, 0);
 }
 
+import { sanitizeTzPhone } from "./phone";
+
 export function whatsappUrl(number: string | undefined, message: string) {
-  const digits = (number ?? "").replace(/\D/g, "");
+  const digits = sanitizeTzPhone(number ?? "");
   const base = digits ? `https://wa.me/${digits}` : "https://wa.me/";
   return `${base}?text=${encodeURIComponent(message)}`;
 }
