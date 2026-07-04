@@ -59,20 +59,6 @@ export const demoProducts: DemoProduct[] = [
       "Highlighted in a few chapters, no torn pages. Ideal for BEng and BSc year-one students. Cash pickup or WhatsApp delivery within campus.",
   },
   {
-    id: "p4",
-    title: "Nike Windrunner Jacket · Size M",
-    price: 45000,
-    condition: "Like New",
-    category: "Fashion/Clothing",
-    location: "Iyunga",
-    seller: { name: "Faraja S.", verified: true },
-    image: "",
-    gradient: "from-indigo-900 via-purple-800 to-fuchsia-700",
-    emoji: "🧥",
-    description:
-      "Worn twice. Water-resistant shell, no stains, no tears. Fits slim medium build. Chilly campus mornings sorted.",
-  },
-  {
     id: "p5",
     title: "JBL Go 3 Bluetooth Speaker",
     price: 55000,
