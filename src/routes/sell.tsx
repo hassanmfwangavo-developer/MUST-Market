@@ -52,6 +52,14 @@ function SellPage() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) {
+        navigate({ to: "/auth", search: { next: "/sell" } });
+      }
+    });
+  }, [navigate]);
+
   const [title, setTitle] = useState("");
   const [categorySlug, setCategorySlug] = useState(categories[0]?.slug ?? "");
   const [price, setPrice] = useState("");
