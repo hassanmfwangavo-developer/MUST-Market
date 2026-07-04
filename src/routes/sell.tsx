@@ -108,12 +108,13 @@ function SellPage() {
 
     setSubmitting(true);
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
+      let { data: sessionData } = await supabase.auth.getSession();
       if (!sessionData.session) {
-        navigate({ to: "/auth", search: { next: "/sell" } });
-        return;
+        const { data, error } = await supabase.auth.signInAnonymously();
+        if (error || !data.session) throw new Error(error?.message || "Could not start session");
+        sessionData = { session: data.session };
       }
-      const userId = sessionData.session.user.id;
+      const userId = sessionData.session!.user.id;
 
       const { data: cat, error: catErr } = await supabase
         .from("categories")
