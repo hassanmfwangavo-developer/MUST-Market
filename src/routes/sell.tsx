@@ -14,6 +14,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
 import { Navbar } from "@/components/navbar";
+import { sanitizeTzPhone } from "@/lib/phone";
+import { useEffect } from "react";
 
 const CONDITIONS = ["Like New", "Good", "Fair"] as const;
 type Condition = (typeof CONDITIONS)[number];
