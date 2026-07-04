@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { Sparkles, ShieldCheck } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
 
@@ -16,54 +16,49 @@ export function Hero() {
         </div>
 
         <h1 className="mx-auto mt-6 max-w-3xl text-center text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          Buy & sell used student gear
-          <br className="hidden sm:block" />
-          <span className="relative inline-block">
-            at{" "}
-            <span className="text-primary">MUST</span>{" "}
-            <span className="relative">
-              instantly
-              <svg
-                aria-hidden
-                viewBox="0 0 220 12"
-                className="absolute -bottom-1.5 left-0 h-2.5 w-full text-accent"
-                preserveAspectRatio="none"
-              >
-                <path
-                  d="M2 8 Q 55 -2, 110 5 T 218 6"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
-            </span>
-            .
+          Buy &amp; sell used student gear at{" "}
+          <span className="relative inline-block whitespace-nowrap">
+            <span className="text-primary">MUST</span> instantly
+            <svg
+              aria-hidden
+              viewBox="0 0 260 12"
+              className="absolute -bottom-1.5 left-0 h-2.5 w-full text-accent"
+              preserveAspectRatio="none"
+            >
+              <path
+                d="M2 8 Q 65 -2, 130 5 T 258 6"
+                stroke="currentColor"
+                strokeWidth="4"
+                strokeLinecap="round"
+                fill="none"
+              />
+            </svg>
           </span>
+          .
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-center text-base text-muted-foreground sm:text-lg">
-          From laptops to lamps to lecture notes. Buy nearby, pay less, and reach fellow
-          students on WhatsApp in one tap — no shipping, no strangers.
+          Used laptops, books, hostel gear &amp; more. Connect with fellow students via
+          WhatsApp instantly.
         </p>
 
         {/* CTAs */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
             to="/sell"
-            className="btn-shine group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:w-auto"
+            className="btn-shine group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
-            Sell an Item — it's free
+            Sell for Free
           </Link>
           <a
             href="#browse"
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-colors hover:border-primary/40 hover:text-primary sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border-2 border-primary/80 bg-surface px-6 py-3.5 text-sm font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-primary-soft sm:w-auto"
           >
-            Browse the market
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            Browse the Marketplace
           </a>
         </div>
+
 
         {/* Category pills */}
         <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
