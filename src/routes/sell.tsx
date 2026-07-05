@@ -14,6 +14,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
 import { Navbar } from "@/components/navbar";
+import { SafetyModal } from "@/components/safety-modal";
 import { sanitizeTzPhone } from "@/lib/phone";
 
 const CONDITIONS = ["Like New", "Good", "Fair"] as const;
