@@ -62,6 +62,7 @@ function SellPage() {
   const [delivery, setDelivery] = useState<(typeof DELIVERY_OPTIONS)[number]>("Same Day");
   const [whatsapp, setWhatsapp] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [safetyOpen, setSafetyOpen] = useState(false);
 
   function handleFiles(e: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
