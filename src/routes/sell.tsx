@@ -387,6 +387,12 @@ function SellPage() {
           </button>
         </form>
       </main>
+      <SafetyModal
+        open={safetyOpen}
+        submitting={submitting}
+        onClose={() => setSafetyOpen(false)}
+        onConfirm={publishListing}
+      />
     </div>
   );
 }
