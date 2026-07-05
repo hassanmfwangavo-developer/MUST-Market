@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { demoProducts, type DemoProduct, type ProductCondition } from "./demo-data";
+import type { DemoProduct, ProductCondition } from "./demo-data";
 
 const FALLBACK_GRADIENTS = [
   "from-emerald-700 via-emerald-600 to-teal-500",
