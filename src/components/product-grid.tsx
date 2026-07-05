@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useSearchQuery } from "@/lib/search-store";
+
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   // Deterministic Fisher-Yates using a seeded PRNG so filtering stays stable per mount.
@@ -22,6 +24,7 @@ function shuffle<T>(arr: T[], seed: number): T[] {
 export function ProductGrid() {
   const [active, setActive] = useState<string>("All");
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000) + 1);
+  const query = useSearchQuery();
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
@@ -31,11 +34,19 @@ export function ProductGrid() {
   const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);
 
   const filtered = useMemo(() => {
-    if (active === "All") return shuffled;
-    return shuffled.filter((p) => p.category === active);
-  }, [active, shuffled]);
+    const byCat = active === "All" ? shuffled : shuffled.filter((p) => p.category === active);
+    const q = query.trim().toLowerCase();
+    if (!q) return byCat;
+    return byCat.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q),
+    );
+  }, [active, shuffled, query]);
 
   const tabs = ["All", ...categories.map((c) => c.name)];
+
 
   return (
     <section id="browse" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
