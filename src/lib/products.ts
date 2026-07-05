@@ -61,14 +61,10 @@ export async function fetchProducts(): Promise<MarketProduct[]> {
     .eq("status", "active")
     .order("created_at", { ascending: false });
   if (error) throw error;
-  const live = (data ?? []).map((r, i) => rowToProduct(r as unknown as DbProductRow, i));
-  const demos: MarketProduct[] = demoProducts.map((d) => ({ ...d, isDemo: true }));
-  return [...live, ...demos];
+  return (data ?? []).map((r, i) => rowToProduct(r as unknown as DbProductRow, i));
 }
 
 export async function fetchProduct(id: string): Promise<MarketProduct | null> {
-  const demo = demoProducts.find((d) => d.id === id);
-  if (demo) return { ...demo, isDemo: true };
   const { data, error } = await supabase
     .from("products")
     .select(
