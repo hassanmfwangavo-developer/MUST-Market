@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Search, ShoppingBag } from "lucide-react";
 import { categories } from "@/lib/demo-data";
+import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 
 export function Navbar() {
+  const query = useSearchQuery();
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-6 sm:px-6 lg:px-8">
@@ -19,10 +21,19 @@ export function Navbar() {
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
+            value={query}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              if (typeof window !== "undefined" && !window.location.hash.includes("browse")) {
+                const el = document.getElementById("browse");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }}
             placeholder="Search laptops, books, hostel gear…"
             className="h-11 w-full rounded-full border border-border bg-surface-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/80 shadow-soft transition-all focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
           />
         </div>
+
 
         <nav className="hidden items-center gap-1 lg:flex">
           {categories.slice(0, 3).map((c) => (

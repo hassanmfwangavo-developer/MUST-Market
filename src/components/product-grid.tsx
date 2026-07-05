@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useSearchQuery } from "@/lib/search-store";
+
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   // Deterministic Fisher-Yates using a seeded PRNG so filtering stays stable per mount.
