@@ -92,7 +92,7 @@ function SellPage() {
     });
   }
 
-  async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (submitting) return;
 
@@ -108,6 +108,14 @@ function SellPage() {
     if (waDigits.length < 9 || waDigits.length > 15)
       return toast.error("Enter a valid WhatsApp number");
 
+    // Intercept: open safety modal instead of writing to DB.
+    setSafetyOpen(true);
+  }
+
+  async function publishListing() {
+    if (submitting) return;
+    const priceNum = Number(price);
+    const waDigits = sanitizeTzPhone(whatsapp);
     setSubmitting(true);
     try {
       let { data: sessionData } = await supabase.auth.getSession();
@@ -133,7 +141,6 @@ function SellPage() {
           .from("product-images")
           .upload(path, img.file, { contentType: img.file.type, upsert: false });
         if (upErr) throw upErr;
-        // Bucket is private (workspace policy); create a long-lived signed URL.
         const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
         const { data: signed, error: signErr } = await supabase.storage
           .from("product-images")
@@ -157,6 +164,7 @@ function SellPage() {
       if (insErr) throw insErr;
 
       toast.success("Listing published! 🎉");
+      setSafetyOpen(false);
       await queryClient.invalidateQueries({ queryKey: ["products"] });
       navigate({ to: "/", hash: "browse" });
     } catch (err) {
