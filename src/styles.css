@@ -167,3 +167,31 @@
     transform: translateX(120%);
   }
 }
+
+/* Google Translate widget: hide the top frame/banner and style the dropdown */
+.goog-te-banner-frame.skiptranslate,
+.goog-tooltip,
+.goog-tooltip:hover,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+.gtranslate-widget .goog-te-gadget {
+  font-size: 0 !important;
+  color: transparent !important;
+}
+.gtranslate-widget .goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  color: var(--foreground);
+  cursor: pointer;
+  outline: none;
+}
+
