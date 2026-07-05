@@ -2,20 +2,38 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
-import { fetchProducts } from "@/lib/products";
+import { fetchProducts, type MarketProduct } from "@/lib/products";
+
+function shuffle<T>(arr: T[], seed: number): T[] {
+  // Deterministic Fisher-Yates using a seeded PRNG so filtering stays stable per mount.
+  const copy = [...arr];
+  let s = seed || 1;
+  const rand = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 
 export function ProductGrid() {
   const [active, setActive] = useState<string>("All");
-  const { data: products = [], isLoading } = useQuery({
+  const [seed] = useState(() => Math.floor(Math.random() * 1_000_000) + 1);
+  const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
     staleTime: 30_000,
   });
 
+  const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);
+
   const filtered = useMemo(() => {
-    if (active === "All") return products;
-    return products.filter((p) => p.category === active);
-  }, [active, products]);
+    if (active === "All") return shuffled;
+    return shuffled.filter((p) => p.category === active);
+  }, [active, shuffled]);
 
   const tabs = ["All", ...categories.map((c) => c.name)];
 
