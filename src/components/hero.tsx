@@ -61,7 +61,7 @@ export function Hero() {
 
 
         {/* Category pills */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5 pb-[35vh] sm:gap-3 sm:pb-0">
           {categories.map((c) => (
             <a
               key={c.slug}
@@ -78,6 +78,7 @@ export function Hero() {
 
         {/* Social proof strip */}
         <div className="mt-14 grid grid-cols-3 gap-3 sm:mt-16 sm:gap-6">
+
           {[
             { k: "1,200+", v: "Active listings" },
             { k: "3,400+", v: "MUST students" },
