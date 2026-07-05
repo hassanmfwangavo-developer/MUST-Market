@@ -1,10 +1,91 @@
-import { ShoppingBag, Instagram, Twitter } from "lucide-react";
+import { useState } from "react";
+import { ShoppingBag, Instagram, Twitter, X } from "lucide-react";
+
+type InfoKey =
+  | "buyer-tips"
+  | "seller-tips"
+  | "report"
+  | "rules"
+  | "mission"
+  | "contact"
+  | "privacy"
+  | "terms";
+
+const INFO: Record<InfoKey, { title: string; body: string[] }> = {
+  "buyer-tips": {
+    title: "Buyer tips",
+    body: [
+      "Inspect the item in person before paying. Always meet in public campus spots like the Library, Cafeteria, or Block C foyers.",
+      "Confirm the seller is a current MUST student. Ask a quick question about their class or hostel block.",
+      "Never send money in advance for items you haven't seen. Pay on delivery, in person.",
+      "Reminder: MUST Market is strictly for used personal gear. Clothing and commercial shop products are banned.",
+    ],
+  },
+  "seller-tips": {
+    title: "Seller tips",
+    body: [
+      "Use real, clear photos of the actual item. Listings with stock images will be removed.",
+      "Set a fair price — check similar items on the marketplace first.",
+      "Reply quickly on WhatsApp. Serious buyers move fast.",
+      "Reminder: only used personal items are allowed. Clothing and commercial/shop inventory listings will be taken down.",
+    ],
+  },
+  report: {
+    title: "Report a listing",
+    body: [
+      "Spotted something off? WhatsApp us at +255 700 000 000 with the listing title and a short reason.",
+      "We remove listings that violate our rules within 24 hours — especially commercial shop products, clothing, counterfeit gear, or unsafe items.",
+    ],
+  },
+  rules: {
+    title: "Community rules",
+    body: [
+      "1. Only current MUST students may buy or sell.",
+      "2. Only used, personal items. Clothing and commercial/shop products are strictly banned.",
+      "3. Meet only in safe, public campus areas (Cafeteria, Block C, Library).",
+      "4. No scams, no fake photos, no misleading prices.",
+      "5. Be respectful. Violations = permanent removal.",
+    ],
+  },
+  mission: {
+    title: "Our mission",
+    body: [
+      "Helping MUST students trade gear safely and save money. Built by students, for students, so nothing useful ends up in a drawer or a dumpster.",
+    ],
+  },
+  contact: {
+    title: "Contact",
+    body: [
+      "WhatsApp: +255 700 000 000",
+      "Email: hello@mustmarket.co.tz",
+      "On campus: find us near the Library help desk.",
+    ],
+  },
+  privacy: {
+    title: "Privacy",
+    body: [
+      "We only store what your listing needs: title, description, price, location, images and your WhatsApp number.",
+      "Your number is shared with buyers so they can chat you on WhatsApp — that's the whole point of the marketplace.",
+      "We don't sell your data. Ever.",
+    ],
+  },
+  terms: {
+    title: "Terms",
+    body: [
+      "MUST Market is a peer-to-peer marketplace. We connect buyers and sellers but we are not a party to any transaction.",
+      "By listing an item, you confirm it is your own used personal property and that you are a current MUST student.",
+      "Commercial shop products, clothing, counterfeit goods, and prohibited items are banned and will be removed.",
+    ],
+  },
+};
 
 export function Footer() {
+  const [open, setOpen] = useState<InfoKey | null>(null);
+
   return (
     <footer className="border-t border-border bg-surface-2">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-        <div className="sm:col-span-2 lg:col-span-1">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:px-8">
+        <div className="sm:col-span-2">
           <div className="flex items-center gap-2">
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
               <ShoppingBag className="h-4 w-4" strokeWidth={2.5} />
@@ -13,41 +94,109 @@ export function Footer() {
               MUST <span className="text-primary">Market</span>
             </span>
           </div>
-          <p className="mt-3 max-w-xs text-sm text-muted-foreground">
-            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology students.
+          <p className="mt-3 max-w-md text-sm text-muted-foreground">
+            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology
+            students.
           </p>
         </div>
 
-        {[
-          { title: "Marketplace", links: ["Browse", "Sell an item", "Categories", "Verified sellers"] },
-          { title: "Safety", links: ["Buyer tips", "Seller tips", "Report a listing", "Community rules"] },
-          { title: "About", links: ["Our mission", "Contact", "Privacy", "Terms"] },
-        ].map((col) => (
-          <div key={col.title}>
-            <div className="text-xs font-semibold uppercase tracking-widest text-foreground">
-              {col.title}
-            </div>
-            <ul className="mt-3 space-y-2">
-              {col.links.map((l) => (
-                <li key={l}>
-                  <a href="#" className="text-sm text-muted-foreground transition-colors hover:text-primary">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+        <FooterCol
+          title="Safety"
+          items={[
+            { label: "Buyer tips", key: "buyer-tips" },
+            { label: "Seller tips", key: "seller-tips" },
+            { label: "Report a listing", key: "report" },
+            { label: "Community rules", key: "rules" },
+          ]}
+          onOpen={setOpen}
+        />
+        <FooterCol
+          title="About"
+          items={[
+            { label: "Our mission", key: "mission" },
+            { label: "Contact", key: "contact" },
+            { label: "Privacy", key: "privacy" },
+            { label: "Terms", key: "terms" },
+          ]}
+          onOpen={setOpen}
+        />
       </div>
+
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
           <div className="flex items-center gap-3">
-            <a href="#" aria-label="Instagram" className="hover:text-primary"><Instagram className="h-4 w-4" /></a>
-            <a href="#" aria-label="Twitter" className="hover:text-primary"><Twitter className="h-4 w-4" /></a>
+            <a href="#" aria-label="Instagram" className="hover:text-primary">
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a href="#" aria-label="Twitter" className="hover:text-primary">
+              <Twitter className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-900/60 p-4 backdrop-blur-sm"
+          onClick={() => setOpen(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                {INFO[open].title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setOpen(null)}
+                className="rounded-full p-1 text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-foreground/85">
+              {INFO[open].body.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </footer>
+  );
+}
+
+function FooterCol({
+  title,
+  items,
+  onOpen,
+}: {
+  title: string;
+  items: { label: string; key: InfoKey }[];
+  onOpen: (k: InfoKey) => void;
+}) {
+  return (
+    <div>
+      <div className="text-xs font-semibold uppercase tracking-widest text-foreground">
+        {title}
+      </div>
+      <ul className="mt-3 space-y-2">
+        {items.map((it) => (
+          <li key={it.key}>
+            <button
+              type="button"
+              onClick={() => onOpen(it.key)}
+              className="text-left text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              {it.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
