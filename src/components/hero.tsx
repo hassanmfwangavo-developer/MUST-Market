@@ -1,4 +1,5 @@
 import { Sparkles, ShieldCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
 
