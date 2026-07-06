@@ -5,6 +5,7 @@ import { categories } from "@/lib/demo-data";
 
 export function Hero() {
   return (
+
     <section className="hero-gradient relative overflow-hidden">
       <div className="mesh-dots absolute inset-0 opacity-70" />
       <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:px-6 sm:pb-20 sm:pt-20 lg:px-8">
