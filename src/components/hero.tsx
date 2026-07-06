@@ -83,7 +83,7 @@ export function Hero() {
 
 
         {/* Category pills */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-2.5 pb-[35vh] sm:gap-3 sm:pb-0">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
           {categories.map((c) => (
             <a
               key={c.slug}
@@ -97,6 +97,28 @@ export function Hero() {
             </a>
           ))}
         </div>
+
+        {/* Social proof strip */}
+        <div className="mt-6 grid grid-cols-3 gap-3 sm:mt-10 sm:gap-6">
+          {[
+            { node: <CountUp target={20} suffix="+" />, v: "Active listings" },
+            { node: <CountUp target={150} suffix="+" />, v: "MUST students" },
+            { node: <>&lt; 2 min</>, v: "Avg. reply time" },
+          ].map((s) => (
+            <div
+              key={s.v}
+              className="rounded-2xl border border-border bg-surface/70 px-3 py-4 text-center shadow-soft backdrop-blur sm:px-6"
+            >
+              <div className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+                {s.node}
+              </div>
+              <div className="mt-0.5 text-[11px] uppercase tracking-wider text-muted-foreground sm:text-xs">
+                {s.v}
+              </div>
+            </div>
+          ))}
+        </div>
+
 
         {/* Social proof strip */}
         <div className="mt-14 grid grid-cols-3 gap-3 sm:mt-16 sm:gap-6">
