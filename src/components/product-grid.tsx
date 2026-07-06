@@ -1,9 +1,12 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { Plus } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
+
 
 
 function shuffle<T>(arr: T[], seed: number): T[] {
