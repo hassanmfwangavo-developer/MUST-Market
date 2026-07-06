@@ -217,6 +217,15 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         <MessageCircle className="h-5 w-5" strokeWidth={2.5} />
         Order Now via WhatsApp
       </a>
+
+      <Link
+        to="/report/$id"
+        params={{ id: product.id }}
+        className="mt-3 inline-flex w-full items-center justify-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-destructive"
+      >
+        🚩 Report this listing
+      </Link>
     </div>
+
   );
 }
