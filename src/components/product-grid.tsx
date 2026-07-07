@@ -69,14 +69,15 @@ export function ProductGrid() {
             Latest listings from MUST
           </h2>
         </div>
-        <Link
-          to="/sell"
+        <button
+          type="button"
+          onClick={goPost}
           aria-label="Post a listing"
           className="btn-shine inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-4 py-2.5 text-xs font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:text-sm"
         >
           <Plus className="h-4 w-4" strokeWidth={2.8} />
           Post
-        </Link>
+        </button>
       </div>
 
 
