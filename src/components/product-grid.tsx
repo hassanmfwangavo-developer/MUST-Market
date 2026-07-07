@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
+import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
 
 
@@ -28,6 +29,12 @@ export function ProductGrid() {
   const [active, setActive] = useState<string>("All");
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000) + 1);
   const query = useSearchQuery();
+  const navigate = useNavigate();
+  const { user } = useAuthUser();
+  const goPost = () => {
+    if (user) navigate({ to: "/sell" });
+    else openAuthModal("/sell");
+  };
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
@@ -62,14 +69,15 @@ export function ProductGrid() {
             Latest listings from MUST
           </h2>
         </div>
-        <Link
-          to="/sell"
+        <button
+          type="button"
+          onClick={goPost}
           aria-label="Post a listing"
           className="btn-shine inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-4 py-2.5 text-xs font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:text-sm"
         >
           <Plus className="h-4 w-4" strokeWidth={2.8} />
           Post
-        </Link>
+        </button>
       </div>
 
 

@@ -3,15 +3,22 @@ import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 
 let open = false;
+let pendingRedirect: string | null = null;
 const openListeners = new Set<() => void>();
 
-export function openAuthModal() {
+export function openAuthModal(redirectTo?: string) {
   open = true;
+  if (redirectTo) pendingRedirect = redirectTo;
   openListeners.forEach((l) => l());
 }
 export function closeAuthModal() {
   open = false;
   openListeners.forEach((l) => l());
+}
+export function consumePendingRedirect(): string | null {
+  const r = pendingRedirect;
+  pendingRedirect = null;
+  return r;
 }
 export function useAuthModalOpen() {
   return useSyncExternalStore(

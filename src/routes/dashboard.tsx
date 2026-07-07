@@ -69,7 +69,7 @@ function DashboardPage() {
             Your listings, views, and edit controls live behind sign-in.
           </p>
           <button
-            onClick={openAuthModal}
+            onClick={() => openAuthModal()}
             className="mt-6 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-soft"
           >
             Sign in
