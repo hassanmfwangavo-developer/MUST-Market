@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { LayoutDashboard, LogOut, Search, ShoppingBag } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { LayoutDashboard, LogOut, Search, ShoppingBag, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
@@ -9,11 +10,31 @@ import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 export function Navbar() {
   const query = useSearchQuery();
   const { user } = useAuthUser();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onDoc(e: MouseEvent) {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [menuOpen]);
 
   async function handleSignOut() {
+    setMenuOpen(false);
     await supabase.auth.signOut();
     toast.success("Signed out");
+    navigate({ to: "/" });
   }
+
+  const initial =
+    (user?.user_metadata?.full_name as string | undefined)?.[0]?.toUpperCase() ??
+    user?.email?.[0]?.toUpperCase() ??
+    "U";
+  const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -58,27 +79,50 @@ export function Navbar() {
 
         <div className="flex shrink-0 items-center gap-2">
           {user ? (
-            <>
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-2 text-xs font-semibold text-foreground shadow-soft hover:border-primary/40 hover:text-primary sm:px-4 sm:text-sm"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Link>
+            <div ref={menuRef} className="relative">
               <button
-                onClick={handleSignOut}
-                aria-label="Sign out"
-                className="grid h-9 w-9 place-items-center rounded-full border border-border bg-surface text-muted-foreground shadow-soft hover:border-destructive/30 hover:text-destructive"
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label="Account menu"
+                className="grid h-10 w-10 place-items-center overflow-hidden rounded-full border border-border bg-primary text-sm font-semibold text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
               >
-                <LogOut className="h-4 w-4" />
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <span>{initial}</span>
+                )}
               </button>
-            </>
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-border bg-surface shadow-lift animate-scale-in">
+                  <div className="border-b border-border px-4 py-3">
+                    <div className="text-sm font-semibold text-foreground truncate">
+                      {(user.user_metadata?.full_name as string | undefined) ?? "Signed in"}
+                    </div>
+                    <div className="text-xs text-muted-foreground truncate">{user.email}</div>
+                  </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                  >
+                    <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
+                    My Dashboard
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/5"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Log out
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <button
-              onClick={openAuthModal}
-              className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform sm:text-sm"
+              onClick={() => openAuthModal()}
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform sm:text-sm"
             >
+              <UserIcon className="h-4 w-4" />
               Sign in
             </button>
           )}

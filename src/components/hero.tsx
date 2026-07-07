@@ -1,7 +1,8 @@
 import { Sparkles, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
+import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
 function CountUp({ target, suffix = "", duration = 1500 }: { target: number; suffix?: string; duration?: number }) {
   const [value, setValue] = useState(0);
@@ -24,6 +25,12 @@ function CountUp({ target, suffix = "", duration = 1500 }: { target: number; suf
 }
 
 export function Hero() {
+  const navigate = useNavigate();
+  const { user } = useAuthUser();
+  const goSell = () => {
+    if (user) navigate({ to: "/sell" });
+    else openAuthModal("/sell");
+  };
   return (
     <section className="hero-gradient relative overflow-hidden">
       <div className="mesh-dots absolute inset-0 opacity-70" />
@@ -66,13 +73,14 @@ export function Hero() {
 
         {/* CTAs */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            to="/sell"
+          <button
+            type="button"
+            onClick={goSell}
             className="btn-shine group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
             Sell for Free
-          </Link>
+          </button>
           <a
             href="#browse"
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border-2 border-primary/80 bg-surface px-6 py-3.5 text-sm font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-primary-soft sm:w-auto"

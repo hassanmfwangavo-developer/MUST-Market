@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
+import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
 
 
@@ -28,6 +29,12 @@ export function ProductGrid() {
   const [active, setActive] = useState<string>("All");
   const [seed] = useState(() => Math.floor(Math.random() * 1_000_000) + 1);
   const query = useSearchQuery();
+  const navigate = useNavigate();
+  const { user } = useAuthUser();
+  const goPost = () => {
+    if (user) navigate({ to: "/sell" });
+    else openAuthModal("/sell");
+  };
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
