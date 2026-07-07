@@ -40,7 +40,7 @@ function TermsPage() {
             the account may be banned.
           </Section>
           <Section title="4. Safe meetups">
-            All trades happen in person at public MUST locations (library, cafeteria, block foyers). Never share OTPs,
+            All trades happen in person at safe, public spots — the Library, Academic Blocks, or a busy area near the hostels. Never share OTPs,
             never send money before inspecting an item.
           </Section>
           <Section title="5. Content ownership">

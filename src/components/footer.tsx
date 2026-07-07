@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ShoppingBag, Instagram, Twitter, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { ShoppingBag, Instagram, Twitter, X, MessageSquare } from "lucide-react";
 
 type InfoKey =
   | "buyer-tips"
@@ -15,35 +16,34 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
   "buyer-tips": {
     title: "Buyer tips",
     body: [
-      "Inspect the item in person before paying. Always meet in public campus spots like the Library, Cafeteria, or Block C foyers.",
-      "Confirm the seller is a current MUST student. Ask a quick question about their class or hostel block.",
+      "Inspect the item in person before paying. Meet in busy, well-lit spots — the Library, Academic Blocks, or a lively corner of the hostels.",
+      "Confirm the seller is a current MUST student. Ask a quick question about their course, hostel, or nearby area (Iyunga, Ikuti, Inyara, Lupeta, Coca).",
       "Never send money in advance for items you haven't seen. Pay on delivery, in person.",
-      "Reminder: MUST Market is strictly for used personal gear. Clothing and commercial shop products are banned.",
     ],
   },
   "seller-tips": {
     title: "Seller tips",
     body: [
-      "Use real, clear photos of the actual item. Listings with stock images will be removed.",
+      "Use real, clear photos of the actual item. Listings with stock images will be taken down.",
       "Set a fair price — check similar items on the marketplace first.",
       "Reply quickly on WhatsApp. Serious buyers move fast.",
-      "Reminder: only used personal items are allowed. Clothing and commercial/shop inventory listings will be taken down.",
+      "Living off campus in Iyunga, Ikuti, Inyara, Lupeta or Coca is totally fine — just be clear about pickup or delivery.",
     ],
   },
   report: {
     title: "Report a listing",
     body: [
-      "Spotted something off? WhatsApp us at +255 700 000 000 with the listing title and a short reason.",
-      "We remove listings that violate our rules within 24 hours — especially commercial shop products, clothing, counterfeit gear, or unsafe items.",
+      "Spotted something off? WhatsApp us at +255 674 044 676 with the listing title and a short reason.",
+      "We remove listings that violate our rules within 24 hours — especially scams, counterfeit gear, or unsafe items.",
     ],
   },
   rules: {
     title: "Community rules",
     body: [
       "1. Only current MUST students may buy or sell.",
-      "2. Only used, personal items. Clothing and commercial/shop products are strictly banned.",
-      "3. Meet only in safe, public campus areas (Cafeteria, Block C, Library).",
-      "4. No scams, no fake photos, no misleading prices.",
+      "2. List real items you own. No scams, no fake photos, no misleading prices.",
+      "3. Meet in safe, public spots — Library, Academic Blocks, or a busy area near the hostels.",
+      "4. On or off campus (Iyunga, Ikuti, Inyara, Lupeta, Coca) — all MUST students are welcome to trade.",
       "5. Be respectful. Violations = permanent removal.",
     ],
   },
@@ -56,7 +56,7 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
   contact: {
     title: "Contact",
     body: [
-      "WhatsApp: +255 700 000 000",
+      "WhatsApp: +255 674 044 676",
       "Email: hello@mustmarket.co.tz",
       "On campus: find us near the Library help desk.",
     ],
@@ -73,8 +73,8 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
     title: "Terms",
     body: [
       "MUST Market is a peer-to-peer marketplace. We connect buyers and sellers but we are not a party to any transaction.",
-      "By listing an item, you confirm it is your own used personal property and that you are a current MUST student.",
-      "Commercial shop products, clothing, counterfeit goods, and prohibited items are banned and will be removed.",
+      "By listing an item, you confirm you are a current MUST student and the item is accurately described.",
+      "Scams, counterfeit goods, and prohibited items are banned and will be removed.",
     ],
   },
 };
@@ -98,6 +98,13 @@ export function Footer() {
             The peer-to-peer marketplace built by and for Mbeya University of Science and Technology
             students.
           </p>
+          <Link
+            to="/feedback"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground"
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            Feedback & Suggestions
+          </Link>
         </div>
 
         <FooterCol
@@ -119,6 +126,7 @@ export function Footer() {
             { label: "Terms", key: "terms" },
           ]}
           onOpen={setOpen}
+          extraLinks={[{ label: "Feedback & Suggestions", to: "/feedback" }]}
         />
       </div>
 
@@ -174,10 +182,12 @@ function FooterCol({
   title,
   items,
   onOpen,
+  extraLinks,
 }: {
   title: string;
   items: { label: string; key: InfoKey }[];
   onOpen: (k: InfoKey) => void;
+  extraLinks?: { label: string; to: string }[];
 }) {
   return (
     <div>
@@ -194,6 +204,16 @@ function FooterCol({
             >
               {it.label}
             </button>
+          </li>
+        ))}
+        {extraLinks?.map((l) => (
+          <li key={l.to}>
+            <Link
+              to={l.to}
+              className="text-left text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              {l.label}
+            </Link>
           </li>
         ))}
       </ul>
