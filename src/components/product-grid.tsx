@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { useNavigate, Link } from "@tanstack/react-router";
+import { Plus, ArrowRight } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
@@ -55,6 +55,10 @@ export function ProductGrid() {
     );
   }, [active, shuffled, query]);
 
+  const FEATURED_LIMIT = 6;
+  const featured = filtered.slice(0, FEATURED_LIMIT);
+  const hasMore = filtered.length > FEATURED_LIMIT;
+
   const tabs = ["All", ...categories.map((c) => c.name)];
 
 
@@ -103,16 +107,33 @@ export function ProductGrid() {
 
       {isLoading ? (
         <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
+        <>
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
+            {featured.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-col items-center gap-2">
+            <Link
+              to="/browse"
+              className="btn-shine inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lift transition-transform hover:-translate-y-0.5"
+            >
+              View All Products
+              <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+            </Link>
+            {hasMore && (
+              <p className="text-xs text-muted-foreground">
+                Showing {featured.length} of {filtered.length} items
+              </p>
+            )}
+          </div>
+        </>
       )}
     </section>
   );

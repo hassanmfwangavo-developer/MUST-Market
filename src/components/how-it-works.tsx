@@ -20,7 +20,7 @@ const steps = [
     icon: Handshake,
     title: "Safe Meetup",
     body:
-      "Meet up on campus (library, cafeteria, Block C foyers) to test your item and exchange safely!",
+      "Meet up at a safe spot — the Library, Academic Blocks, or a busy area near the hostels — to test and exchange safely.",
   },
 ];
 

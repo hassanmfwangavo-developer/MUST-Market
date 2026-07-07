@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
+import { MUST_LOCATIONS } from "@/lib/locations";
 import { Navbar } from "@/components/navbar";
 import { SafetyModal } from "@/components/safety-modal";
 import { sanitizeTzPhone } from "@/lib/phone";
@@ -326,13 +327,24 @@ function SellPage() {
             />
           </Field>
 
-          <Field label="Where are you located?" hint="Around MUST campus or nearby hostels">
-            <input
+          <Field label="Where are you located?" hint="Around MUST campus or nearby areas">
+            <select
               className={inputCls}
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g. Hostel Block C, Iyunga"
-            />
+            >
+              <option value="">Select a location…</option>
+              <optgroup label="On campus">
+                {MUST_LOCATIONS.slice(0, 5).map((l) => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Off campus (nearby)">
+                {MUST_LOCATIONS.slice(5).map((l) => (
+                  <option key={l} value={l}>{l}</option>
+                ))}
+              </optgroup>
+            </select>
           </Field>
 
           <Field label="How fast can you deliver?" hint="Set expectations for the buyer">

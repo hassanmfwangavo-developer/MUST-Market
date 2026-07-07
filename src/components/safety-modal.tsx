@@ -61,8 +61,8 @@ export function SafetyModal({ open, submitting, onClose, onConfirm }: SafetyModa
             I confirm this is a Used/Personal item, not a commercial shop product.
           </Row>
           <Row checked={c3} onChange={setC3}>
-            I agree to meet buyers only in safe, public campus areas (Cafeteria, Block C,
-            Library).
+            I agree to meet buyers only in safe, public spots (Library, Academic Blocks, or a busy
+            area near the hostels).
           </Row>
         </div>
 

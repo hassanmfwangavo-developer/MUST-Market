@@ -3,6 +3,7 @@ import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { HowItWorks } from "@/components/how-it-works";
 import { ProductGrid } from "@/components/product-grid";
+import { Testimonials } from "@/components/testimonials";
 import { Footer } from "@/components/footer";
 
 export const Route = createFileRoute("/")({
@@ -32,8 +33,10 @@ function Index() {
         <Hero />
         <HowItWorks />
         <ProductGrid />
+        <Testimonials />
       </main>
       <Footer />
     </div>
   );
 }
+
