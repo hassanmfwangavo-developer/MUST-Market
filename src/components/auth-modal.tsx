@@ -7,19 +7,9 @@ import { closeAuthModal, consumePendingRedirect, useAuthModalOpen } from "@/lib/
 
 type View = "root" | "email";
 
-function GoogleLogo({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 48 48" className={className} aria-hidden>
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
-      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-    </svg>
-  );
-}
-
 export function AuthModal() {
   const isOpen = useAuthModalOpen();
+  const navigate = useNavigate();
   const [view, setView] = useState<View>("root");
   const [busy, setBusy] = useState(false);
 
@@ -27,25 +17,66 @@ export function AuthModal() {
     if (!isOpen) setView("root");
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  // Mbinu ya Reddit: Pakia Google JavaScript API chinichini na uonyeshe Native Pop-up
+  useEffect(() => {
+    if (!isOpen || view !== "root") return;
 
-  async function handleGoogle() {
-    setBusy(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: { redirectTo: window.location.origin + "/dashboard" },
-      });
-      if (error) {
-        toast.error(error.message);
-        setBusy(false);
+    const initGoogleGIS = () => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.initialize({
+          client_id: "217115858450-jqb0ea9ok8rncgb6chlo1fjlra9ltnj1.apps.googleusercontent.com",
+          callback: async (response: any) => {
+            setBusy(true);
+            try {
+              const { data, error } = await supabase.auth.signInWithIdToken({
+                provider: "google",
+                token: response.credential,
+              });
+
+              if (error) throw error;
+
+              toast.success("Welcome to MUST Market!");
+              closeAuthModal();
+              const dest = consumePendingRedirect() ?? "/dashboard";
+              navigate({ to: dest });
+            } catch (err) {
+              toast.error(err instanceof Error ? err.message : "Google sign in failed");
+            } finally {
+              setBusy(false);
+            }
+          },
+        });
+
+        // Tupa kitufe rasmi cha Google ndani ya lile box letu safi
+        const btnContainer = document.getElementById("google-signin-container");
+        if (btnContainer) {
+          window.google.accounts.id.renderButton(btnContainer, {
+            theme: "outline",
+            size: "large",
+            shape: "rectangular",
+            width: btnContainer.clientWidth || 380,
+            text: "continue_with",
+          });
+        }
       }
-      // On success browser redirects to Google.
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Sign in failed");
-      setBusy(false);
+    };
+
+    // Kama script ya Google haipo, iweke sasa hivi bila kuhitaji index.html
+    if (!document.getElementById("google-gsi-client")) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.id = "google-gsi-client";
+      script.async = true;
+      script.defer = true;
+      script.onload = initGoogleGIS;
+      document.head.appendChild(script);
+    } else {
+      const timer = setTimeout(initGoogleGIS, 150);
+      return () => clearTimeout(timer);
     }
-  }
+  }, [isOpen, view, navigate]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center">
@@ -64,7 +95,7 @@ export function AuthModal() {
         </button>
 
         {view === "root" && (
-          <RootView busy={busy} onGoogle={handleGoogle} onEmail={() => setView("email")} />
+          <RootView busy={busy} onEmail={() => setView("email")} />
         )}
         {view === "email" && <EmailView onBack={() => setView("root")} />}
 
@@ -83,7 +114,7 @@ export function AuthModal() {
     </div>
   );
 
-  function RootView({ busy, onGoogle, onEmail }: { busy: boolean; onGoogle: () => void; onEmail: () => void }) {
+  function RootView({ busy, onEmail }: { busy: boolean; onEmail: () => void }) {
     return (
       <>
         <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-border sm:hidden" />
@@ -92,14 +123,17 @@ export function AuthModal() {
           <p className="mt-1.5 text-sm text-muted-foreground">Sign in to post, save, and manage listings.</p>
         </div>
         <div className="mt-7 space-y-3">
-          <button
-            onClick={onGoogle}
-            disabled={busy}
-            className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card disabled:opacity-70"
-          >
-            {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleLogo />}
-            Continue with Google
-          </button>
+          
+          {/* Hapa ndipo ule ufunguo wa Google Pop-up utakapojitengeneza wenyewe */}
+          <div id="google-signin-container" className="w-full min-h-[46px] flex justify-center items-center rounded-2xl overflow-hidden transition-all hover:scale-[1.01]" />
+          
+          {busy && (
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground animate-pulse">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Processing secure login...
+            </div>
+          )}
+
           <button
             onClick={onEmail}
             className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-soft transition-all hover:-translate-y-0.5"
