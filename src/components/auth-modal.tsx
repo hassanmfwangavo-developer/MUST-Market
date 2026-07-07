@@ -1,12 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { GraduationCap, Mail, X, Loader2, ShieldCheck } from "lucide-react";
-import { lovable } from "@/integrations/lovable";
+import { GraduationCap, Mail, X, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { closeAuthModal, useAuthModalOpen } from "@/lib/auth-store";
+import { closeAuthModal, consumePendingRedirect, useAuthModalOpen } from "@/lib/auth-store";
 
-type View = "root" | "google-consent" | "email";
+type View = "root" | "email";
 
 function GoogleLogo({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -30,23 +29,20 @@ export function AuthModal() {
 
   if (!isOpen) return null;
 
-  async function handleGoogleAllow() {
+  async function handleGoogle() {
     setBusy(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: typeof window !== "undefined" ? window.location.origin : undefined,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: window.location.origin + "/dashboard" },
       });
-      if (result.error) {
-        toast.error("Sign in failed. Please try again.");
+      if (error) {
+        toast.error(error.message);
         setBusy(false);
-        return;
       }
-      if (result.redirected) return;
-      toast.success("Signed in with Google");
-      closeAuthModal();
-    } catch {
-      toast.error("Something went wrong");
-    } finally {
+      // On success browser redirects to Google.
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign in failed");
       setBusy(false);
     }
   }
@@ -67,9 +63,8 @@ export function AuthModal() {
           <X className="h-4 w-4" />
         </button>
 
-        {view === "root" && <RootView onGoogle={() => setView("google-consent")} onEmail={() => setView("email")} />}
-        {view === "google-consent" && (
-          <GoogleConsent busy={busy} onAllow={handleGoogleAllow} onCancel={() => setView("root")} />
+        {view === "root" && (
+          <RootView busy={busy} onGoogle={handleGoogle} onEmail={() => setView("email")} />
         )}
         {view === "email" && <EmailView onBack={() => setView("root")} />}
 
@@ -87,92 +82,46 @@ export function AuthModal() {
       </div>
     </div>
   );
-}
 
-function RootView({ onGoogle, onEmail }: { onGoogle: () => void; onEmail: () => void }) {
-  return (
-    <>
-      <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-border sm:hidden" />
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground">Join MUST Market</h2>
-        <p className="mt-1.5 text-sm text-muted-foreground">Sign in to post, save, and manage listings.</p>
-      </div>
-      <div className="mt-7 space-y-3">
-        <button
-          onClick={onGoogle}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card"
-        >
-          <GoogleLogo />
-          Continue with Google
-        </button>
-        <button
-          onClick={onEmail}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-soft transition-all hover:-translate-y-0.5"
-        >
-          <Mail className="h-5 w-5" strokeWidth={2.2} />
-          Sign up with email
-        </button>
-        <button
-          onClick={() => toast("🎓 Coming Soon", { description: "University ID sign-in launches next semester." })}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface-2 px-4 py-3.5 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/40"
-        >
-          <GraduationCap className="h-5 w-5" strokeWidth={2.2} />
-          Continue with University ID
-        </button>
-      </div>
-    </>
-  );
-}
-
-function GoogleConsent({ busy, onAllow, onCancel }: { busy: boolean; onAllow: () => void; onCancel: () => void }) {
-  return (
-    <div className="animate-fade-in">
-      <div className="flex items-center justify-center gap-2">
-        <GoogleLogo className="h-6 w-6" />
-        <span className="text-[13px] font-medium text-muted-foreground">Sign in with Google</span>
-      </div>
-      <h3 className="mt-5 text-center text-xl font-semibold text-foreground">
-        MUST Market wants to access your Google information
-      </h3>
-      <div className="mt-5 space-y-2.5 rounded-2xl border border-border bg-surface-2 p-4 text-sm">
-        <Row icon="✉️" text="Your name and email address" />
-        <Row icon="🖼️" text="Your public profile picture" />
-      </div>
-      <p className="mt-4 flex items-start gap-2 text-[12px] text-muted-foreground">
-        <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-        We never post to Google on your behalf. You can revoke access anytime.
-      </p>
-      <div className="mt-6 grid grid-cols-2 gap-3">
-        <button
-          onClick={onCancel}
-          disabled={busy}
-          className="rounded-2xl border border-border bg-surface px-4 py-3 text-sm font-semibold text-foreground hover:bg-surface-2"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={onAllow}
-          disabled={busy}
-          className="flex items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform disabled:opacity-70"
-        >
-          {busy && <Loader2 className="h-4 w-4 animate-spin" />}
-          Allow
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function Row({ icon, text }: { icon: string; text: string }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="text-base">{icon}</span>
-      <span className="text-foreground">{text}</span>
-    </div>
-  );
+  function RootView({ busy, onGoogle, onEmail }: { busy: boolean; onGoogle: () => void; onEmail: () => void }) {
+    return (
+      <>
+        <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-border sm:hidden" />
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Join MUST Market</h2>
+          <p className="mt-1.5 text-sm text-muted-foreground">Sign in to post, save, and manage listings.</p>
+        </div>
+        <div className="mt-7 space-y-3">
+          <button
+            onClick={onGoogle}
+            disabled={busy}
+            className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3.5 text-sm font-semibold text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-card disabled:opacity-70"
+          >
+            {busy ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleLogo />}
+            Continue with Google
+          </button>
+          <button
+            onClick={onEmail}
+            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-soft transition-all hover:-translate-y-0.5"
+          >
+            <Mail className="h-5 w-5" strokeWidth={2.2} />
+            Sign up with email
+          </button>
+          <button
+            onClick={() => toast("🎓 Coming Soon", { description: "University ID sign-in launches next semester." })}
+            className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface-2 px-4 py-3.5 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/40"
+          >
+            <GraduationCap className="h-5 w-5" strokeWidth={2.2} />
+            Continue with University ID
+          </button>
+        </div>
+      </>
+    );
+  }
 }
 
 function EmailView({ onBack }: { onBack: () => void }) {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"signin" | "signup">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -184,19 +133,26 @@ function EmailView({ onBack }: { onBack: () => void }) {
     setBusy(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin },
+          options: { emailRedirectTo: window.location.origin + "/dashboard" },
         });
         if (error) throw error;
-        toast.success("Account created! Check your email to confirm.");
+        if (!data.session) {
+          toast.success("Account created! Check your email to confirm.");
+          closeAuthModal();
+          return;
+        }
+        toast.success("Welcome to MUST Market!");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Welcome back");
       }
       closeAuthModal();
+      const dest = consumePendingRedirect() ?? "/dashboard";
+      navigate({ to: dest });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Something went wrong");
     } finally {
