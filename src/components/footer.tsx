@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Instagram, Twitter, X, MessageSquare } from "lucide-react";
+import {  Instagram, Twitter, X, MessageSquare } from "lucide-react";
 
 type InfoKey =
   | "buyer-tips"
