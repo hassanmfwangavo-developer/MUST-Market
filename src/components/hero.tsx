@@ -45,7 +45,7 @@ export function Hero() {
         </div>
 
         <h1 className="mx-auto mt-6 max-w-3xl text-center text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          Buy &amp; sell used student gear at{" "}
+          Buy &amp; sell used student items at{" "}
           <span className="relative inline-block whitespace-nowrap">
             <span className="text-primary">MUST</span> instantly
             <svg
@@ -67,8 +67,7 @@ export function Hero() {
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-center text-base text-muted-foreground sm:text-lg">
-          Used laptops, books, hostel gear &amp; more. Connect with fellow students via
-          WhatsApp instantly.
+          Buy & sell campus essentials. Connect via WhatsApp instantly.
         </p>
 
         {/* CTAs */}
