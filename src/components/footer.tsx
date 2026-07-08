@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {  Instagram, Twitter, X, MessageSquare } from "lucide-react";
+import { Instagram } from "lucide-react"; // Hakikisha imebaki Instagram pekee hapa
 
 type InfoKey =
   | "buyer-tips"
@@ -135,17 +135,24 @@ export function Footer() {
         />
       </div>
 
-      <div className="border-t border-border">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
-          <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
-          <div className="flex items-center gap-3">
-            <a href="#" aria-label="Instagram" className="hover:text-primary">
-              <Instagram className="h-4 w-4" />
-            </a>
-            <a href="#" aria-label="Twitter" className="hover:text-primary">
-              <Twitter className="h-4 w-4" />
-            </a>
+     <div className="border-t border-border">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
+            <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
+            
+            {/* HAPA TUMEBAKISHA INSTAGRAM TU NA LINK YAKO HALISI */}
+            <div className="flex items-center gap-3">
+              <a 
+                href="https://www.instagram.com/must_market01?igsh=MTUwdHhoMXNkZ3kxcA==" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                aria-label="Instagram" 
+                className="hover:text-primary transition-colors"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+            </div>
           </div>
+        </div>
         </div>
       </div>
 
