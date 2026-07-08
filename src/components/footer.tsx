@@ -57,8 +57,7 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
     title: "Contact",
     body: [
       "WhatsApp: +255 674 044 676",
-      "Email: hello@mustmarket.co.tz",
-      "On campus: find us near the Library help desk.",
+      "Email; hassanmfwangavo49@gmail.com
     ],
   },
   privacy: {
@@ -83,16 +82,22 @@ export function Footer() {
   const [open, setOpen] = useState<InfoKey | null>(null);
 
   return (
-    <footer className="border-t border-border bg-surface-2">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:px-8">
-        <div className="sm:col-span-2">
-          <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
-              <ShoppingBag className="h-4 w-4" strokeWidth={2.5} />
-            </span>
-            <span className="text-base font-semibold tracking-tight">
-              MUST <span className="text-primary">Market</span>
-            </span>
+   <footer className="border-t border-border bg-surface-2">
+  <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:px-8">
+    <div className="sm:col-span-2">
+      <div className="flex items-center gap-2">
+        
+        {/* 👇 LOGO YAKO HALISI INAKAA HAPA SASA HIVI 👇 */}
+        <img 
+          src="/favicon-32x32.png" 
+          alt="MUST Market Logo" 
+          className="h-8 w-8 rounded-lg object-contain" 
+        />
+        
+        <span className="text-base font-semibold tracking-tight">
+          MUST <span className="text-primary">Market</span>
+        </span>
+      </div>
           </div>
           <p className="mt-3 max-w-md text-sm text-muted-foreground">
             The peer-to-peer marketplace built by and for Mbeya University of Science and Technology
