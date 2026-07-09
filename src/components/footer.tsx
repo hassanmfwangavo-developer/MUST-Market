@@ -1,75 +1,233 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { Instagram, MessageSquare, X } from "lucide-react";
+
+type InfoKey =
+  | "buyer-tips"
+  | "seller-tips"
+  | "report"
+  | "rules"
+  | "mission"
+  | "contact"
+  | "privacy"
+  | "terms";
+
+const INFO: Record<InfoKey, { title: string; body: string[] }> = {
+  "buyer-tips": {
+    title: "Buyer tips",
+    body: [
+      "Inspect the item in person before paying. Meet in busy, well-lit spots — the Library, Academic Blocks, or a lively corner of the hostels.",
+      "Confirm the seller is a current MUST student. Ask a quick question about their course, hostel, or nearby area (Iyunga, Ikuti, Inyara, Lupeta, Coca).",
+      "Never send money in advance for items you haven't seen. Pay on delivery, in person.",
+    ],
+  },
+  "seller-tips": {
+    title: "Seller tips",
+    body: [
+      "Use real, clear photos of the actual item. Listings with stock images will be taken down.",
+      "Set a fair price — check similar items on the marketplace first.",
+      "Reply quickly on WhatsApp. Serious buyers move fast.",
+      "Living off campus in Iyunga, Ikuti, Inyara, Lupeta or Coca is totally fine — just be clear about pickup or delivery.",
+    ],
+  },
+  report: {
+    title: "Report a listing",
+    body: [
+      "Spotted something off? WhatsApp us at +255 674 044 676 with the listing title and a short reason.",
+      "We remove listings that violate our rules within 24 hours — especially scams, counterfeit gear, or unsafe items.",
+    ],
+  },
+  rules: {
+    title: "Community rules",
+    body: [
+      "1. Only current MUST students may buy or sell.",
+      "2. List real items you own. No scams, no fake photos, no misleading prices.",
+      "3. Meet in safe, public spots — Library, Academic Blocks, or a busy area near the hostels.",
+      "4. On or off campus (Iyunga, Ikuti, Inyara, Lupeta, Coca) — all MUST students are welcome to trade.",
+      "5. Be respectful. Violations = permanent removal.",
+    ],
+  },
+  mission: {
+    title: "Our mission",
+    body: [
+      "Helping MUST students trade gear safely and save money. Built by students, for students, so nothing useful ends up in a drawer or a dumpster.",
+    ],
+  },
+  contact: {
+    title: "Contact",
+    body: [
+      "WhatsApp: +255 674 044 676",
+      "Email: hassanmfwangavo49@gmail.com",
+    ],
+  },
+  privacy: {
+    title: "Privacy",
+    body: [
+      "We only store what your listing needs: title, description, price, location, images and your WhatsApp number.",
+      "Your number is shared with buyers so they can chat you on WhatsApp — that's the whole point of the marketplace.",
+      "We don't sell your data. Ever.",
+    ],
+  },
+  terms: {
+    title: "Terms",
+    body: [
+      "MUST Market is a peer-to-peer marketplace. We connect buyers and sellers but we are not a party to any transaction.",
+      "By listing an item, you confirm you are a current MUST student and the item is accurately described.",
+      "Scams, counterfeit goods, and prohibited items are banned and will be removed.",
+    ],
+  },
+};
 
 export function Footer() {
+  const [open, setOpen] = useState<InfoKey | null>(null);
+
   return (
-    <footer className="bg-white text-gray-900 border-t border-gray-100 py-10 px-6 mt-auto">
-      <div className="max-w-md mx-auto flex flex-col space-y-8 text-left">
-        
-        {/* Sehemu ya SAFETY */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold tracking-widest text-gray-900 uppercase">
-            SAFETY
-          </h3>
-          <div className="flex flex-col space-y-2.5 text-sm text-gray-500 font-normal">
-            <Link to="/buyer-tips" className="hover:text-gray-900 transition-colors">
-              Buyer tips
-            </Link>
-            <Link to="/seller-tips" className="hover:text-gray-900 transition-colors">
-              Seller tips
-            </Link>
-            <Link to="/report" className="hover:text-gray-900 transition-colors">
-              Report a listing
-            </Link>
-            <Link to="/rules" className="hover:text-gray-900 transition-colors">
-              Community rules
-            </Link>
+    <footer className="border-t border-border bg-surface-2">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:px-8">
+        <div>
+          <div className="flex items-center gap-2">
+            {/* LOGO YAKO HALISI */}
+            <img 
+              src="/favicon-32x32.png" 
+              alt="MUST Market Logo" 
+              className="h-8 w-8 rounded-lg object-contain" 
+            />
+            <span className="text-base font-semibold tracking-tight">
+              MUST <span className="text-primary">Market</span>
+            </span>
           </div>
-        </div>
-
-        {/* Sehemu ya ABOUT */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold tracking-widest text-gray-900 uppercase">
-            ABOUT
-          </h3>
-          <div className="flex flex-col space-y-2.5 text-sm text-gray-500 font-normal">
-            <Link to="/meet-the-founder" className="hover:text-gray-900 transition-colors">
-              Meet the founder
-            </Link>
-            <Link to="/privacy" className="hover:text-gray-900 transition-colors">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hover:text-gray-900 transition-colors">
-              Terms
-            </Link>
-            <Link to="/feedback" className="hover:text-gray-900 transition-colors">
-              Feedback & Suggestions
-            </Link>
-          </div>
-        </div>
-
-        {/* Sehemu ya Chini: Copyright & Instagram */}
-        <div className="border-t border-gray-100 pt-6 flex flex-col items-center justify-center space-y-3 text-center">
-          <p className="text-xs text-gray-500">
-            &copy; 2026 MUST Market. Built by students, for students.
+          <p className="mt-3 max-w-md text-sm text-muted-foreground">
+            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology students.
           </p>
+          <Link
+            to="/feedback"
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground"
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            Feedback & Suggestions
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8 sm:col-span-1">
+          <FooterCol
+            title="Safety"
+            items={[
+              { label: "Buyer tips", key: "buyer-tips" },
+              { label: "Seller tips", key: "seller-tips" },
+              { label: "Report a listing", key: "report" },
+              { label: "Community rules", key: "rules" },
+            ]}
+            onOpen={setOpen}
+          />
+          <FooterCol
+            title="About"
+            items={[
+              { label: "Our mission", key: "mission" },
+              { label: "Contact", key: "contact" },
+              { label: "Privacy", key: "privacy" },
+              { label: "Terms", key: "terms" },
+            ]}
+            onOpen={setOpen}
+            extraLinks={[
+              { label: "Meet the Founder", to: "/meet-the-founder" },
+              { label: "Feedback & Suggestions", to: "/feedback" }
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
+          <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
           
-          <div className="flex items-center justify-center text-gray-500">
+          {/* INSTAGRAM PEKEE YENYE LINK YAKO HALISI */}
+          <div className="flex items-center gap-3">
             <a 
-              href="https://www.instagram.com/mrhm_ai?igsh=MW9tbDY1azZ0bzQ4dQ==" 
+              href="https://www.instagram.com/must_market01?igsh=MTUwdHhoMXNkZ3kxcA==" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="hover:text-gray-900 transition-colors"
+              aria-label="Instagram" 
+              className="hover:text-primary transition-colors"
             >
-              <svg className="h-5 w-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
+              <Instagram className="h-4 w-4" />
             </a>
           </div>
         </div>
-
       </div>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-slate-900/60 p-4 backdrop-blur-sm"
+          onClick={() => setOpen(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl border border-border bg-surface p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                {INFO[open].title}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setOpen(null)}
+                className="rounded-full p-1 text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-foreground/85">
+              {INFO[open].body.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </footer>
+  );
+}
+
+function FooterCol({
+  title,
+  items,
+  onOpen,
+  extraLinks,
+}: {
+  title: string;
+  items: { label: string; key: InfoKey }[];
+  onOpen: (k: InfoKey) => void;
+  extraLinks?: { label: string; to: string }[];
+}) {
+  return (
+    <div>
+      <div className="text-xs font-semibold uppercase tracking-widest text-foreground">
+        {title}
+      </div>
+      <ul className="mt-3 space-y-2">
+        {items.map((it) => (
+          <li key={it.key}>
+            <button
+              type="button"
+              onClick={() => onOpen(it.key)}
+              className="text-left text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              {it.label}
+            </button>
+          </li>
+        ))}
+        {extraLinks?.map((l) => (
+          <li key={l.to}>
+            <Link
+              to={l.to}
+              className="text-left text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
