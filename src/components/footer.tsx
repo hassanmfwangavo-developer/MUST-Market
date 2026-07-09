@@ -1,73 +1,60 @@
 import { Link } from "@tanstack/react-router";
+import { MessageSquare, Shield, FileText, User } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-white text-gray-900 border-t border-gray-100 py-10 px-6 mt-auto">
-      <div className="max-w-md mx-auto flex flex-col space-y-8 text-left">
+    <footer className="bg-[#042f2e] text-white border-t border-teal-500/10 py-8 px-4 mt-auto">
+      <div className="max-w-md mx-auto flex flex-col items-center space-y-4 text-center">
         
-        {/* Sehemu ya SAFETY */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold tracking-widest text-gray-900 uppercase">
-            SAFETY
-          </h3>
-          <div className="flex flex-col space-y-2.5 text-sm text-gray-500 font-normal">
-            <Link to="/buyer-tips" className="hover:text-gray-900 transition-colors">
-              Buyer tips
-            </Link>
-            <Link to="/seller-tips" className="hover:text-gray-900 transition-colors">
-              Seller tips
-            </Link>
-            <Link to="/report-listing" className="hover:text-gray-900 transition-colors">
-              Report a listing
-            </Link>
-            <Link to="/community-rules" className="hover:text-gray-900 transition-colors">
-              Community rules
-            </Link>
-          </div>
+        {/* Jina la Brand kwa Juu */}
+        <div className="text-xs font-bold tracking-widest text-teal-400 uppercase mb-1">
+          MUST Market
         </div>
 
-        {/* Sehemu ya ABOUT */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-bold tracking-widest text-gray-900 uppercase">
-            ABOUT
-          </h3>
-          <div className="flex flex-col space-y-2.5 text-sm text-gray-500 font-normal">
-            <Link to="/meet-the-founder" className="hover:text-gray-900 transition-colors">
-              Meet the founder
-            </Link>
-            <Link to="/privacy" className="hover:text-gray-900 transition-colors">
-              Privacy
-            </Link>
-            <Link to="/terms" className="hover:text-gray-900 transition-colors">
-              Terms
-            </Link>
-            <Link to="/feedback" className="hover:text-gray-900 transition-colors">
-              Feedback & Suggestions
-            </Link>
-          </div>
-        </div>
-
-        {/* Sehemu ya Chini Kabisa: Copyright na Instagram pekee */}
-        <div className="border-t border-gray-100 pt-6 flex flex-col items-center justify-center space-y-3 text-center">
-          <p className="text-xs text-gray-500">
-            &copy; 2026 MUST Market. Built by students, for students.
-          </p>
+        {/* Viungo (Links) kwa mpangilio rasmi ulioueleza kutoka juu kwenda chini */}
+        <div className="flex flex-col space-y-2.5 w-full text-sm font-medium">
           
-          <div className="flex items-center justify-center text-gray-500">
-            {/* Instagram Icon Pekee */}
-            <a 
-              href="https://www.instagram.com/mrhm_ai?igsh=MW9tbDY1azZ0bzQ4dQ==" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="hover:text-gray-900 transition-colors"
-            >
-              <svg className="h-5 w-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-            </a>
-          </div>
+          {/* 1. Meet the Founder */}
+          <Link 
+            to="/meet-the-founder" 
+            className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-teal-950/30 border border-teal-500/5 hover:border-teal-400/20 hover:text-teal-300 transition-colors"
+          >
+            <User className="h-4 w-4 text-teal-400" />
+            Meet the Founder
+          </Link>
+
+          {/* 2. Privacy Policy */}
+          <Link 
+            to="/privacy" 
+            className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-teal-950/30 border border-teal-500/5 hover:border-teal-400/20 hover:text-teal-300 transition-colors"
+          >
+            <Shield className="h-4 w-4 text-teal-400" />
+            Privacy Policy
+          </Link>
+
+          {/* 3. Terms of Service */}
+          <Link 
+            to="/terms" 
+            className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-teal-950/30 border border-teal-500/5 hover:border-teal-400/20 hover:text-teal-300 transition-colors"
+          >
+            <FileText className="h-4 w-4 text-teal-400" />
+            Terms & Conditions
+          </Link>
+
+          {/* 4. Feedback and Suggestions (Inafungua kiform kama ilivyokuwa mwanzo) */}
+          <Link 
+            to="/feedback" 
+            className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-teal-950/30 border border-teal-500/5 hover:border-teal-400/20 hover:text-teal-300 transition-colors"
+          >
+            <MessageSquare className="h-4 w-4 text-teal-400" />
+            Feedback and Suggestions
+          </Link>
+          
+        </div>
+
+        {/* Haki Miliki (Copyright) */}
+        <div className="text-[11px] text-teal-200/40 pt-4 tracking-wide">
+          &copy; {new Date().getFullYear()} MUST Market. All rights reserved.
         </div>
 
       </div>
