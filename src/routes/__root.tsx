@@ -5,6 +5,7 @@ export const Route = createRootRoute({
   meta: () => [
     { charSet: "utf-8" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
+    { name: "google-site-verification", content: "obuXIaVdggUF7lRuAr16MOAa4Juv3K1O067ncm91F-M" },
     { title: "MUST Market |  Soko rasmi la Chuo Kikuu cha MUST " },
     { name: "description", content: "Jukwaa rasmi la wanafunzi wa Mbeya University of Science and Technology (MUST) kununua na kuuza vifaa vya masomo, simu, laptop, na malazi campus bila madalali." },
     { name: "keywords", content: "must market, must store, vitu  used must, mbeya university, must, wanafunzi wa must, duka la chuo" },
