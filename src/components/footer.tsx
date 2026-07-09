@@ -11,7 +11,7 @@ export function Footer() {
           MUST Market
         </div>
 
-        {/* Viungo (Links) kwa mpangilio rasmi ulioueleza kutoka juu kwenda chini */}
+        {/* Viungo (Links) kwa mpangilio rasmi ulioueleza */}
         <div className="flex flex-col space-y-2.5 w-full text-sm font-medium">
           
           {/* 1. Meet the Founder */}
@@ -41,18 +41,20 @@ export function Footer() {
             Terms & Conditions
           </Link>
 
-          {/* 4. Feedback and Suggestions (Inafungua kiform kama ilivyokuwa mwanzo) */}
-          <Link 
-            to="/feedback" 
+          {/* 4. Feedback and Suggestions (Inapeleka WhatsApp yako moja kwa moja kwa urahisi) */}
+          <a 
+            href="https://wa.me/255674044676?text=Habari%20Hassani,%20nina%20maoni/ushauri%20kuhusu%20MUST%20Market"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-teal-950/30 border border-teal-500/5 hover:border-teal-400/20 hover:text-teal-300 transition-colors"
           >
             <MessageSquare className="h-4 w-4 text-teal-400" />
             Feedback and Suggestions
-          </Link>
+          </a>
           
         </div>
 
-        {/* Haki Miliki (Copyright) */}
+        {/* Haki Miliki (Copyright) ya chini kabisa */}
         <div className="text-[11px] text-teal-200/40 pt-4 tracking-wide">
           &copy; {new Date().getFullYear()} MUST Market. All rights reserved.
         </div>
