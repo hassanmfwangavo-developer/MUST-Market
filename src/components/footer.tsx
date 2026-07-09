@@ -26,7 +26,7 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Sehemu ya ABOUT - Mpangilio wako ulioagiza */}
+        {/* Sehemu ya ABOUT */}
         <div className="space-y-3">
           <h3 className="text-xs font-bold tracking-widest text-gray-900 uppercase">
             ABOUT
@@ -47,14 +47,13 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Sehemu ya Chini Kabisa: Copyright na Instagram pekee */}
+        {/* Sehemu ya Chini: Copyright & Instagram */}
         <div className="border-t border-gray-100 pt-6 flex flex-col items-center justify-center space-y-3 text-center">
           <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} MUST Market. Built by students, for students.
+            &copy; 2026 MUST Market. Built by students, for students.
           </p>
           
           <div className="flex items-center justify-center text-gray-500">
-            {/* Instagram Icon Pekee */}
             <a 
               href="https://www.instagram.com/mrhm_ai?igsh=MW9tbDY1azZ0bzQ4dQ==" 
               target="_blank" 
