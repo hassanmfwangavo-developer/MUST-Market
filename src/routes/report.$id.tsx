@@ -65,12 +65,19 @@ function ReportPage() {
             <Flag className="h-5 w-5" strokeWidth={2.2} />
           </div>
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">Report this listing</h1>
-            <p className="text-sm text-muted-foreground">Your report goes straight to a MUST Market admin.</p>
+            <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              Report this listing
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Your report goes straight to a MUST Market admin.
+            </p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-8 rounded-3xl border border-border bg-surface p-6 shadow-soft sm:p-8">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-8 rounded-3xl border border-border bg-surface p-6 shadow-soft sm:p-8"
+        >
           <div>
             <div className="text-sm font-semibold text-foreground">Why are you reporting this?</div>
             <div className="mt-4 space-y-2.5">
@@ -114,7 +121,9 @@ function ReportPage() {
               placeholder="Tell us what happened, screenshots welcome once WhatsApp opens…"
               className="mt-2 w-full resize-none rounded-2xl border border-border bg-surface-2 px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
             />
-            <p className="mt-1.5 text-[11px] text-muted-foreground">Min 10 characters. Be specific.</p>
+            <p className="mt-1.5 text-[11px] text-muted-foreground">
+              Min 10 characters. Be specific.
+            </p>
           </div>
 
           <button

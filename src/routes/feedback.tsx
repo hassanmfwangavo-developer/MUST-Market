@@ -19,7 +19,8 @@ export const Route = createFileRoute("/feedback")({
       { property: "og:title", content: "Feedback & Suggestions — MUST Market" },
       {
         property: "og:description",
-        content: "Help us improve MUST Market. Your feedback goes straight to the team on WhatsApp.",
+        content:
+          "Help us improve MUST Market. Your feedback goes straight to the team on WhatsApp.",
       },
     ],
   }),

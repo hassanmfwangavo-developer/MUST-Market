@@ -38,8 +38,7 @@ function BrowsePage() {
   });
 
   const filtered = useMemo(() => {
-    const byCat =
-      active === "All" ? products : products.filter((p) => p.category === active);
+    const byCat = active === "All" ? products : products.filter((p) => p.category === active);
     const q = query.trim().toLowerCase();
     if (!q) return byCat;
     return byCat.filter(

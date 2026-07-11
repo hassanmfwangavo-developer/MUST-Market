@@ -22,7 +22,10 @@ export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
       { title: "Seller Dashboard — MUST Market" },
-      { name: "description", content: "Manage your MUST Market listings, edit prices, and delete sold items." },
+      {
+        name: "description",
+        content: "Manage your MUST Market listings, edit prices, and delete sold items.",
+      },
     ],
   }),
   component: DashboardPage,
@@ -58,7 +61,11 @@ function DashboardPage() {
   }, [initialized, user]);
 
   if (!initialized) {
-    return <FullPageState><Loader2 className="h-6 w-6 animate-spin text-primary" /></FullPageState>;
+    return (
+      <FullPageState>
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </FullPageState>
+    );
   }
   if (!user) {
     return (
@@ -129,7 +136,9 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 sm:py-14">
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
           <div className="min-w-0">
-            <div className="text-xs font-semibold uppercase tracking-widest text-primary">Seller dashboard</div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-primary">
+              Seller dashboard
+            </div>
             <h1 className="mt-1 truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
               Welcome back
             </h1>
@@ -144,8 +153,16 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
         </header>
 
         <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard label="Total posted items" value={stats.total} icon={<PackageOpen className="h-4 w-4" />} />
-          <StatCard label="Active listings" value={stats.active} icon={<BarChart3 className="h-4 w-4" />} />
+          <StatCard
+            label="Total posted items"
+            value={stats.total}
+            icon={<PackageOpen className="h-4 w-4" />}
+          />
+          <StatCard
+            label="Active listings"
+            value={stats.active}
+            icon={<BarChart3 className="h-4 w-4" />}
+          />
           <StatCard label="Total views" value={stats.views} icon={<Eye className="h-4 w-4" />} />
         </section>
 
@@ -182,13 +199,20 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                     )}
                   </div>
                   <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-foreground sm:text-base">{p.title}</div>
+                    <div className="truncate text-sm font-semibold text-foreground sm:text-base">
+                      {p.title}
+                    </div>
                     <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                       <span>TSh {p.price_tsh.toLocaleString("en-US")}</span>
-                      <span className="inline-flex items-center gap-1"><Eye className="h-3 w-3" />{p.view_count}</span>
+                      <span className="inline-flex items-center gap-1">
+                        <Eye className="h-3 w-3" />
+                        {p.view_count}
+                      </span>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
-                          p.status === "active" ? "bg-primary-soft text-primary" : "bg-muted text-muted-foreground"
+                          p.status === "active"
+                            ? "bg-primary-soft text-primary"
+                            : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {p.status}
@@ -255,10 +279,14 @@ function StatCard({ label, value, icon }: { label: string; value: number; icon: 
   return (
     <div className="rounded-3xl border border-border bg-surface p-5 shadow-soft">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-        <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-soft text-primary">{icon}</span>
+        <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-soft text-primary">
+          {icon}
+        </span>
         {label}
       </div>
-      <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">{value.toLocaleString("en-US")}</div>
+      <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+        {value.toLocaleString("en-US")}
+      </div>
     </div>
   );
 }
@@ -331,14 +359,22 @@ function EditModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center">
-      <button aria-label="Close" onClick={onClose} className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" />
+      <button
+        aria-label="Close"
+        onClick={onClose}
+        className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
+      />
       <form
         onSubmit={handleSave}
         className="relative z-10 w-full max-w-lg space-y-5 rounded-t-3xl bg-surface p-6 shadow-lift sm:rounded-3xl sm:p-8 animate-scale-in max-h-[90vh] overflow-y-auto"
       >
         <div className="flex items-start justify-between">
           <h3 className="text-xl font-semibold text-foreground">Edit listing</h3>
-          <button type="button" onClick={onClose} className="rounded-full p-1.5 text-muted-foreground hover:bg-muted">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -373,7 +409,10 @@ function EditModal({
         <Field label="Photos">
           <div className="grid grid-cols-3 gap-2">
             {images.map((url, i) => (
-              <div key={url + i} className="group relative aspect-square overflow-hidden rounded-xl bg-surface-2">
+              <div
+                key={url + i}
+                className="group relative aspect-square overflow-hidden rounded-xl bg-surface-2"
+              >
                 <img src={url} alt="" className="h-full w-full object-cover" />
                 <button
                   type="button"
@@ -410,7 +449,9 @@ function EditModal({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {label}
+      </span>
       <div className="mt-1.5">{children}</div>
     </label>
   );
@@ -433,7 +474,11 @@ function ConfirmModal({
 }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
-      <button aria-label="Close" onClick={onCancel} className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" />
+      <button
+        aria-label="Close"
+        onClick={onCancel}
+        className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
+      />
       <div className="relative z-10 w-full max-w-sm rounded-3xl bg-surface p-6 shadow-lift animate-scale-in">
         <div className="grid h-11 w-11 place-items-center rounded-2xl bg-destructive/10 text-destructive">
           <Trash2 className="h-5 w-5" />
