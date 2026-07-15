@@ -95,18 +95,24 @@ export function AuthModal() {
           <X className="h-4 w-4" />
         </button>
 
-        {view === "root" && (
-          <RootView busy={busy} onEmail={() => setView("email")} />
-        )}
+        {view === "root" && <RootView busy={busy} onEmail={() => setView("email")} />}
         {view === "email" && <EmailView onBack={() => setView("root")} />}
 
         <p className="mt-6 text-center text-[11px] leading-relaxed text-muted-foreground">
           By continuing you agree to our{" "}
-          <Link to="/terms" onClick={closeAuthModal} className="underline underline-offset-2 hover:text-foreground">
+          <Link
+            to="/terms"
+            onClick={closeAuthModal}
+            className="underline underline-offset-2 hover:text-foreground"
+          >
             Terms of Service
           </Link>{" "}
           and{" "}
-          <Link to="/privacy" onClick={closeAuthModal} className="underline underline-offset-2 hover:text-foreground">
+          <Link
+            to="/privacy"
+            onClick={closeAuthModal}
+            className="underline underline-offset-2 hover:text-foreground"
+          >
             Privacy Policy
           </Link>
           .
@@ -120,17 +126,20 @@ export function AuthModal() {
       <>
         <div className="mx-auto mb-6 h-1.5 w-10 rounded-full bg-border sm:hidden" />
         <div className="text-center">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">Join MUST Market</h2>
-          <p className="mt-1.5 text-sm text-muted-foreground">Sign in to post, save, and manage listings.</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+            Join MUST Market
+          </h2>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Sign in to post, save, and manage listings.
+          </p>
         </div>
         <div className="mt-7 space-y-3">
-          
           {/* Mchawi wa Pop-up: Kitufe safi cha Google kitatokea ndani ya hili box */}
-          <div 
-            id="google-signin-container" 
-            className="w-full min-h-[46px] flex justify-center items-center rounded-2xl overflow-hidden" 
+          <div
+            id="google-signin-container"
+            className="w-full min-h-[46px] flex justify-center items-center rounded-2xl overflow-hidden"
           />
-          
+
           {busy && (
             <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground animate-pulse">
               <Loader2 className="h-3 w-3 animate-spin" />
@@ -146,7 +155,11 @@ export function AuthModal() {
             Sign up with email
           </button>
           <button
-            onClick={() => toast("🎓 Coming Soon", { description: "University ID sign-in launches next semester." })}
+            onClick={() =>
+              toast("🎓 Coming Soon", {
+                description: "University ID sign-in launches next semester.",
+              })
+            }
             className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-surface-2 px-4 py-3.5 text-sm font-semibold text-foreground transition-all hover:-translate-y-0.5 hover:border-primary/40"
           >
             <GraduationCap className="h-5 w-5" strokeWidth={2.2} />
@@ -200,7 +213,11 @@ function EmailView({ onBack }: { onBack: () => void }) {
 
   return (
     <form onSubmit={submit} className="animate-fade-in">
-      <button type="button" onClick={onBack} className="mb-3 text-xs font-medium text-muted-foreground hover:text-foreground">
+      <button
+        type="button"
+        onClick={onBack}
+        className="mb-3 text-xs font-medium text-muted-foreground hover:text-foreground"
+      >
         ← Back
       </button>
       <h3 className="text-xl font-semibold tracking-tight text-foreground">

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SellRouteImport } from './routes/sell'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BrowseRouteImport } from './routes/browse'
@@ -32,6 +33,11 @@ const SellRoute = SellRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetTheFounderRoute = MeetTheFounderRouteImport.update({
+  id: '/meet-the-founder',
+  path: '/meet-the-founder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedbackRoute = FeedbackRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/terms': typeof TermsRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/terms': typeof TermsRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/terms': typeof TermsRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/meet-the-founder'
     | '/privacy'
     | '/sell'
     | '/terms'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/meet-the-founder'
     | '/privacy'
     | '/sell'
     | '/terms'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/meet-the-founder'
     | '/privacy'
     | '/sell'
     | '/terms'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   BrowseRoute: typeof BrowseRoute
   DashboardRoute: typeof DashboardRoute
   FeedbackRoute: typeof FeedbackRoute
+  MeetTheFounderRoute: typeof MeetTheFounderRoute
   PrivacyRoute: typeof PrivacyRoute
   SellRoute: typeof SellRoute
   TermsRoute: typeof TermsRoute
@@ -168,6 +181,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meet-the-founder': {
+      id: '/meet-the-founder'
+      path: '/meet-the-founder'
+      fullPath: '/meet-the-founder'
+      preLoaderRoute: typeof MeetTheFounderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feedback': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseRoute: BrowseRoute,
   DashboardRoute: DashboardRoute,
   FeedbackRoute: FeedbackRoute,
+  MeetTheFounderRoute: MeetTheFounderRoute,
   PrivacyRoute: PrivacyRoute,
   SellRoute: SellRoute,
   TermsRoute: TermsRoute,
@@ -229,3 +250,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

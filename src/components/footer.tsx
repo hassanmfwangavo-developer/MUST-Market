@@ -3,14 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, MessageSquare, X } from "lucide-react";
 
 type InfoKey =
-  | "buyer-tips"
-  | "seller-tips"
-  | "report"
-  | "rules"
-  | "mission"
-  | "contact"
-  | "privacy"
-  | "terms";
+  "buyer-tips" | "seller-tips" | "report" | "rules" | "mission" | "contact" | "privacy" | "terms";
 
 const INFO: Record<InfoKey, { title: string; body: string[] }> = {
   "buyer-tips": {
@@ -55,10 +48,7 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
   },
   contact: {
     title: "Contact",
-    body: [
-      "WhatsApp: +255 674 044 676",
-      "Email: hassanmfwangavo49@gmail.com",
-    ],
+    body: ["WhatsApp: +255 674 044 676", "Email: hassanmfwangavo49@gmail.com"],
   },
   privacy: {
     title: "Privacy",
@@ -87,17 +77,18 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2">
             {/* LOGO YAKO HALISI */}
-            <img 
-              src="/favicon-32x32.png" 
-              alt="MUST Market Logo" 
-              className="h-8 w-8 rounded-lg object-contain" 
+            <img
+              src="/favicon-32x32.png"
+              alt="MUST Market Logo"
+              className="h-8 w-8 rounded-lg object-contain"
             />
             <span className="text-base font-semibold tracking-tight">
               MUST <span className="text-primary">Market</span>
             </span>
           </div>
           <p className="mt-3 max-w-md text-sm text-muted-foreground">
-            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology students.
+            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology
+            students.
           </p>
           <Link
             to="/feedback"
@@ -130,7 +121,7 @@ export function Footer() {
             onOpen={setOpen}
             extraLinks={[
               { label: "Meet the Founder", to: "/meet-the-founder" },
-              { label: "Feedback & Suggestions", to: "/feedback" }
+              { label: "Feedback & Suggestions", to: "/feedback" },
             ]}
           />
         </div>
@@ -139,14 +130,14 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
-          
+
           {/* INSTAGRAM PEKEE YENYE LINK YAKO HALISI */}
           <div className="flex items-center gap-3">
-            <a 
-              href="https://www.instagram.com/must_market01?igsh=MTUwdHhoMXNkZ3kxcA==" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              aria-label="Instagram" 
+            <a
+              href="https://www.instagram.com/must_market01?igsh=MTUwdHhoMXNkZ3kxcA=="
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
               className="hover:text-primary transition-colors"
             >
               <Instagram className="h-4 w-4" />
@@ -202,9 +193,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <div className="text-xs font-semibold uppercase tracking-widest text-foreground">
-        {title}
-      </div>
+      <div className="text-xs font-semibold uppercase tracking-widest text-foreground">{title}</div>
       <ul className="mt-3 space-y-2">
         {items.map((it) => (
           <li key={it.key}>

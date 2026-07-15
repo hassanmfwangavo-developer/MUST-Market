@@ -37,21 +37,20 @@ export function Navbar() {
   const avatarUrl = user?.user_metadata?.avatar_url as string | undefined;
 
   return (
-   <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-  <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
-    <Link to="/" className="group flex shrink-0 items-center gap-2">
-      
-      {/* NEMBO YAKO MPYA INAKAA HAPA SASA HIVI (TUMEFUTA KIBEGI CHA LOVABLE) */}
-      <img 
-        src="/favicon-32x32.png" 
-        alt="MUST Market Logo" 
-        className="h-9 w-9 rounded-xl object-contain shadow-soft transition-transform group-hover:scale-105" 
-      />
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <Link to="/" className="group flex shrink-0 items-center gap-2">
+          {/* NEMBO YAKO MPYA INAKAA HAPA SASA HIVI (TUMEFUTA KIBEGI CHA LOVABLE) */}
+          <img
+            src="/favicon-32x32.png"
+            alt="MUST Market Logo"
+            className="h-9 w-9 rounded-xl object-contain shadow-soft transition-transform group-hover:scale-105"
+          />
 
-      <span className="hidden text-[17px] font-semibold tracking-tight text-foreground sm:block">
-        MUST <span className="text-primary">Market</span>
-      </span>
-    </Link>
+          <span className="hidden text-[17px] font-semibold tracking-tight text-foreground sm:block">
+            MUST <span className="text-primary">Market</span>
+          </span>
+        </Link>
 
         <div className="relative min-w-0 flex-1 max-w-xl">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

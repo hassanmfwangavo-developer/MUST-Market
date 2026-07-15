@@ -64,9 +64,7 @@ export function Testimonials() {
                   {v.initials}
                 </span>
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-foreground">
-                    {v.name}
-                  </div>
+                  <div className="truncate text-sm font-semibold text-foreground">{v.name}</div>
                   <div className="text-xs text-muted-foreground">
                     {v.course} · {v.year}
                   </div>
