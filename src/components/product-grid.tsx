@@ -8,8 +8,6 @@ import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
-
-
 function shuffle<T>(arr: T[], seed: number): T[] {
   // Deterministic Fisher-Yates using a seeded PRNG so filtering stays stable per mount.
   const copy = [...arr];
@@ -61,7 +59,6 @@ export function ProductGrid() {
 
   const tabs = ["All", ...categories.map((c) => c.name)];
 
-
   return (
     <section id="browse" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
@@ -83,7 +80,6 @@ export function ProductGrid() {
           Post
         </button>
       </div>
-
 
       <div className="mt-6 -mx-4 flex gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0">
         {tabs.map((t) => {

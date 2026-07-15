@@ -39,4 +39,3 @@ function Index() {
     </div>
   );
 }
-

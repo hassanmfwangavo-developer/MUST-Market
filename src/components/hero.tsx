@@ -4,7 +4,15 @@ import { useNavigate } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
-function CountUp({ target, suffix = "", duration = 1500 }: { target: number; suffix?: string; duration?: number }) {
+function CountUp({
+  target,
+  suffix = "",
+  duration = 1500,
+}: {
+  target: number;
+  suffix?: string;
+  duration?: number;
+}) {
   const [value, setValue] = useState(0);
   const startedRef = useRef(false);
   useEffect(() => {
@@ -21,7 +29,12 @@ function CountUp({ target, suffix = "", duration = 1500 }: { target: number; suf
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [target, duration]);
-  return <>{value.toLocaleString("en-US")}{suffix}</>;
+  return (
+    <>
+      {value.toLocaleString("en-US")}
+      {suffix}
+    </>
+  );
 }
 
 export function Hero() {
@@ -35,7 +48,6 @@ export function Hero() {
     <section className="hero-gradient relative overflow-hidden">
       <div className="mesh-dots absolute inset-0 opacity-70" />
       <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 sm:pb-20 sm:pt-20 lg:px-8">
-
         {/* Trust chip */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-surface/70 px-3.5 py-1.5 text-xs font-medium text-primary shadow-soft backdrop-blur">
@@ -87,7 +99,6 @@ export function Hero() {
             Browse the Marketplace
           </a>
         </div>
-
 
         {/* Category pills */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
