@@ -6,16 +6,16 @@ const VOICES = [
     course: "BCET",
     year: "1st Year",
     quote:
-      "Sold my old textbooks in a day. Buyer met me at the Library and paid cash. Way better than posting in random WhatsApp groups.",
+      "Got a used mic for my content work at half the shop price. Seller was at New Hostels, five minute walk. Smooth trade.",
     initials: "HM",
     tint: "from-emerald-500 to-teal-600",
   },
   {
-    name: "Vedastus Milingi",
+    name: "Vedastus Mlingi",
     course: "Telecom",
     year: "3rd Year",
     quote:
-      "Got a used mic for my content work at half the shop price. Seller was at New Hostels, five minute walk. Smooth trade.",
+      "Nilipata nilichokuwa natafuta kwa haraka na kwa bei nzuri. Mawasiliano na muuzaji yalikuwa rahisi, na kila kitu kilikwenda vizuri. Hakika nitatumia MUST Market tena.",
     initials: "VM",
     tint: "from-sky-500 to-indigo-600",
   },
