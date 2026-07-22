@@ -1,4 +1,4 @@
-import { Sparkles, ShieldCheck } from "lucide-react";
+ import { Sparkles, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { categories } from "@/lib/demo-data";
@@ -108,8 +108,8 @@ export function Hero() {
         {/* Social proof strip */}
         <div className="mt-6 grid grid-cols-3 gap-3 sm:mt-10 sm:gap-6">
           {[
-            { node: <CountUp target={20} suffix="+" />, v: "Active listings" },
-            { node: <CountUp target={150} suffix="+" />, v: "MUST students" },
+            { node: <CountUp target={80} suffix="+" />, v: "Active listings" },
+            { node: <CountUp target={200} suffix="+" />, v: "MUST students" },
             { node: <>&lt; 2 min</>, v: "Avg. reply time" },
           ].map((s) => (
             <div
