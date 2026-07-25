@@ -21,12 +21,78 @@ import { sanitizeTzPhone } from "@/lib/phone";
 const CONDITIONS = ["Like New", "Good", "Fair"] as const;
 type Condition = (typeof CONDITIONS)[number];
 const DELIVERY_OPTIONS = ["Within 1 Hour", "Same Day", "Next Day", "This Week"] as const;
-const MAX_IMAGES = 3;
+const MAX_IMAGES = 1;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const TARGET_IMAGE_SIZE = 150 * 1024;
 
 interface PickedImage {
   file: File;
   preview: string;
+}
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("Failed to read image"));
+    img.src = src;
+  });
+}
+
+async function compressImageFile(file: File, maxBytes = TARGET_IMAGE_SIZE): Promise<File> {
+  if (file.size <= maxBytes) return file;
+
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const img = await loadImage(objectUrl);
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+
+    const maxDimension = 1600;
+    let width = img.width;
+    let height = img.height;
+
+    if (width > maxDimension || height > maxDimension) {
+      const scale = Math.min(maxDimension / width, maxDimension / height);
+      width = Math.max(1, Math.round(width * scale));
+      height = Math.max(1, Math.round(height * scale));
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    context.drawImage(img, 0, 0, width, height);
+
+    const mimeType = file.type === "image/png" ? "image/jpeg" : file.type;
+    const extension = mimeType.split("/")[1] ?? "jpg";
+    const baseName = file.name.replace(/\.[^.]+$/, "");
+
+    let quality = 0.92;
+    let blob: Blob | null = null;
+
+    while (quality >= 0.2) {
+      blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, mimeType, quality);
+      });
+      if (blob && blob.size <= maxBytes) break;
+      quality -= 0.1;
+    }
+
+    if (!blob || blob.size > maxBytes) {
+      blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(resolve, mimeType, 0.75);
+      });
+    }
+
+    if (!blob) return file;
+
+    return new File([blob], `${baseName}.${extension}`, {
+      type: mimeType,
+      lastModified: Date.now(),
+    });
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 }
 
 export const Route = createFileRoute("/sell")({
@@ -65,23 +131,50 @@ function SellPage() {
   const [submitting, setSubmitting] = useState(false);
   const [safetyOpen, setSafetyOpen] = useState(false);
 
-  function handleFiles(e: ChangeEvent<HTMLInputElement>) {
+  async function handleFiles(e: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
-    const remaining = MAX_IMAGES - images.length;
-    const accepted: PickedImage[] = [];
-    for (const file of files.slice(0, remaining)) {
-      if (!file.type.startsWith("image/")) {
-        toast.error(`${file.name} is not an image`);
-        continue;
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        toast.error(`${file.name} is over 5MB`);
-        continue;
-      }
-      accepted.push({ file, preview: URL.createObjectURL(file) });
+    const file = files[0];
+    if (!file) return;
+
+    if (images.length >= MAX_IMAGES) {
+      toast.error("You can upload exactly 1 photo for this listing.");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
     }
-    setImages((prev) => [...prev, ...accepted]);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+
+    if (!file.type.startsWith("image/")) {
+      toast.error(`${file.name} is not an image`);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error(`${file.name} is over 5MB`);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    try {
+      const compressedFile = await compressImageFile(file);
+      const nextImage = {
+        file: compressedFile,
+        preview: URL.createObjectURL(compressedFile),
+      };
+
+      setImages((prev) => {
+        if (prev.length > 0) {
+          const [existing] = prev;
+          if (existing) URL.revokeObjectURL(existing.preview);
+          return [nextImage];
+        }
+        return [nextImage];
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Could not prepare the image for upload.");
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   }
 
   function removeImage(idx: number) {
@@ -252,7 +345,7 @@ function SellPage() {
 
           <Field
             label="Images"
-            hint={`Optional · up to ${MAX_IMAGES} photos from different angles`}
+            hint={`Optional · exactly ${MAX_IMAGES} photo`}
           >
             <div className="grid grid-cols-3 gap-2.5">
               {images.map((img, i) => (
@@ -277,17 +370,8 @@ function SellPage() {
                   onClick={() => fileInputRef.current?.click()}
                   className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border bg-surface-2 text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
                 >
-                  {images.length === 0 ? (
-                    <>
-                      <Upload className="h-5 w-5" />
-                      <span className="text-[11px] font-medium">Upload</span>
-                    </>
-                  ) : (
-                    <>
-                      <ImagePlus className="h-5 w-5" />
-                      <span className="text-[11px] font-medium">Add more</span>
-                    </>
-                  )}
+                  <Upload className="h-5 w-5" />
+                  <span className="text-[11px] font-medium">Upload 1 photo</span>
                 </button>
               )}
             </div>
@@ -295,9 +379,8 @@ function SellPage() {
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              multiple
               className="hidden"
-              onChange={handleFiles}
+              onChange={(e) => void handleFiles(e)}
             />
           </Field>
 
