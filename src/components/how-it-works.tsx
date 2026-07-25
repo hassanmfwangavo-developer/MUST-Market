@@ -5,22 +5,19 @@ const steps = [
     n: "1",
     icon: ListPlus,
     title: "List Your Item",
-    body:
-      "Fill out our seamless form with product specifications, locations around MUST, and your phone number.",
+    body: "Fill out our seamless form with product specifications, locations around MUST, and your phone number.",
   },
   {
     n: "2",
     icon: MessageCircle,
     title: "Direct Chat",
-    body:
-      "Interested buyers tap 'Order Now' to instantly open a WhatsApp conversation with a pre-filled trade deal.",
+    body: "Interested buyers tap 'Order Now' to instantly open a WhatsApp conversation with a pre-filled trade deal.",
   },
   {
     n: "3",
     icon: Handshake,
     title: "Safe Meetup",
-    body:
-      "Meet up at a safe spot — the Library, Academic Blocks, or a busy area near the hostels — to test and exchange safely.",
+    body: "Meet up at a safe spot — the Library, Academic Blocks, or a busy area near the hostels — to test and exchange safely.",
   },
 ];
 
@@ -54,9 +51,7 @@ export function HowItWorks() {
                   {n}
                 </span>
               </div>
-              <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">
-                {title}
-              </h3>
+              <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">{title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{body}</p>
             </li>
           ))}

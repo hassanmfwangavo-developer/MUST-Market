@@ -2,15 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  ArrowLeft,
-  ImagePlus,
-  Loader2,
-  ShieldCheck,
-  Sparkles,
-  Trash2,
-  Upload,
-} from "lucide-react";
+import { ArrowLeft, ImagePlus, Loader2, ShieldCheck, Sparkles, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { categories } from "@/lib/demo-data";
 import { MUST_LOCATIONS } from "@/lib/locations";
@@ -298,10 +290,7 @@ function SellPage() {
           onSubmit={handleSubmit}
           className="mt-8 space-y-7 rounded-3xl border border-border bg-surface p-6 shadow-soft sm:p-8"
         >
-          <Field
-            label="What are you selling?"
-            hint="Product title & category"
-          >
+          <Field label="What are you selling?" hint="Product title & category">
             <input
               className={inputCls}
               value={title}
@@ -384,7 +373,10 @@ function SellPage() {
             />
           </Field>
 
-          <Field label="Why should someone buy this?" hint="Condition, what's included, why you're selling">
+          <Field
+            label="Why should someone buy this?"
+            hint="Condition, what's included, why you're selling"
+          >
             <div className="mb-2.5 flex gap-1.5">
               {CONDITIONS.map((c) => (
                 <button
@@ -419,12 +411,16 @@ function SellPage() {
               <option value="">Select a location…</option>
               <optgroup label="On campus">
                 {MUST_LOCATIONS.slice(0, 5).map((l) => (
-                  <option key={l} value={l}>{l}</option>
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
                 ))}
               </optgroup>
               <optgroup label="Off campus (nearby)">
                 {MUST_LOCATIONS.slice(5).map((l) => (
-                  <option key={l} value={l}>{l}</option>
+                  <option key={l} value={l}>
+                    {l}
+                  </option>
                 ))}
               </optgroup>
             </select>

@@ -122,7 +122,6 @@ export const categories = [
   { name: "Books/Stationery", slug: "books", emoji: "📚" },
 ];
 
-
 export function formatTsh(n: number) {
   return `TSh ${n.toLocaleString("en-US")}`;
 }

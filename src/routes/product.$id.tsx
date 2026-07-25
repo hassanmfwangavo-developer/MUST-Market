@@ -1,13 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  AlertTriangle,
-  ArrowLeft,
-  MapPin,
-  MessageCircle,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh } from "@/lib/demo-data";
 import { fetchProduct, whatsappUrl, type MarketProduct } from "@/lib/products";
@@ -21,10 +14,7 @@ export const Route = createFileRoute("/product/$id")({
   head: ({ loaderData }) => {
     if (!loaderData) {
       return {
-        meta: [
-          { title: "Item not found — MUST Market" },
-          { name: "robots", content: "noindex" },
-        ],
+        meta: [{ title: "Item not found — MUST Market" }, { name: "robots", content: "noindex" }],
       };
     }
     const { product } = loaderData;
@@ -111,11 +101,7 @@ function ProductGallery({ product }: { product: MarketProduct }) {
     <div>
       <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-surface shadow-soft">
         {hasImage ? (
-          <img
-            src={images[active]}
-            alt={product.title}
-            className="h-full w-full object-cover"
-          />
+          <img src={images[active]} alt={product.title} className="h-full w-full object-cover" />
         ) : (
           <>
             <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient}`} />
@@ -226,6 +212,5 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         🚩 Report this listing
       </Link>
     </div>
-
   );
 }
