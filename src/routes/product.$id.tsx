@@ -3,7 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
-import { formatTsh } from "@/lib/demo-data";
+import { formatTsh, categoryEmoji } from "@/lib/demo-data";
 import { fetchProduct, whatsappUrl, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
