@@ -205,13 +205,14 @@ function SellPage() {
     const waDigits = sanitizeTzPhone(whatsapp);
     setSubmitting(true);
     try {
-      let { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        const { data, error } = await supabase.auth.signInAnonymously();
-        if (error || !data.session) throw new Error(error?.message || "Could not start session");
-        sessionData = { session: data.session };
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session || sessionData.session.user.is_anonymous) {
+        setSubmitting(false);
+        openAuthModal("/sell");
+        toast.error("Please sign in to publish your listing");
+        return;
       }
-      const userId = sessionData.session!.user.id;
+      const userId = sessionData.session.user.id;
 
       const { data: cat, error: catErr } = await supabase
         .from("categories")
