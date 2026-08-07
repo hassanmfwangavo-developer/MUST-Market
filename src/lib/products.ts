@@ -25,7 +25,7 @@ interface DbProductRow {
   location: string;
   description: string;
   images: string[] | null;
-  whatsapp_number: string;
+  whatsapp_number?: string | null;
   delivery_timeframe: string | null;
   created_at: string;
   categories: { name: string; slug: string } | null;
