@@ -111,7 +111,9 @@ export function Hero() {
               <span className="text-base transition-transform group-hover:scale-110">
                 {c.emoji}
               </span>
-              {c.name}
+              <span className="whitespace-pre-line text-left leading-tight">
+                {c.name}
+              </span>
             </a>
           ))}
         </div>

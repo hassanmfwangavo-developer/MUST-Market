@@ -118,7 +118,7 @@ export const demoProducts: DemoProduct[] = [
 
 export const categories = [
   { name: "Electronics", slug: "electronics", emoji: "💻" },
-  { name: "Room/Hostel Gear", slug: "room-hostel", emoji: "🛏️" },
+  { name: "Room Items", slug: "room-hostel", emoji: "🛏️" },
   { name: "Books/Stationery", slug: "books", emoji: "📚" },
 ];
 
