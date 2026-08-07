@@ -1,6 +1,8 @@
 import { MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { type DemoProduct, formatTsh } from "@/lib/demo-data";
+import { SmartImage } from "@/components/smart-image";
+import { thumbUrl, imageSrcSet } from "@/lib/images";
 
 const conditionStyle: Record<DemoProduct["condition"], string> = {
   "Like New": "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
@@ -14,26 +16,27 @@ export function ProductCard({ product }: { product: DemoProduct }) {
       <Link
         to="/product/$id"
         params={{ id: product.id }}
-        className="relative block aspect-[4/5] overflow-hidden bg-muted"
+        className="relative block overflow-hidden"
       >
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={product.title}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <>
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${product.gradient} transition-transform duration-700 group-hover:scale-105`}
-            />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
-            <div className="absolute inset-0 grid place-items-center text-6xl opacity-90 drop-shadow-lg">
-              {product.emoji}
-            </div>
-          </>
-        )}
+        <SmartImage
+          src={product.image ? thumbUrl(product.image) : undefined}
+          srcSet={product.image ? imageSrcSet(product.image, [200, 400, 600]) : undefined}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          alt={product.title}
+          aspect="aspect-[4/5]"
+          className="transition-transform duration-700 group-hover:scale-105"
+          fallback={
+            <>
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${product.gradient} transition-transform duration-700 group-hover:scale-105`}
+              />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
+              <div className="absolute inset-0 grid place-items-center text-6xl opacity-90 drop-shadow-lg">
+                {product.emoji}
+              </div>
+            </>
+          }
+        />
 
         <div className="absolute left-3 top-3 rounded-full bg-accent/95 px-3 py-1 text-xs font-bold text-accent-foreground shadow-[var(--shadow-amber)] backdrop-blur">
           {formatTsh(product.price)}
@@ -45,6 +48,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           {product.condition}
         </div>
       </Link>
+
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
         <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-[15px]">
