@@ -3,7 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { LayoutDashboard, LogOut, Search, ShoppingBag, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { categories } from "@/lib/demo-data";
+import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
@@ -76,7 +76,7 @@ export function Navbar() {
               href={`/#browse`}
               className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
             >
-              {c.name}
+              {categoryLabel(c.dbName).replace("\n", " ")}
             </a>
           ))}
         </nav>

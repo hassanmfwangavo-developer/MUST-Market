@@ -158,7 +158,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <span className="rounded-full bg-primary-soft px-2.5 py-1 font-semibold text-primary">
-          {product.category}
+          {categoryEmoji(product.category)} {product.category}
         </span>
         <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">
           {product.condition}
