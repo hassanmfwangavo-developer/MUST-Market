@@ -52,12 +52,21 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
   };
 }
 
+// Seller contact numbers are only readable by signed-in users (enforced in the
+// database with column-level grants), so we only request the column when a
+// session exists.
+const BASE_COLUMNS =
+  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,created_at,categories(name,slug)";
+
+async function selectColumns(): Promise<string> {
+  const { data } = await supabase.auth.getSession();
+  return data.session ? `${BASE_COLUMNS},whatsapp_number` : BASE_COLUMNS;
+}
+
 export async function fetchProducts(): Promise<MarketProduct[]> {
   const { data, error } = await supabase
     .from("products")
-    .select(
-      "id,title,price_tsh,condition,location,description,images,whatsapp_number,delivery_timeframe,created_at,categories(name,slug)",
-    )
+    .select(await selectColumns())
     .eq("status", "active")
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -67,9 +76,7 @@ export async function fetchProducts(): Promise<MarketProduct[]> {
 export async function fetchProduct(id: string): Promise<MarketProduct | null> {
   const { data, error } = await supabase
     .from("products")
-    .select(
-      "id,title,price_tsh,condition,location,description,images,whatsapp_number,delivery_timeframe,created_at,categories(name,slug)",
-    )
+    .select(await selectColumns())
     .eq("id", id)
     .maybeSingle();
   if (error) throw error;
