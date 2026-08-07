@@ -45,7 +45,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     gradient: FALLBACK_GRADIENTS[idx % FALLBACK_GRADIENTS.length],
     emoji: "📦",
     description: row.description,
-    whatsapp: row.whatsapp_number,
+    whatsapp: row.whatsapp_number ?? undefined,
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
     createdAt: row.created_at,
     isDemo: false,
