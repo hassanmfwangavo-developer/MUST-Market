@@ -1,3 +1,4 @@
+import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -367,7 +368,7 @@ function SellPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept={ALLOWED_IMAGE_ACCEPT}
               className="hidden"
               onChange={(e) => void handleFiles(e)}
             />

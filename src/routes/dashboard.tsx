@@ -1,3 +1,4 @@
+import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -431,7 +432,7 @@ function EditModal({
             {images.length < 3 && (
               <label className="grid aspect-square cursor-pointer place-items-center rounded-xl border border-dashed border-border bg-surface-2 text-xs text-muted-foreground hover:border-primary/40 hover:text-primary">
                 {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "+ Add"}
-                <input type="file" accept="image/*" className="hidden" onChange={handleAddImage} />
+                <input type="file" accept={ALLOWED_IMAGE_ACCEPT} className="hidden" onChange={handleAddImage} />
               </label>
             )}
           </div>
