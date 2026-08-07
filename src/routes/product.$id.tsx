@@ -5,6 +5,9 @@ import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } f
 import { Navbar } from "@/components/navbar";
 import { formatTsh } from "@/lib/demo-data";
 import { fetchProduct, whatsappUrl, type MarketProduct } from "@/lib/products";
+import { SmartImage } from "@/components/smart-image";
+import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
+
 
 export const Route = createFileRoute("/product/$id")({
   loader: async ({ params }) => {
