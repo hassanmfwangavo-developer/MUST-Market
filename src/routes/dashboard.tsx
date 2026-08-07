@@ -312,6 +312,10 @@ function EditModal({
   async function handleAddImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      e.target.value = "";
+      return toast.error("Only JPEG, PNG, WebP or GIF images are allowed");
+    }
     if (file.size > 5 * 1024 * 1024) return toast.error("Image must be under 5MB");
     setUploading(true);
     try {

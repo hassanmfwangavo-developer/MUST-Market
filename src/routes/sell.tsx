@@ -134,8 +134,8 @@ function SellPage() {
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      toast.error(`${file.name} is not an image`);
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error(`${file.name} is not a supported image (JPEG, PNG, WebP or GIF)`);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
