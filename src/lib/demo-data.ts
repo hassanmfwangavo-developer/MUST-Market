@@ -116,11 +116,34 @@ export const demoProducts: DemoProduct[] = [
   },
 ];
 
-export const categories = [
-  { name: "Electronics", slug: "electronics", emoji: "💻" },
-  { name: "Room\nItems", slug: "room-hostel", emoji: "🛏️" },
-  { name: "Books/Stationery", slug: "books", emoji: "📚" },
+export interface CategoryDef {
+  /** Display label (may contain a line break for compact pills). */
+  name: string;
+  /** Exact category name stored in the database — used for filtering. */
+  dbName: string;
+  slug: string;
+  emoji: string;
+}
+
+export const categories: CategoryDef[] = [
+  { name: "Electronics", dbName: "Electronics", slug: "electronics", emoji: "💻" },
+  { name: "Room\nItems", dbName: "Room/Hostel Gear", slug: "room-hostel", emoji: "🛏️" },
+  { name: "Books/Stationery", dbName: "Books/Stationery", slug: "books", emoji: "📚" },
+  { name: "Fashion", dbName: "Fashion", slug: "fashion", emoji: "👕" },
+  { name: "Online\nServices", dbName: "Online Services", slug: "online-services", emoji: "📶" },
+  { name: "Rooms / Gheto", dbName: "Rooms / Gheto", slug: "rooms-gheto", emoji: "🏠" },
 ];
+
+/** Display label for a database category name. */
+export function categoryLabel(dbName: string) {
+  return categories.find((c) => c.dbName === dbName)?.name ?? dbName;
+}
+
+/** Emoji for a database category name. */
+export function categoryEmoji(dbName: string) {
+  return categories.find((c) => c.dbName === dbName)?.emoji ?? "📦";
+}
+
 
 export function formatTsh(n: number) {
   return `TSh ${n.toLocaleString("en-US")}`;
