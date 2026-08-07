@@ -314,7 +314,7 @@ function SellPage() {
                   }`}
                 >
                   <span>{c.emoji}</span>
-                  {c.name}
+                  {c.name.replace("\n", " ")}
                 </button>
               ))}
             </div>

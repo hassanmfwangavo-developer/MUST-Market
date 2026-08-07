@@ -3,7 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
-import { formatTsh } from "@/lib/demo-data";
+import { formatTsh, categoryEmoji } from "@/lib/demo-data";
 import { fetchProduct, whatsappUrl, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
@@ -158,7 +158,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <span className="rounded-full bg-primary-soft px-2.5 py-1 font-semibold text-primary">
-          {product.category}
+          {categoryEmoji(product.category)} {product.category}
         </span>
         <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground">
           {product.condition}

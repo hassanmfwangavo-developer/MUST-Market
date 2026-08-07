@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Plus, ArrowRight } from "lucide-react";
 import { ProductCard } from "./product-card";
-import { categories } from "@/lib/demo-data";
+import { categories, categoryLabel, categoryEmoji } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
@@ -57,7 +57,7 @@ export function ProductGrid() {
   const featured = filtered.slice(0, FEATURED_LIMIT);
   const hasMore = filtered.length > FEATURED_LIMIT;
 
-  const tabs = ["All", ...categories.map((c) => c.name)];
+  const tabs = ["All", ...categories.map((c) => c.dbName)];
 
   return (
     <section id="browse" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
@@ -95,7 +95,7 @@ export function ProductGrid() {
                   : "border border-border bg-surface text-muted-foreground hover:border-primary/30 hover:text-foreground"
               }`}
             >
-              {t}
+              {t === "All" ? "All" : `${categoryEmoji(t)} ${categoryLabel(t).replace("\n", " ")}`}
             </button>
           );
         })}

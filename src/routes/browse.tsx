@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
-import { categories } from "@/lib/demo-data";
+import { categories, categoryLabel, categoryEmoji } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 
@@ -49,7 +49,7 @@ function BrowsePage() {
     );
   }, [active, products, query]);
 
-  const tabs = ["All", ...categories.map((c) => c.name)];
+  const tabs = ["All", ...categories.map((c) => c.dbName)];
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -91,7 +91,7 @@ function BrowsePage() {
                     : "border border-border bg-surface text-muted-foreground hover:border-primary/30 hover:text-foreground"
                 }`}
               >
-                {t}
+                {t === "All" ? "All" : `${categoryEmoji(t)} ${categoryLabel(t).replace("\n", " ")}`}
               </button>
             );
           })}
