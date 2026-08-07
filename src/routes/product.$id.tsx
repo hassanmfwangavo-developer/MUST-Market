@@ -1,3 +1,4 @@
+import { openAuthModal } from "@/lib/auth-store";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
@@ -194,15 +195,26 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         </span>
       </div>
 
-      <a
-        href={waHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lift transition-transform hover:-translate-y-0.5"
-      >
-        <MessageCircle className="h-5 w-5" strokeWidth={2.5} />
-        Order Now via WhatsApp
-      </a>
+      {product.whatsapp ? (
+        <a
+          href={waHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lift transition-transform hover:-translate-y-0.5"
+        >
+          <MessageCircle className="h-5 w-5" strokeWidth={2.5} />
+          Order Now via WhatsApp
+        </a>
+      ) : (
+        <button
+          type="button"
+          onClick={() => openAuthModal(`/product/${product.id}`)}
+          className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lift transition-transform hover:-translate-y-0.5"
+        >
+          <MessageCircle className="h-5 w-5" strokeWidth={2.5} />
+          Sign in to order via WhatsApp
+        </button>
+      )}
 
       <Link
         to="/report/$id"

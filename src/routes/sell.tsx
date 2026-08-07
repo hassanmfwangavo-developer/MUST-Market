@@ -1,3 +1,5 @@
+import { openAuthModal } from "@/lib/auth-store";
+import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -134,8 +136,8 @@ function SellPage() {
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      toast.error(`${file.name} is not an image`);
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      toast.error(`${file.name} is not a supported image (JPEG, PNG, WebP or GIF)`);
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
@@ -204,13 +206,14 @@ function SellPage() {
     const waDigits = sanitizeTzPhone(whatsapp);
     setSubmitting(true);
     try {
-      let { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        const { data, error } = await supabase.auth.signInAnonymously();
-        if (error || !data.session) throw new Error(error?.message || "Could not start session");
-        sessionData = { session: data.session };
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session || sessionData.session.user.is_anonymous) {
+        setSubmitting(false);
+        openAuthModal("/sell");
+        toast.error("Please sign in to publish your listing");
+        return;
       }
-      const userId = sessionData.session!.user.id;
+      const userId = sessionData.session.user.id;
 
       const { data: cat, error: catErr } = await supabase
         .from("categories")
@@ -367,7 +370,7 @@ function SellPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept={ALLOWED_IMAGE_ACCEPT}
               className="hidden"
               onChange={(e) => void handleFiles(e)}
             />

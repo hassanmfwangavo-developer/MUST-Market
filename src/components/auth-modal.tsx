@@ -7,6 +7,22 @@ import { closeAuthModal, consumePendingRedirect, useAuthModalOpen } from "@/lib/
 
 type View = "root" | "email";
 
+declare global {
+  interface Window {
+    google?: {
+      accounts?: {
+        id?: {
+          initialize: (config: {
+            client_id: string;
+            callback: (response: { credential: string }) => void;
+          }) => void;
+          renderButton: (parent: HTMLElement, options: Record<string, unknown>) => void;
+        };
+      };
+    };
+  }
+}
+
 export function AuthModal() {
   const isOpen = useAuthModalOpen();
   const navigate = useNavigate();
