@@ -427,7 +427,14 @@ function EditModal({
                 key={url + i}
                 className="group relative aspect-square overflow-hidden rounded-xl bg-surface-2"
               >
-                <img src={url} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={microUrl(url)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+
                 <button
                   type="button"
                   onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}
