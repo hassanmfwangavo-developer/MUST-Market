@@ -194,7 +194,14 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                 >
                   <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2 sm:h-20 sm:w-20">
                     {p.images?.[0] ? (
-                      <img src={p.images[0]} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={microUrl(p.images[0])}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover"
+                      />
+
                     ) : (
                       <PackageOpen className="h-6 w-6 text-muted-foreground" />
                     )}
