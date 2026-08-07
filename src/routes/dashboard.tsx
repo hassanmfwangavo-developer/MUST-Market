@@ -1,4 +1,6 @@
 import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
+import { microUrl } from "@/lib/images";
+
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -194,7 +196,14 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                 >
                   <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2 sm:h-20 sm:w-20">
                     {p.images?.[0] ? (
-                      <img src={p.images[0]} alt="" className="h-full w-full object-cover" />
+                      <img
+                        src={microUrl(p.images[0])}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover"
+                      />
+
                     ) : (
                       <PackageOpen className="h-6 w-6 text-muted-foreground" />
                     )}
@@ -418,7 +427,14 @@ function EditModal({
                 key={url + i}
                 className="group relative aspect-square overflow-hidden rounded-xl bg-surface-2"
               >
-                <img src={url} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={microUrl(url)}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+
                 <button
                   type="button"
                   onClick={() => setImages((prev) => prev.filter((_, idx) => idx !== i))}

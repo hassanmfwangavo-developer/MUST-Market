@@ -345,7 +345,14 @@ function SellPage() {
                   key={i}
                   className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-surface-2"
                 >
-                  <img src={img.preview} alt="" className="h-full w-full object-cover" />
+                  <img
+                    src={img.preview}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover"
+                  />
+
                   <button
                     type="button"
                     onClick={() => removeImage(i)}
