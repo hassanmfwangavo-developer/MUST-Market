@@ -100,18 +100,24 @@ function ProductGallery({ product }: { product: MarketProduct }) {
 
   return (
     <div>
-      <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-surface shadow-soft">
-        {hasImage ? (
-          <img src={images[active]} alt={product.title} className="h-full w-full object-cover" />
-        ) : (
-          <>
-            <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient}`} />
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
-            <div className="absolute inset-0 grid place-items-center text-8xl drop-shadow-2xl">
-              {product.emoji}
-            </div>
-          </>
-        )}
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-surface shadow-soft">
+        <SmartImage
+          src={hasImage ? detailUrl(images[active]) : undefined}
+          srcSet={hasImage ? imageSrcSet(images[active], [600, 1000, 1400], 80) : undefined}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          alt={product.title}
+          aspect="aspect-[4/5]"
+          eager
+          fallback={
+            <>
+              <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient}`} />
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
+              <div className="absolute inset-0 grid place-items-center text-8xl drop-shadow-2xl">
+                {product.emoji}
+              </div>
+            </>
+          }
+        />
         <div className="absolute left-4 top-4 rounded-full bg-accent px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)]">
           {formatTsh(product.price)}
         </div>
@@ -126,7 +132,12 @@ function ProductGallery({ product }: { product: MarketProduct }) {
                 i === active ? "border-primary" : "border-border"
               }`}
             >
-              <img src={src} alt="" className="h-full w-full object-cover" />
+              <SmartImage
+                src={microUrl(src)}
+                alt=""
+                aspect="aspect-square"
+                wrapperClassName="h-full w-full"
+              />
             </button>
           ))}
         </div>
@@ -134,6 +145,7 @@ function ProductGallery({ product }: { product: MarketProduct }) {
     </div>
   );
 }
+
 
 function ProductDetails({ product }: { product: MarketProduct }) {
   const message = `Hi! I saw "${product.title}" (${formatTsh(product.price)}) on MUST Market. Is it still available?`;
