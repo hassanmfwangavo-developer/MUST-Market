@@ -1,8 +1,10 @@
 import { Sparkles, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
-import { categories } from "@/lib/demo-data";
+import { useNavigate, Link } from "@tanstack/react-router";
+import { categoryLabel, categoryEmoji } from "@/lib/demo-data";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+
+const heroCategories = ["Electronics", "Rooms / Gheto", "Online Services"];
 
 function CountUp({
   target,
@@ -102,19 +104,20 @@ export function Hero() {
 
         {/* Category pills */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-          {categories.map((c) => (
-            <a
-              key={c.slug}
-              href={`#${c.slug}`}
+          {heroCategories.map((dbName) => (
+            <Link
+              key={dbName}
+              to="/browse"
+              search={{ category: dbName }}
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-medium text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-card"
             >
               <span className="text-base transition-transform group-hover:scale-110">
-                {c.emoji}
+                {categoryEmoji(dbName)}
               </span>
               <span className="whitespace-pre-line text-left leading-tight">
-                {c.name}
+                {categoryLabel(dbName).replace("\n", " ")}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
 
