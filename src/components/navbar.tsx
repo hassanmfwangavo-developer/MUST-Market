@@ -6,10 +6,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export function Navbar() {
   const query = useSearchQuery();
   const { user } = useAuthUser();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -64,7 +67,7 @@ export function Navbar() {
                 if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
               }
             }}
-            placeholder="Search laptops, books, hostel gear…"
+            placeholder={t.search.placeholder}
             className="h-11 w-full rounded-full border border-border bg-surface-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/80 shadow-soft transition-all focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
           />
         </div>
@@ -82,6 +85,7 @@ export function Navbar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
+          <LanguageToggle />
           {user ? (
             <div ref={menuRef} className="relative">
               <button
@@ -109,14 +113,14 @@ export function Navbar() {
                     className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
                   >
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
-                    My Dashboard
+                    {t.nav.dashboard}
                   </Link>
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/5"
                   >
                     <LogOut className="h-4 w-4" />
-                    Log out
+                    {t.nav.logout}
                   </button>
                 </div>
               )}
@@ -127,7 +131,7 @@ export function Navbar() {
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform sm:text-sm"
             >
               <UserIcon className="h-4 w-4" />
-              Sign in
+              {t.nav.login}
             </button>
           )}
         </div>
