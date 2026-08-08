@@ -80,7 +80,6 @@ export function Hero() {
               />
             </svg>
           </span>
-          .
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-center text-base text-muted-foreground sm:text-lg">
