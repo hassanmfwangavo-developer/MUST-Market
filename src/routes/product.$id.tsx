@@ -74,6 +74,14 @@ function NotFoundPage() {
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
+  const counted = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (counted.current === product.id) return;
+    counted.current = product.id;
+    void recordProductView(product.id);
+  }, [product.id]);
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
