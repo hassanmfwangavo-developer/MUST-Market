@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { type DemoProduct, formatTsh } from "@/lib/demo-data";
 import { SmartImage } from "@/components/smart-image";
 import { thumbUrl, imageSrcSet } from "@/lib/images";
+import { useLanguage } from "@/context/LanguageContext";
 
 const conditionStyle: Record<DemoProduct["condition"], string> = {
   "Like New": "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
@@ -11,6 +12,12 @@ const conditionStyle: Record<DemoProduct["condition"], string> = {
 };
 
 export function ProductCard({ product }: { product: DemoProduct }) {
+  const { t } = useLanguage();
+  const conditionLabel: Record<DemoProduct["condition"], string> = {
+    "Like New": t.productCard.condition.likeNew,
+    Good: t.productCard.condition.good,
+    Fair: t.productCard.condition.fair,
+  };
   return (
     <article className="card-hover group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft">
       <Link
@@ -45,7 +52,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
         <div
           className={`absolute right-3 top-3 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset ${conditionStyle[product.condition]} backdrop-blur`}
         >
-          {product.condition}
+          {conditionLabel[product.condition]}
         </div>
       </Link>
 
@@ -70,7 +77,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           params={{ id: product.id }}
           className="mt-1 inline-flex items-center justify-between gap-1 rounded-lg border border-border bg-surface-2 px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
         >
-          See details
+          {t.productCard.seeDetails}
           <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
       </div>

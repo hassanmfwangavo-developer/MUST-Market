@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { categoryLabel, categoryEmoji } from "@/lib/demo-data";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { useLanguage } from "@/context/LanguageContext";
 
 const heroCategories = ["Electronics", "Rooms / Gheto", "Online Services"];
 
@@ -42,6 +43,7 @@ function CountUp({
 export function Hero() {
   const navigate = useNavigate();
   const { user } = useAuthUser();
+  const { t } = useLanguage();
   const goSell = () => {
     if (user) navigate({ to: "/sell" });
     else openAuthModal("/sell");
@@ -54,14 +56,15 @@ export function Hero() {
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-surface/70 px-3.5 py-1.5 text-xs font-medium text-primary shadow-soft backdrop-blur">
             <ShieldCheck className="h-3.5 w-3.5" />
-            Trusted marketplace for Mbeya University students
+            {t.nav.trustedBadge}
           </div>
         </div>
 
         <h1 className="mx-auto mt-6 max-w-3xl text-center text-4xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-5xl md:text-6xl">
-          Buy &amp; sell used student items at{" "}
+          {t.hero.titlePrefix}
           <span className="relative inline-block whitespace-nowrap">
-            <span className="text-primary">MUST</span> instantly
+            <span className="text-primary">{t.hero.titleHighlight}</span>
+            {t.hero.titleSuffix}
             <svg
               aria-hidden
               viewBox="0 0 260 12"
@@ -77,11 +80,10 @@ export function Hero() {
               />
             </svg>
           </span>
-          .
         </h1>
 
         <p className="mx-auto mt-5 max-w-xl text-center text-base text-muted-foreground sm:text-lg">
-          Buy & sell campus essentials. Connect via WhatsApp instantly.
+          {t.hero.subtitle}
         </p>
 
         {/* CTAs */}
@@ -92,13 +94,13 @@ export function Hero() {
             className="btn-shine group inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:w-auto"
           >
             <Sparkles className="h-4 w-4" strokeWidth={2.5} />
-            Sell for Free
+            {t.hero.sellBtn}
           </button>
           <a
             href="#browse"
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border-2 border-primary/80 bg-surface px-6 py-3.5 text-sm font-semibold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-primary-soft sm:w-auto"
           >
-            Browse the Marketplace
+            {t.hero.browseBtn}
           </a>
         </div>
 
@@ -124,9 +126,9 @@ export function Hero() {
         {/* Social proof strip */}
         <div className="mt-6 grid grid-cols-3 gap-3 sm:mt-10 sm:gap-6">
           {[
-            { node: <CountUp target={90} suffix="+" />, v: "Active listings" },
-            { node: <CountUp target={1700} suffix="+" />, v: "MUST students" },
-            { node: <>&lt; 2 min</>, v: "Avg. reply time" },
+            { node: <CountUp target={90} suffix="+" />, v: t.hero.activeListings },
+            { node: <CountUp target={1700} suffix="+" />, v: t.hero.mustStudents },
+            { node: <>&lt; 2 min</>, v: t.hero.avgReply },
           ].map((s) => (
             <div
               key={s.v}
