@@ -51,10 +51,6 @@ export function ProductCard({ product }: { product: DemoProduct }) {
 
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
-        <span className="inline-flex w-fit items-center gap-1 rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-semibold text-primary">
-          <span>{categoryEmoji(product.category)}</span>
-          <span className="truncate">{product.category}</span>
-        </span>
         <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-[15px]">
           {product.title}
         </h3>
