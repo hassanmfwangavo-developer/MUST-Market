@@ -175,7 +175,7 @@ export const translations = {
       tagline: "Soko la mwanafunzi kwa mwanafunzi ndani ya MUST.",
     },
   },
-} as const;
+};
 
 export type Language = keyof typeof translations;
 export type Dictionary = (typeof translations)["en"];
