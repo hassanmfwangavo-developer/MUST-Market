@@ -29,7 +29,12 @@ export const Route = createFileRoute("/browse")({
 });
 
 function BrowsePage() {
-  const [active, setActive] = useState<string>("All");
+  const search = Route.useSearch();
+  const initialCategory =
+    typeof search.category === "string" && categories.some((c) => c.dbName === search.category)
+      ? search.category
+      : "All";
+  const [active, setActive] = useState<string>(initialCategory);
   const query = useSearchQuery();
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
