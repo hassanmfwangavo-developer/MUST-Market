@@ -10,28 +10,6 @@ import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 
 export const Route = createFileRoute("/browse")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    category: typeof search.category === "string" ? search.category : undefined,
-  }),
-  head: () => ({
-    meta: [
-      { title: "Browse All Products — MUST Market" },
-      {
-        name: "description",
-        content:
-          "Explore every active listing on MUST Market — laptops, books, hostel gear and more from Mbeya University students.",
-      },
-      { property: "og:title", content: "Browse All Products — MUST Market" },
-      {
-        property: "og:description",
-        content: "Every active listing from MUST students, in one place.",
-      },
-    ],
-  }),
-  component: BrowsePage,
-});
-
-export const Route = createFileRoute("/browse")({
   head: () => ({
     meta: [
       { title: "Browse All Products — MUST Market" },
