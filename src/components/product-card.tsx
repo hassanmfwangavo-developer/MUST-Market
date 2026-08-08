@@ -1,6 +1,6 @@
 import { MapPin, ShieldCheck, ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { type DemoProduct, formatTsh, categoryEmoji } from "@/lib/demo-data";
+import { type DemoProduct, formatTsh } from "@/lib/demo-data";
 import { SmartImage } from "@/components/smart-image";
 import { thumbUrl, imageSrcSet } from "@/lib/images";
 
