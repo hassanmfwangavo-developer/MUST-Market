@@ -127,7 +127,7 @@ export interface CategoryDef {
 
 export const categories: CategoryDef[] = [
   { name: "Electronics", dbName: "Electronics", slug: "electronics", emoji: "💻" },
-  { name: "Room\nItems", dbName: "Room/Hostel Gear", slug: "room-hostel", emoji: "🛏️" },
+  { name: "Home\nItems", dbName: "Room/Hostel Gear", slug: "room-hostel", emoji: "🛏️" },
   { name: "Books/Stationery", dbName: "Books/Stationery", slug: "books", emoji: "📚" },
   { name: "Fashion", dbName: "Fashion", slug: "fashion", emoji: "👕" },
   { name: "Online\nServices", dbName: "Online Services", slug: "online-services", emoji: "📶" },
