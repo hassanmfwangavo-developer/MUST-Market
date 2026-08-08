@@ -1,6 +1,6 @@
 import { openAuthModal } from "@/lib/auth-store";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
