@@ -1,7 +1,7 @@
 import { Sparkles, ShieldCheck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { categories, categoryLabel, categoryEmoji } from "@/lib/demo-data";
+import { categoryLabel, categoryEmoji } from "@/lib/demo-data";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
 const heroCategories = ["Electronics", "Rooms / Gheto", "Online Services"];
