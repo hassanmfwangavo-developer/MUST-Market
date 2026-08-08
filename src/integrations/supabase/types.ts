@@ -141,7 +141,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_product_view: {
+        Args: { _product_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       product_condition: "Like New" | "Good" | "Fair"

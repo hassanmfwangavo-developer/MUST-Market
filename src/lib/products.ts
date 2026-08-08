@@ -91,3 +91,12 @@ export function whatsappUrl(number: string | undefined, message: string) {
   const base = digits ? `https://wa.me/${digits}` : "https://wa.me/";
   return `${base}?text=${encodeURIComponent(message)}`;
 }
+
+// Atomically records one view for a listing. Safe to call from any visitor.
+export async function recordProductView(id: string) {
+  try {
+    await supabase.rpc("increment_product_view", { _product_id: id });
+  } catch {
+    // View tracking must never break the page.
+  }
+}
