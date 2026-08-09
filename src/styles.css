@@ -176,3 +176,28 @@
     transform: translateX(120%);
   }
 }
+
+@utility marquee-track {
+  animation: marquee-x 38s linear infinite;
+  &:hover {
+    animation-play-state: paused;
+  }
+  &:active {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes marquee-x {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

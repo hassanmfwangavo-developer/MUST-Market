@@ -10,6 +10,9 @@ import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 
 export const Route = createFileRoute("/browse")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: typeof search.category === "string" ? search.category : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Browse All Products — MUST Market" },
