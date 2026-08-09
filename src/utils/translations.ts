@@ -196,6 +196,34 @@ export const translations = {
       deleteItem: "Futa Tangazo",
       noListings: "Hujaweka bidhaa yoyote sokoni bado.",
     },
+    testimonials: {
+      badge: "Sauti za Wanafunzi",
+      title: "Wanafunzi halisi wa MUST. Biashara halisi.",
+      subtitle: "Haya ndiyo wanafunzi wenzako wanasema baada ya kununua na kuuza MUST Market.",
+    },
+    faq: {
+      badge: "MASWALI",
+      title: "Maswali yanayoulizwa mara kwa mara",
+      subtitle: "Kila unachohitaji kujua kabla ya biashara yako ya kwanza.",
+      items: [
+        {
+          q: "Nawekaje tangazo la bidhaa?",
+          a: "Bonyeza 'Uza Bure', jaza maelezo ya bidhaa na picha, kisha chapisha papo hapo.",
+        },
+        {
+          q: "Nabadilishaje au kufuta tangazo langu?",
+          a: "Nenda 'Akaunti Yangu', ambapo unaweza kuweka bidhaa kama 'Imeuzwa' au kufuta tangazo.",
+        },
+        {
+          q: "Wanunuzi na wauzaji wanawasilianaje?",
+          a: "Mnunuzi anabonyeza 'Agiza kupitia WhatsApp' kwenye bidhaa ili kuanza mazungumzo na muuzaji moja kwa moja.",
+        },
+        {
+          q: "Je, MUST Market ni bure?",
+          a: "Ndiyo, kuweka matangazo na kukagua soko ni bure 100% kwa wanafunzi wote.",
+        },
+      ],
+    },
     footer: {
       terms: "Masharti ya Utumiaji",
       privacy: "Sera ya Faragha",
