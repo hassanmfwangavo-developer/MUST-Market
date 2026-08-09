@@ -80,6 +80,26 @@ export const translations = {
       deleteItem: "Delete Listing",
       noListings: "You haven't posted any items yet.",
     },
+    howItWorks: {
+      badge: "How it works",
+      title: "How MUST Market Works",
+      subtitle: "Three simple steps between you and your next campus deal.",
+      stepLabel: "Step",
+      steps: [
+        {
+          title: "List Your Item",
+          body: "Fill out our seamless form with product specifications, locations around MUST, and your phone number.",
+        },
+        {
+          title: "Direct Chat",
+          body: "Interested buyers tap 'Order Now' to instantly open a WhatsApp conversation with a pre-filled trade deal.",
+        },
+        {
+          title: "Safe Meetup",
+          body: "Meet up at a safe spot — the Library, Academic Blocks, or a busy area near the hostels — to test and exchange safely.",
+        },
+      ],
+    },
     testimonials: {
       badge: "Community Voices",
       title: "Real MUST students. Real trades.",
@@ -195,6 +215,26 @@ export const translations = {
       soldStatus: "Weka Kama Imeuzwa",
       deleteItem: "Futa Tangazo",
       noListings: "Hujaweka bidhaa yoyote sokoni bado.",
+    },
+    howItWorks: {
+      badge: "Inavyofanya kazi",
+      title: "MUST Market Inavyofanya Kazi",
+      subtitle: "Hatua tatu rahisi kati yako na biashara yako ijayo chuoni.",
+      stepLabel: "Hatua",
+      steps: [
+        {
+          title: "Weka Bidhaa Yako",
+          body: "Jaza fomu rahisi ukiweka maelezo ya bidhaa, eneo lako karibu na MUST, na namba yako ya simu.",
+        },
+        {
+          title: "Mazungumzo ya Moja kwa Moja",
+          body: "Mnunuzi anabonyeza 'Agiza Sasa' na kufungua mazungumzo ya WhatsApp na ujumbe tayari umeandaliwa.",
+        },
+        {
+          title: "Kukutana Salama",
+          body: "Kutana sehemu salama — Maktaba, Majengo ya Masomo, au eneo lenye watu karibu na hosteli — kukagua na kubadilishana salama.",
+        },
+      ],
     },
     testimonials: {
       badge: "Sauti za Wanafunzi",

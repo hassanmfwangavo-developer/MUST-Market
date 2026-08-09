@@ -118,6 +118,7 @@ export function ProductGrid() {
           <div className="mt-10 flex flex-col items-center gap-2">
             <Link
               to="/browse"
+              search={{ category: undefined }}
               className="btn-shine inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lift transition-transform hover:-translate-y-0.5"
             >
               View All Products
