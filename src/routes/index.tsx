@@ -35,6 +35,7 @@ function Index() {
         <HowItWorks />
         <ProductGrid />
         <Testimonials />
+        <FAQ />
       </main>
       <Footer />
     </div>
