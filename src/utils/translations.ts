@@ -216,6 +216,26 @@ export const translations = {
       deleteItem: "Futa Tangazo",
       noListings: "Hujaweka bidhaa yoyote sokoni bado.",
     },
+    howItWorks: {
+      badge: "Inavyofanya kazi",
+      title: "MUST Market Inavyofanya Kazi",
+      subtitle: "Hatua tatu rahisi kati yako na biashara yako ijayo chuoni.",
+      stepLabel: "Hatua",
+      steps: [
+        {
+          title: "Weka Bidhaa Yako",
+          body: "Jaza fomu rahisi ukiweka maelezo ya bidhaa, eneo lako karibu na MUST, na namba yako ya simu.",
+        },
+        {
+          title: "Mazungumzo ya Moja kwa Moja",
+          body: "Mnunuzi anabonyeza 'Agiza Sasa' na kufungua mazungumzo ya WhatsApp na ujumbe tayari umeandaliwa.",
+        },
+        {
+          title: "Kukutana Salama",
+          body: "Kutana sehemu salama — Maktaba, Majengo ya Masomo, au eneo lenye watu karibu na hosteli — kukagua na kubadilishana salama.",
+        },
+      ],
+    },
     testimonials: {
       badge: "Sauti za Wanafunzi",
       title: "Wanafunzi halisi wa MUST. Biashara halisi.",
