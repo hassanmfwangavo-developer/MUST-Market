@@ -80,6 +80,26 @@ export const translations = {
       deleteItem: "Delete Listing",
       noListings: "You haven't posted any items yet.",
     },
+    howItWorks: {
+      badge: "How it works",
+      title: "How MUST Market Works",
+      subtitle: "Three simple steps between you and your next campus deal.",
+      stepLabel: "Step",
+      steps: [
+        {
+          title: "List Your Item",
+          body: "Fill out our seamless form with product specifications, locations around MUST, and your phone number.",
+        },
+        {
+          title: "Direct Chat",
+          body: "Interested buyers tap 'Order Now' to instantly open a WhatsApp conversation with a pre-filled trade deal.",
+        },
+        {
+          title: "Safe Meetup",
+          body: "Meet up at a safe spot — the Library, Academic Blocks, or a busy area near the hostels — to test and exchange safely.",
+        },
+      ],
+    },
     testimonials: {
       badge: "Community Voices",
       title: "Real MUST students. Real trades.",
