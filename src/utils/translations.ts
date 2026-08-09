@@ -80,6 +80,34 @@ export const translations = {
       deleteItem: "Delete Listing",
       noListings: "You haven't posted any items yet.",
     },
+    testimonials: {
+      badge: "Community Voices",
+      title: "Real MUST students. Real trades.",
+      subtitle: "Here's what your fellow students say after buying and selling on MUST Market.",
+    },
+    faq: {
+      badge: "FAQ",
+      title: "Frequently asked questions",
+      subtitle: "Everything you need to know before your first trade.",
+      items: [
+        {
+          q: "How do I post an item for sale?",
+          a: "Click 'Sell for Free', fill in your product details and photos, and publish instantly.",
+        },
+        {
+          q: "How do I edit or delete my listed item?",
+          a: "Go to 'My Dashboard', where you can mark items as 'Sold' or 'Delete Listing'.",
+        },
+        {
+          q: "How do buyers and sellers communicate?",
+          a: "Buyers click 'Order via WhatsApp' on any item card to open a direct chat with the seller.",
+        },
+        {
+          q: "Is MUST Market free to use?",
+          a: "Yes, posting and browsing listings on MUST Market is 100% free for all students.",
+        },
+      ],
+    },
     footer: {
       terms: "Terms of Service",
       privacy: "Privacy Policy",
