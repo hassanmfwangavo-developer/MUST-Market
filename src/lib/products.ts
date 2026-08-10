@@ -14,6 +14,7 @@ export interface MarketProduct extends DemoProduct {
   whatsapp?: string;
   deliveryTimeframe?: string;
   createdAt?: string;
+  viewCount?: number;
   isDemo?: boolean;
 }
 
@@ -27,6 +28,7 @@ interface DbProductRow {
   images: string[] | null;
   whatsapp_number?: string | null;
   delivery_timeframe: string | null;
+  view_count?: number | null;
   created_at: string;
   categories: { name: string; slug: string } | null;
 }
@@ -48,6 +50,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     whatsapp: row.whatsapp_number ?? undefined,
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
     createdAt: row.created_at,
+    viewCount: row.view_count ?? 0,
     isDemo: false,
   };
 }
@@ -56,7 +59,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
 // database with column-level grants), so we only request the column when a
 // session exists.
 const BASE_COLUMNS =
-  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,created_at,categories(name,slug)";
+  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,created_at,categories(name,slug)";
 
 async function selectColumns(): Promise<string> {
   const { data } = await supabase.auth.getSession();
