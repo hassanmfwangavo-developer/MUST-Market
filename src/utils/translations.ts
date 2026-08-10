@@ -146,7 +146,7 @@ export const translations = {
       trustedBadge: "Soko la kuaminika la wanafunzi wa MUST",
     },
     hero: {
-      titlePrefix: "Nunua na uze vitu vya wanafunzi ",
+      titlePrefix: "Nunua na uuze vitu used vya wanafunzi wa\u00a0",
       titleHighlight: "MUST ",
       titleSuffix: "kwa haraka.",
       subtitle: "Uza na ununue mahitaji ya chuo. Ungana na muuzaji WhatsApp papo hapo.",
