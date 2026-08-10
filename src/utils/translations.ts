@@ -146,12 +146,12 @@ export const translations = {
       trustedBadge: "Soko la kuaminika la wanafunzi wa MUST",
     },
     hero: {
-      titlePrefix: "Nunua na uuze vitu used vya wanafunzi wa\u00a0",
+      titlePrefix: "Nunua na uuze vitu used vya wana\u00a0",
       titleHighlight: "MUST ",
       titleSuffix: "kwa haraka.",
       subtitle: "Uza na ununue mahitaji ya chuo. Ungana na muuzaji WhatsApp papo hapo.",
       sellBtn: "Uza Bure",
-      browseBtn: "Kagua Sokoni",
+      browseBtn: "Angalia Bidhaa",
       activeListings: "BIDHAA SOKONI",
       mustStudents: "WANAFUNZI MUST",
       avgReply: "MUDA WA KUJIBU",
@@ -247,11 +247,11 @@ export const translations = {
       subtitle: "Kila unachohitaji kujua kabla ya biashara yako ya kwanza.",
       items: [
         {
-          q: "Nawekaje tangazo la bidhaa?",
+          q: "Napost\u00a0 vipi\u00a0 bidhaa yangu?",
           a: "Bonyeza 'Uza Bure', jaza maelezo ya bidhaa na picha, kisha chapisha papo hapo.",
         },
         {
-          q: "Nabadilishaje au kufuta tangazo langu?",
+          q: "Nabadilishaje au kufuta bidhaa yangu?",
           a: "Nenda 'Akaunti Yangu', ambapo unaweza kuweka bidhaa kama 'Imeuzwa' au kufuta tangazo.",
         },
         {
