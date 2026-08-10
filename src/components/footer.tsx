@@ -3,7 +3,12 @@ import { Link } from "@tanstack/react-router";
 import { Instagram, MessageSquare, X } from "lucide-react";
 
 type InfoKey =
-  "buyer-tips" | "seller-tips" | "report" | "rules" | "mission" | "contact" | "privacy" | "terms";
+  | "buyer-tips"
+  | "seller-tips"
+  | "report"
+  | "rules"
+  | "mission"
+  | "contact";
 
 const INFO: Record<InfoKey, { title: string; body: string[] }> = {
   "buyer-tips": {
@@ -50,22 +55,6 @@ const INFO: Record<InfoKey, { title: string; body: string[] }> = {
     title: "Contact",
     body: ["WhatsApp: +255 674 044 676", "Email: hassanmfwangavo49@gmail.com"],
   },
-  privacy: {
-    title: "Privacy",
-    body: [
-      "We only store what your listing needs: title, description, price, location, images and your WhatsApp number.",
-      "Your number is shared with buyers so they can chat you on WhatsApp — that's the whole point of the marketplace.",
-      "We don't sell your data. Ever.",
-    ],
-  },
-  terms: {
-    title: "Terms",
-    body: [
-      "MUST Market is a peer-to-peer marketplace. We connect buyers and sellers but we are not a party to any transaction.",
-      "By listing an item, you confirm you are a current MUST student and the item is accurately described.",
-      "Scams, counterfeit goods, and prohibited items are banned and will be removed.",
-    ],
-  },
 };
 
 export function Footer() {
@@ -76,7 +65,6 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:px-8">
         <div>
           <div className="flex items-center gap-2">
-            {/* LOGO YAKO HALISI */}
             <img
               src="/favicon-32x32.png"
               alt="MUST Market Logo"
@@ -87,8 +75,8 @@ export function Footer() {
             </span>
           </div>
           <p className="mt-3 max-w-md text-sm text-muted-foreground">
-            The peer-to-peer marketplace built by and for Mbeya University of Science and Technology
-            students.
+            The peer-to-peer marketplace built by and for Mbeya University of Science and
+            Technology students.
           </p>
           <Link
             to="/feedback"
@@ -115,13 +103,13 @@ export function Footer() {
             items={[
               { label: "Our mission", key: "mission" },
               { label: "Contact", key: "contact" },
-              { label: "Privacy", key: "privacy" },
-              { label: "Terms", key: "terms" },
             ]}
             onOpen={setOpen}
             extraLinks={[
               { label: "Meet the Founder", to: "/meet-the-founder" },
               { label: "Feedback & Suggestions", to: "/feedback" },
+              { label: "Privacy Policy", to: "/privacy" },
+              { label: "Terms of Service", to: "/terms" },
             ]}
           />
         </div>
@@ -131,7 +119,6 @@ export function Footer() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-muted-foreground sm:flex-row sm:px-6 lg:px-8">
           <span>© {new Date().getFullYear()} MUST Market. Built by students, for students.</span>
 
-          {/* INSTAGRAM PEKEE YENYE LINK YAKO HALISI */}
           <div className="flex items-center gap-3">
             <a
               href="https://www.instagram.com/must_market01?igsh=MTUwdHhoMXNkZ3kxcA=="
