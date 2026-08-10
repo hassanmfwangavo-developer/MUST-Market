@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText, AlertCircle } from "lucide-react";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -30,43 +30,68 @@ function TermsPage() {
           to="/"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" /> Home
+          <ArrowLeft className="h-4 w-4" /> Back to Homepage
         </Link>
-        <h1 className="mt-6 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-          Terms of Service
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">Last updated: July 2026</p>
+        <div className="mt-6 flex items-center gap-3">
+          <FileText className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            Terms of Service
+          </h1>
+        </div>
+        <p className="mt-2 text-sm text-muted-foreground">Last updated: August 2026</p>
 
-        <div className="prose prose-sm mt-8 max-w-none space-y-6 text-foreground">
-          <Section title="1. Who can use MUST Market">
-            You must be a current Mbeya University of Science and Technology student, staff member,
-            or invited guest to post listings. Buyers can be anyone connected to the MUST community.
+        <div className="mt-8 space-y-6">
+          <Section title="1. Platform Identity & Purpose">
+            MUST Market is a digital platform connecting students and the community at Mbeya
+            University of Science and Technology (MUST) to trade goods and services conveniently.
+            MUST Market acts solely as a venue and does not own or directly sell any listed items.
           </Section>
-          <Section title="2. What you can sell">
-            Only lawful, personal, second-hand items you own — laptops, books, hostel gear, small
-            electronics. No counterfeit goods, no bulk commercial products, no clothing resale, no
-            restricted or dangerous items.
+
+          <Section title="2. Seller Responsibilities">
+            <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+              <li>
+                Sellers must provide accurate information, genuine photos, and correct pricing for
+                all listings.
+              </li>
+              <li>
+                Posting illegal items, explosives, narcotics, weapons, or any items violating Mbeya
+                University of Science and Technology (MUST) regulations and the laws of the United
+                Republic of Tanzania is strictly prohibited.
+              </li>
+              <li>
+                Sellers must update their listing status to &quot;Sold&quot; as soon as a transaction is
+                completed to maintain platform transparency.
+              </li>
+            </ul>
           </Section>
-          <Section title="3. Honest listings">
-            Titles, descriptions, photos, and prices must reflect the real item. Misleading listings
-            are removed and the account may be banned.
+
+          <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-5">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+              <div>
+                <h2 className="text-lg font-semibold text-amber-900">
+                  3. Transaction Safety & Guidelines
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-amber-800">
+                  <span className="font-semibold">Safety Notice:</span> Students are strongly
+                  advised to meet in well-lit, public campus areas (e.g., Cafeteria, Lecture Blocks,
+                  or Library) to inspect items before making payments. Never transfer funds before
+                  physically inspecting the product.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Section title="4. Limitation of Liability">
+            MUST Market is not liable for financial disputes, product condition, or agreements made
+            directly between buyers and sellers. All transactions are conducted at the discretion of
+            both parties.
           </Section>
-          <Section title="4. Safe meetups">
-            All trades happen in person at safe, public spots — the Library, Academic Blocks, or a
-            busy area near the hostels. Never share OTPs, never send money before inspecting an
-            item.
-          </Section>
-          <Section title="5. Content ownership">
-            You keep ownership of your photos and text. By posting, you grant MUST Market a limited
-            license to display them on the marketplace.
-          </Section>
-          <Section title="6. Account termination">
-            We may remove listings or suspend accounts that break these rules, at our discretion, to
-            keep the community safe.
-          </Section>
-          <Section title="7. Changes">
-            We may update these terms as the platform grows. Material changes will be announced on
-            the homepage.
+
+          <Section title="5. Governing Law">
+            These terms are governed by and construed in accordance with the Laws of the United
+            Republic of Tanzania and the Student By-Laws of Mbeya University of Science and
+            Technology (MUST).
           </Section>
         </div>
       </main>
@@ -79,7 +104,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <div>
       <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{children}</p>
+      <div className="mt-2 text-sm leading-relaxed text-muted-foreground">{children}</div>
     </div>
   );
 }
