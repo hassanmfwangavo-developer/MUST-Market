@@ -3,7 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { type DemoProduct, formatTsh } from "@/lib/demo-data";
 import { SmartImage } from "@/components/smart-image";
 import { thumbUrl, imageSrcSet } from "@/lib/images";
-import { useLanguage } from "@/context/LanguageContext";
 
 const conditionStyle: Record<DemoProduct["condition"], string> = {
   "Like New": "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
@@ -12,12 +11,6 @@ const conditionStyle: Record<DemoProduct["condition"], string> = {
 };
 
 export function ProductCard({ product }: { product: DemoProduct }) {
-  const { t } = useLanguage();
-  const conditionLabel: Record<DemoProduct["condition"], string> = {
-    "Like New": t.productCard.condition.likeNew,
-    Good: t.productCard.condition.good,
-    Fair: t.productCard.condition.fair,
-  };
   return (
     <article className="card-hover group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft">
       <Link
