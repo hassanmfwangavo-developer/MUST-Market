@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
-import { fetchProduct, whatsappUrl, recordProductView, type MarketProduct } from "@/lib/products";
+import { fetchProduct, whatsappUrl, recordProductView, recordWhatsappClick, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
 
@@ -221,6 +221,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
       {product.whatsapp ? (
         <a
           href={waHref}
+          onClick={() => void recordWhatsappClick(product.id)}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lift transition-transform hover:-translate-y-0.5"

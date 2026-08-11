@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, LogOut, Search, ShoppingBag, User as UserIcon } from "lucide-react";
+import { LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { isAdminEmail } from "@/lib/admin";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -115,6 +116,16 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                     {t.nav.dashboard}
                   </Link>
+                  {isAdminEmail(user.email) && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                    >
+                      <ShieldCheck className="h-4 w-4 text-primary" />
+                      Admin Panel
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/5"
