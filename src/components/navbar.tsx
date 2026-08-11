@@ -116,6 +116,16 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                     {t.nav.dashboard}
                   </Link>
+                  {isAdminEmail(user.email) && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                    >
+                      <ShieldCheck className="h-4 w-4 text-primary" />
+                      Admin Panel
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-destructive hover:bg-destructive/5"
