@@ -221,6 +221,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
       {product.whatsapp ? (
         <a
           href={waHref}
+          onClick={() => void recordWhatsappClick(product.id)}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-shine inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-6 py-4 text-base font-semibold text-white shadow-lift transition-transform hover:-translate-y-0.5"
