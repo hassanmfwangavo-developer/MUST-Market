@@ -29,6 +29,7 @@ interface DbProductRow {
   whatsapp_number?: string | null;
   delivery_timeframe: string | null;
   view_count?: number | null;
+  status?: "active" | "sold" | "hidden" | null;
   created_at: string;
   categories: { name: string; slug: string } | null;
 }
@@ -47,6 +48,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     gradient: FALLBACK_GRADIENTS[idx % FALLBACK_GRADIENTS.length],
     emoji: "📦",
     description: row.description,
+    status: row.status ?? "active",
     whatsapp: row.whatsapp_number ?? undefined,
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
     createdAt: row.created_at,
@@ -59,7 +61,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
 // database with column-level grants), so we only request the column when a
 // session exists.
 const BASE_COLUMNS =
-  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,created_at,categories(name,slug)";
+  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,status,created_at,categories(name,slug)";
 
 async function selectColumns(): Promise<string> {
   const { data } = await supabase.auth.getSession();
@@ -70,7 +72,10 @@ export async function fetchProducts(): Promise<MarketProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(await selectColumns())
-    .eq("status", "active")
+    // Sold items stay visible (with a SOLD OUT overlay) — only hidden ones drop out.
+    .in("status", ["active", "sold"])
+    // Enum order puts 'active' before 'sold', so live listings surface first.
+    .order("status", { ascending: true })
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []).map((r, i) => rowToProduct(r as unknown as DbProductRow, i));
