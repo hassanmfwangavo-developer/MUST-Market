@@ -12,6 +12,7 @@ export interface DemoProduct {
   gradient: string;
   emoji: string;
   description: string;
+  status?: "active" | "sold" | "hidden";
 }
 
 // Placeholder gradients acting as high-res image stand-ins until sellers upload real photos.

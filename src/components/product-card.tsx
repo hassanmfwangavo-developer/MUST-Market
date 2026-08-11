@@ -11,32 +11,48 @@ const conditionStyle: Record<DemoProduct["condition"], string> = {
 };
 
 export function ProductCard({ product }: { product: DemoProduct }) {
+  const isSold = product.status === "sold";
+
   return (
-    <article className="card-hover group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft">
+    <article
+      className={`card-hover group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-soft ${
+        isSold ? "opacity-90" : ""
+      }`}
+    >
       <Link
         to="/product/$id"
         params={{ id: product.id }}
         className="relative block overflow-hidden"
       >
-        <SmartImage
-          src={product.image ? thumbUrl(product.image) : undefined}
-          srcSet={product.image ? imageSrcSet(product.image, [200, 400, 600]) : undefined}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          alt={product.title}
-          aspect="aspect-[4/5]"
-          className="transition-transform duration-700 group-hover:scale-105"
-          fallback={
-            <>
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${product.gradient} transition-transform duration-700 group-hover:scale-105`}
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
-              <div className="absolute inset-0 grid place-items-center text-6xl opacity-90 drop-shadow-lg">
-                {product.emoji}
-              </div>
-            </>
-          }
-        />
+        <div className={isSold ? "saturate-50" : ""}>
+          <SmartImage
+            src={product.image ? thumbUrl(product.image) : undefined}
+            srcSet={product.image ? imageSrcSet(product.image, [200, 400, 600]) : undefined}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            alt={product.title}
+            aspect="aspect-[4/5]"
+            className="transition-transform duration-700 group-hover:scale-105"
+            fallback={
+              <>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${product.gradient} transition-transform duration-700 group-hover:scale-105`}
+                />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_55%)]" />
+                <div className="absolute inset-0 grid place-items-center text-6xl opacity-90 drop-shadow-lg">
+                  {product.emoji}
+                </div>
+              </>
+            }
+          />
+        </div>
+
+        {isSold && (
+          <div className="pointer-events-none absolute inset-0 grid place-items-center bg-slate-900/55 backdrop-blur-[1px]">
+            <span className="-rotate-6 rounded-lg bg-destructive px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-destructive-foreground shadow-lift sm:text-sm">
+              Sold out! 🔥
+            </span>
+          </div>
+        )}
 
         <div className="absolute left-3 top-3 rounded-full bg-accent/95 px-3 py-1 text-xs font-bold text-accent-foreground shadow-[var(--shadow-amber)] backdrop-blur">
           {formatTsh(product.price)}
@@ -48,6 +64,7 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           {product.condition}
         </div>
       </Link>
+
 
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
@@ -70,9 +87,10 @@ export function ProductCard({ product }: { product: DemoProduct }) {
           params={{ id: product.id }}
           className="mt-1 inline-flex items-center justify-between gap-1 rounded-lg border border-border bg-surface-2 px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
         >
-          See details
+          {isSold ? "Item sold" : "See details"}
           <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
+
       </div>
     </article>
   );

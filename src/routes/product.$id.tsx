@@ -129,9 +129,17 @@ function ProductGallery({ product }: { product: MarketProduct }) {
             </>
           }
         />
+        {product.status === "sold" && (
+          <div className="pointer-events-none absolute inset-0 grid place-items-center bg-slate-900/55">
+            <span className="-rotate-6 rounded-xl bg-destructive px-5 py-2.5 text-lg font-extrabold uppercase tracking-wide text-destructive-foreground shadow-lift">
+              Sold out! 🔥
+            </span>
+          </div>
+        )}
         <div className="absolute left-4 top-4 rounded-full bg-accent px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)]">
           {formatTsh(product.price)}
         </div>
+
       </div>
       {images.length > 1 && (
         <div className="mt-3 flex gap-2">
@@ -218,7 +226,15 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         </span>
       </div>
 
-      {product.whatsapp ? (
+      {product.status === "sold" ? (
+        <button
+          type="button"
+          disabled
+          className="inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-muted px-6 py-4 text-base font-semibold text-muted-foreground"
+        >
+          Item Sold
+        </button>
+      ) : product.whatsapp ? (
         <a
           href={waHref}
           onClick={() => void recordWhatsappClick(product.id)}
@@ -239,6 +255,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
           Sign in to order via WhatsApp
         </button>
       )}
+
 
       <Link
         to="/report/$id"
