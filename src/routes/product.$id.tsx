@@ -226,7 +226,15 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         </span>
       </div>
 
-      {product.whatsapp ? (
+      {product.status === "sold" ? (
+        <button
+          type="button"
+          disabled
+          className="inline-flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-muted px-6 py-4 text-base font-semibold text-muted-foreground"
+        >
+          Item Sold
+        </button>
+      ) : product.whatsapp ? (
         <a
           href={waHref}
           onClick={() => void recordWhatsappClick(product.id)}
@@ -247,6 +255,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
           Sign in to order via WhatsApp
         </button>
       )}
+
 
       <Link
         to="/report/$id"
