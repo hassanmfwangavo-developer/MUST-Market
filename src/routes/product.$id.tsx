@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
-import { fetchProduct, whatsappUrl, recordProductView, type MarketProduct } from "@/lib/products";
+import { fetchProduct, whatsappUrl, recordProductView, recordWhatsappClick, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
 

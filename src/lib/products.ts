@@ -103,3 +103,13 @@ export async function recordProductView(id: string) {
     // View tracking must never break the page.
   }
 }
+
+// Records one "Order via WhatsApp" click. Signed-in visitors only (contact
+// details are gated behind sign-in anyway).
+export async function recordWhatsappClick(id: string) {
+  try {
+    await supabase.rpc("increment_whatsapp_click", { _product_id: id });
+  } catch {
+    // Click tracking must never break the page.
+  }
+}
