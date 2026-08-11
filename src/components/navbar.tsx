@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, LogOut, Search, ShoppingBag, User as UserIcon } from "lucide-react";
+import { LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { isAdminEmail } from "@/lib/admin";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
