@@ -15,6 +15,7 @@ export interface MarketProduct extends DemoProduct {
   deliveryTimeframe?: string;
   createdAt?: string;
   viewCount?: number;
+  featuredShelf?: string | null;
   isDemo?: boolean;
 }
 
@@ -29,6 +30,7 @@ interface DbProductRow {
   whatsapp_number?: string | null;
   delivery_timeframe: string | null;
   view_count?: number | null;
+  featured_shelf?: string | null;
   status?: "active" | "sold" | "hidden" | null;
   created_at: string;
   categories: { name: string; slug: string } | null;
@@ -53,6 +55,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
     createdAt: row.created_at,
     viewCount: row.view_count ?? 0,
+    featuredShelf: row.featured_shelf ?? null,
     isDemo: false,
   };
 }
@@ -61,7 +64,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
 // database with column-level grants), so we only request the column when a
 // session exists.
 const BASE_COLUMNS =
-  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,status,created_at,categories(name,slug)";
+  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,featured_shelf,status,created_at,categories(name,slug)";
 
 async function selectColumns(): Promise<string> {
   const { data } = await supabase.auth.getSession();

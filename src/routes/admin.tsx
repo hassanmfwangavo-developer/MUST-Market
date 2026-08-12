@@ -11,6 +11,9 @@ import {
   Search,
   ShieldCheck,
   Trash2,
+  ArrowUp,
+  ArrowDown,
+  LayoutList,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/navbar";
@@ -18,6 +21,7 @@ import { Footer } from "@/components/footer";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { ADMIN_EMAIL } from "@/lib/admin";
+import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -43,6 +47,7 @@ interface AdminProduct {
   whatsapp_clicks_count: number;
   whatsapp_number: string | null;
   images: string[] | null;
+  featured_shelf: string | null;
   created_at: string;
 }
 
@@ -50,7 +55,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,created_at",
+      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -167,6 +172,23 @@ function AdminConsole() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const assignShelf = useMutation({
+    mutationFn: async ({ id, shelf }: { id: string; shelf: string }) => {
+      const { error } = await supabase
+        .from("products")
+        .update({ featured_shelf: shelf === "" ? null : shelf })
+        .eq("id", id);
+      if (error) throw error;
+      return shelf;
+    },
+    onSuccess: (shelf) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(shelf ? "Shelf updated" : "Removed from shelf");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
@@ -182,6 +204,8 @@ function AdminConsole() {
             </p>
           </div>
         </div>
+
+        <ShelfManager />
 
         <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard label="Active listings" value={kpis.active} icon={<PackageOpen className="h-4 w-4" />} />
@@ -257,6 +281,18 @@ function AdminConsole() {
                   >
                     {p.status}
                   </span>
+                  <select
+                    value={p.featured_shelf ?? ""}
+                    onChange={(e) => assignShelf.mutate({ id: p.id, shelf: e.target.value })}
+                    aria-label={`Assigned shelf for ${p.title}`}
+                    className="h-9 rounded-full border border-border bg-surface-2 px-3 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+                  >
+                    {SHELF_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleStatus.mutate(p)}
@@ -307,6 +343,99 @@ function KpiCard({
       <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
         {value.toLocaleString("en-US")}
       </p>
+    </div>
+  );
+}
+
+function ShelfManager() {
+  const queryClient = useQueryClient();
+  const { data: shelves = [], isLoading } = useQuery<HomepageShelf[]>({
+    queryKey: ["homepage-shelves"],
+    queryFn: fetchShelves,
+  });
+
+  const save = useMutation({
+    mutationFn: async (rows: { id: string; position_order?: number; is_visible?: boolean }[]) => {
+      for (const r of rows) {
+        const patch: { position_order?: number; is_visible?: boolean } = {};
+        if (r.position_order !== undefined) patch.position_order = r.position_order;
+        if (r.is_visible !== undefined) patch.is_visible = r.is_visible;
+        const { error } = await supabase.from("homepage_shelves").update(patch).eq("id", r.id);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["homepage-shelves"] });
+      toast.success("Homepage shelves updated");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const move = (index: number, dir: -1 | 1) => {
+    const target = index + dir;
+    if (target < 0 || target >= shelves.length) return;
+    const a = shelves[index];
+    const b = shelves[target];
+    save.mutate([
+      { id: a.id, position_order: b.position_order },
+      { id: b.id, position_order: a.position_order },
+    ]);
+  };
+
+  return (
+    <div className="mt-6 rounded-2xl border border-border bg-surface p-4 shadow-soft sm:p-5">
+      <div className="flex items-center gap-2">
+        <LayoutList className="h-4 w-4 text-primary" />
+        <h2 className="text-sm font-semibold text-foreground">Manage homepage shelves</h2>
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Reorder shelves or hide them seasonally. Changes apply to the homepage instantly.
+      </p>
+
+      {isLoading ? (
+        <div className="grid place-items-center py-8">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+        </div>
+      ) : (
+        <ul className="mt-4 divide-y divide-border rounded-xl border border-border">
+          {shelves.map((s, i) => (
+            <li key={s.id} className="flex flex-wrap items-center gap-3 p-3">
+              <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+                {s.display_name}
+              </span>
+              <button
+                onClick={() => save.mutate([{ id: s.id, is_visible: !s.is_visible }])}
+                disabled={save.isPending}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
+                  s.is_visible
+                    ? "bg-primary-soft text-primary"
+                    : "bg-surface-2 text-muted-foreground"
+                }`}
+              >
+                {s.is_visible ? "Visible" : "Hidden"}
+              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => move(i, -1)}
+                  disabled={i === 0 || save.isPending}
+                  aria-label={`Move ${s.display_name} up`}
+                  className="grid h-8 w-8 place-items-center rounded-full border border-border bg-surface-2 text-foreground hover:border-primary hover:text-primary disabled:opacity-40"
+                >
+                  <ArrowUp className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => move(i, 1)}
+                  disabled={i === shelves.length - 1 || save.isPending}
+                  aria-label={`Move ${s.display_name} down`}
+                  className="grid h-8 w-8 place-items-center rounded-full border border-border bg-surface-2 text-foreground hover:border-primary hover:text-primary disabled:opacity-40"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
