@@ -41,6 +41,42 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_shelves: {
+        Row: {
+          category: string | null
+          created_at: string
+          display_name: string
+          id: string
+          is_visible: boolean
+          position_order: number
+          shelf_key: string
+          subtitle: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          is_visible?: boolean
+          position_order?: number
+          shelf_key: string
+          subtitle?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_visible?: boolean
+          position_order?: number
+          shelf_key?: string
+          subtitle?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null
@@ -48,6 +84,7 @@ export type Database = {
           created_at: string
           delivery_timeframe: string
           description: string
+          featured_shelf: string | null
           id: string
           images: string[]
           location: string
@@ -66,6 +103,7 @@ export type Database = {
           created_at?: string
           delivery_timeframe?: string
           description: string
+          featured_shelf?: string | null
           id?: string
           images?: string[]
           location: string
@@ -84,6 +122,7 @@ export type Database = {
           created_at?: string
           delivery_timeframe?: string
           description?: string
+          featured_shelf?: string | null
           id?: string
           images?: string[]
           location?: string
