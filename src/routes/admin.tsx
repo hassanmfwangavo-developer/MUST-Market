@@ -28,6 +28,7 @@ export const Route = createFileRoute("/admin")({
         content: "Private moderation console for MUST Market listings, views and WhatsApp clicks.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: AdminPage,

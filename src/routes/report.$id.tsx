@@ -21,6 +21,7 @@ export const Route = createFileRoute("/report/$id")({
     meta: [
       { title: "Report a listing — MUST Market" },
       { name: "description", content: "Report a problematic listing to MUST Market admins." },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: ReportPage,

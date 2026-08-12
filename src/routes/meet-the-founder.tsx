@@ -3,8 +3,28 @@ import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/meet-the-founder")({
+  head: () => ({
+    meta: [
+      { title: "Meet the Founder — MUST Market" },
+      {
+        name: "description",
+        content:
+          "The story behind MUST Market, the student-built marketplace for Mbeya University of Science and Technology.",
+      },
+      { property: "og:title", content: "Meet the Founder — MUST Market" },
+      {
+        property: "og:description",
+        content: "Why a MUST student built a marketplace for campus.",
+      },
+      { property: "og:url", content: "https://must-campus-swap.lovable.app/meet-the-founder" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://must-campus-swap.lovable.app/meet-the-founder" },
+    ],
+  }),
   component: MeetTheFounder,
 });
+
 
 function MeetTheFounder() {
   const [showCoffeeThanks, setShowCoffeeThanks] = useState(false);

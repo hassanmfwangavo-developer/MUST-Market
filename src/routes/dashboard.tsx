@@ -29,6 +29,7 @@ export const Route = createFileRoute("/dashboard")({
         name: "description",
         content: "Manage your MUST Market listings, edit prices, and delete sold items.",
       },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: DashboardPage,
@@ -143,7 +144,7 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
               Seller dashboard
             </div>
             <h1 className="mt-1 truncate text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-              Welcome back
+              Seller Dashboard
             </h1>
           </div>
           <button

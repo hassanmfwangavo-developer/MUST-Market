@@ -30,7 +30,32 @@ export const Route = createFileRoute("/product/$id")({
         { name: "description", content: desc },
         { property: "og:title", content: product.title },
         { property: "og:description", content: desc },
+        { property: "og:type", content: "product" },
+        { property: "og:url", content: `https://must-campus-swap.lovable.app/product/${product.id}` },
         ...(product.image ? [{ property: "og:image", content: product.image }] : []),
+      ],
+      links: [{ rel: "canonical", href: `https://must-campus-swap.lovable.app/product/${product.id}` }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: product.title,
+            description: product.description,
+            ...(product.image ? { image: product.image } : {}),
+            offers: {
+              "@type": "Offer",
+              price: product.price,
+              priceCurrency: "TZS",
+              availability:
+                product.status === "sold"
+                  ? "https://schema.org/SoldOut"
+                  : "https://schema.org/InStock",
+              url: `https://must-campus-swap.lovable.app/product/${product.id}`,
+            },
+          }),
+        },
       ],
     };
   },

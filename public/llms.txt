@@ -1,0 +1,17 @@
+# MUST Market
+
+> Peer-to-peer marketplace where students at Mbeya University of Science and Technology (MUST) buy and sell used laptops, books, hostel gear, rooms and services, connecting directly via WhatsApp.
+
+## Pages
+
+- [Home](/): Featured shelves — hot deals, rooms & gheto, freshers starter pack and trending tech.
+- [Browse](/browse): Every active and sold listing, searchable and filterable by category.
+- [Sell an Item](/sell): Free listing form — title, price in TSh, photos, campus location, delivery time and WhatsApp number.
+- [Feedback](/feedback): Send suggestions or issues to the MUST Market team.
+- [Meet the Founder](/meet-the-founder): The story behind MUST Market.
+- [Privacy Policy](/privacy): How listing and contact data is handled.
+- [Terms of Service](/terms): Rules for buyers and sellers on the platform.
+
+## Optional
+
+- [Sitemap](/sitemap.xml): All indexable URLs, including individual product pages.

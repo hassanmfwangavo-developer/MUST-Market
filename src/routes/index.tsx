@@ -10,7 +10,7 @@ import { Footer } from "@/components/footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MUST Market — Buy & Sell Used Student Gear at Mbeya University" },
+      { title: "MUST Market — Buy & Sell Student Gear at MUST" },
       {
         name: "description",
         content:
@@ -20,6 +20,35 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content: "Buy and sell used student gear at MUST instantly.",
+      },
+      { property: "og:url", content: "https://must-campus-swap.lovable.app/" },
+    ],
+    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "MUST Market",
+              url: "https://must-campus-swap.lovable.app/",
+              description:
+                "Peer-to-peer marketplace for students at Mbeya University of Science and Technology.",
+            },
+            {
+              "@type": "WebSite",
+              name: "MUST Market",
+              url: "https://must-campus-swap.lovable.app/",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://must-campus-swap.lovable.app/browse?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ],
+        }),
       },
     ],
   }),
