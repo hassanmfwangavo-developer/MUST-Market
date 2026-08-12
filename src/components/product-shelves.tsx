@@ -100,64 +100,57 @@ export function ProductShelves() {
 
   const shelves = useMemo<Shelf[]>(() => {
     const take = 12;
-    const hotDeals = [...products].sort((a, b) => a.price - b.price).slice(0, take);
 
-    const rooms = products.filter(
-      (p) => p.category === "Rooms / Gheto" || p.category === "Room/Hostel Gear",
-    );
+    // Admin-pinned items always win; each shelf falls back to a smart query
+    // so a brand-new/empty shelf never renders as a blank row.
+    const pinned = (key: string) => products.filter((p) => p.featuredShelf === key);
 
-    const fresherMatches = products.filter((p) => {
-      const text = `${p.title} ${p.description}`.toLowerCase();
-      return FRESHER_KEYWORDS.some((k) => text.includes(k));
-    });
-    const freshers = (
-      fresherMatches.length > 0
-        ? fresherMatches
-        : products.filter(
-            (p) => p.category === "Room/Hostel Gear" || p.category === "Books/Stationery",
-          )
-    ).slice(0, take);
+    const fallback = (key: string): MarketProduct[] => {
+      switch (key) {
+        case "hot_deals":
+          return [...products].sort((a, b) => a.price - b.price);
+        case "rooms":
+          return products.filter(
+            (p) => p.category === "Rooms / Gheto" || p.category === "Room/Hostel Gear",
+          );
+        case "freshers_pack": {
+          const matches = products.filter((p) => {
+            const text = `${p.title} ${p.description}`.toLowerCase();
+            return FRESHER_KEYWORDS.some((k) => text.includes(k));
+          });
+          return matches.length > 0
+            ? matches
+            : products.filter(
+                (p) => p.category === "Room/Hostel Gear" || p.category === "Books/Stationery",
+              );
+        }
+        case "trending": {
+          const tech = products.filter((p) => p.category === "Electronics");
+          return (tech.length > 0 ? tech : products).slice().sort((a, b) => {
+            const v = (b.viewCount ?? 0) - (a.viewCount ?? 0);
+            if (v !== 0) return v;
+            return (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
+          });
+        }
+        default:
+          return products;
+      }
+    };
 
-    const techPool = products.filter((p) => p.category === "Electronics");
-    const trending = (techPool.length > 0 ? techPool : products)
-      .slice()
-      .sort((a, b) => {
-        const v = (b.viewCount ?? 0) - (a.viewCount ?? 0);
-        if (v !== 0) return v;
-        return (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
-      })
-      .slice(0, take);
-
-    return [
-      {
-        key: "hot",
-        title: "🔥 Hot Deals",
-        subtitle: "Lowest prices on campus right now",
-        items: hotDeals,
-      },
-      {
-        key: "rooms",
-        title: "🏠 Vyumba & Gheto",
-        subtitle: "Rooms, hostel space & accommodation",
-        category: "Rooms / Gheto",
-        items: rooms.slice(0, take),
-      },
-      {
-        key: "freshers",
-        title: "🎓 Freshers Starter Pack",
-        subtitle: "Kettles, laptops, desks, beds & essentials",
-        category: "Room/Hostel Gear",
-        items: freshers,
-      },
-      {
-        key: "tech",
-        title: "⚡ Trending Tech",
-        subtitle: "Most viewed gadgets & electronics",
-        category: "Electronics",
-        items: trending,
-      },
-    ];
-  }, [products]);
+    return shelfConfig
+      .filter((s) => s.is_visible)
+      .map((s) => {
+        const own = pinned(s.shelf_key);
+        const items = (own.length > 0 ? own : fallback(s.shelf_key)).slice(0, take);
+        return {
+          key: s.shelf_key,
+          title: s.display_name,
+          subtitle: s.subtitle,
+          category: s.category ?? undefined,
+          items,
+        };
+      });
+  }, [products, shelfConfig]);
 
   return (
     <section id="browse" className="py-12 sm:py-16">
