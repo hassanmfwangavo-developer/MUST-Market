@@ -6,6 +6,7 @@ import { ProductCard } from "./product-card";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { fetchShelves, DEFAULT_SHELVES, type HomepageShelf } from "@/lib/shelves";
 
 const FRESHER_KEYWORDS = [
   "kettle",
@@ -84,6 +85,12 @@ export function ProductShelves() {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
+    staleTime: 30_000,
+  });
+
+  const { data: shelfConfig = DEFAULT_SHELVES } = useQuery<HomepageShelf[]>({
+    queryKey: ["homepage-shelves"],
+    queryFn: fetchShelves,
     staleTime: 30_000,
   });
 
