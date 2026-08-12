@@ -29,6 +29,7 @@ export const Route = createFileRoute("/dashboard")({
         name: "description",
         content: "Manage your MUST Market listings, edit prices, and delete sold items.",
       },
+      { name: "robots", content: "noindex, nofollow" },
     ],
   }),
   component: DashboardPage,

@@ -26,7 +26,9 @@ export const Route = createFileRoute("/browse")({
         property: "og:description",
         content: "Every active listing from MUST students, in one place.",
       },
+      { property: "og:url", content: "https://must-campus-swap.lovable.app/browse" },
     ],
+    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/browse" }],
   }),
   component: BrowsePage,
 });

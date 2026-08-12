@@ -21,7 +21,9 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Buy and sell used student gear at MUST instantly.",
       },
+      { property: "og:url", content: "https://must-campus-swap.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/" }],
   }),
   component: Index,
 });
