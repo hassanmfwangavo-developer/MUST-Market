@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellRouteImport } from './routes/sell'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
@@ -24,6 +25,11 @@ import { Route as ProductIdRouteImport } from './routes/product.$id'
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SellRoute = SellRouteImport.update({
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
     | '/terms'
     | '/product/$id'
     | '/report/$id'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
     | '/terms'
     | '/product/$id'
     | '/report/$id'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/privacy'
     | '/sell'
+    | '/sitemap.xml'
     | '/terms'
     | '/product/$id'
     | '/report/$id'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   MeetTheFounderRoute: typeof MeetTheFounderRoute
   PrivacyRoute: typeof PrivacyRoute
   SellRoute: typeof SellRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   ProductIdRoute: typeof ProductIdRoute
   ReportIdRoute: typeof ReportIdRoute
@@ -180,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sell': {
@@ -264,6 +284,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeetTheFounderRoute: MeetTheFounderRoute,
   PrivacyRoute: PrivacyRoute,
   SellRoute: SellRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   ProductIdRoute: ProductIdRoute,
   ReportIdRoute: ReportIdRoute,
@@ -271,3 +292,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
