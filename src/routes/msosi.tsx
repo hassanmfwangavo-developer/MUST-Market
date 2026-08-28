@@ -106,8 +106,11 @@ const BOTTOM_TABS = [
 /* ----------------------------- Component ----------------------------- */
 
 function MsosiFasta() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string>("Zote");
   const [activeSlide, setActiveSlide] = useState(0);
+
+  const goToDetail = () => navigate({ to: "/msosi/detail" });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6] pb-20 md:pb-0">
