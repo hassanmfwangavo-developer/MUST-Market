@@ -35,6 +35,10 @@ type CheckoutState = {
   addSoda?: boolean;
 };
 
+declare module "@tanstack/react-router" {
+  interface HistoryState extends CheckoutState {}
+}
+
 export const Route = createFileRoute("/msosi/checkout")({
   head: () => ({
     meta: [
