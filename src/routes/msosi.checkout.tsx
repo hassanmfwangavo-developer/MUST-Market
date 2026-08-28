@@ -272,7 +272,7 @@ function MsosiCheckout() {
                 maxLength={14}
                 autoComplete="tel-national"
                 inputMode="tel"
-                className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-[4.6rem] pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#008542]"
+                className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-[4.9rem] pr-4 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#008542]"
               />
             </div>
           </div>
