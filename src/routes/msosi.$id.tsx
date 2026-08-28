@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -46,6 +46,7 @@ export const Route = createFileRoute("/msosi/$id")({
 
 function MsosiDetail() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [addSoda, setAddSoda] = useState(false);
   const [favorite, setFavorite] = useState(false);
@@ -240,6 +241,20 @@ function MsosiDetail() {
 
         <button
           type="button"
+          onClick={() =>
+            navigate({
+              to: "/msosi/checkout",
+              state: {
+                itemId: dish.id,
+                name: dish.name,
+                price: dish.price,
+                imageUrl: dish.image_url,
+                vendorName: dish.vendor_name,
+                quantity,
+                addSoda,
+              },
+            })
+          }
           className="flex h-[48px] flex-1 items-center justify-between overflow-hidden rounded-full bg-[#008542] px-4 text-white shadow-md transition-colors hover:bg-[#006e36]"
         >
           <span className="whitespace-nowrap text-xs font-bold sm:text-sm">
