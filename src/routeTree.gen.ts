@@ -13,7 +13,9 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellRouteImport } from './routes/sell'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as MsosiRouteImport } from './routes/msosi'
 import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BrowseRouteImport } from './routes/browse'
@@ -42,9 +44,19 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MsosiRoute = MsosiRouteImport.update({
+  id: '/msosi',
+  path: '/msosi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MeetTheFounderRoute = MeetTheFounderRouteImport.update({
   id: '/meet-the-founder',
   path: '/meet-the-founder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedbackRoute = FeedbackRouteImport.update({
@@ -89,7 +101,9 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
+  '/msosi': typeof MsosiRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -103,7 +117,9 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
+  '/msosi': typeof MsosiRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -118,7 +134,9 @@ export interface FileRoutesById {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
+  '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
+  '/msosi': typeof MsosiRoute
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -134,7 +152,9 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/market'
     | '/meet-the-founder'
+    | '/msosi'
     | '/privacy'
     | '/sell'
     | '/sitemap.xml'
@@ -148,7 +168,9 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/market'
     | '/meet-the-founder'
+    | '/msosi'
     | '/privacy'
     | '/sell'
     | '/sitemap.xml'
@@ -162,7 +184,9 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
+    | '/market'
     | '/meet-the-founder'
+    | '/msosi'
     | '/privacy'
     | '/sell'
     | '/sitemap.xml'
@@ -177,7 +201,9 @@ export interface RootRouteChildren {
   BrowseRoute: typeof BrowseRoute
   DashboardRoute: typeof DashboardRoute
   FeedbackRoute: typeof FeedbackRoute
+  MarketRoute: typeof MarketRoute
   MeetTheFounderRoute: typeof MeetTheFounderRoute
+  MsosiRoute: typeof MsosiRoute
   PrivacyRoute: typeof PrivacyRoute
   SellRoute: typeof SellRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -216,11 +242,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/msosi': {
+      id: '/msosi'
+      path: '/msosi'
+      fullPath: '/msosi'
+      preLoaderRoute: typeof MsosiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/meet-the-founder': {
       id: '/meet-the-founder'
       path: '/meet-the-founder'
       fullPath: '/meet-the-founder'
       preLoaderRoute: typeof MeetTheFounderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feedback': {
@@ -281,7 +321,9 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseRoute: BrowseRoute,
   DashboardRoute: DashboardRoute,
   FeedbackRoute: FeedbackRoute,
+  MarketRoute: MarketRoute,
   MeetTheFounderRoute: MeetTheFounderRoute,
+  MsosiRoute: MsosiRoute,
   PrivacyRoute: PrivacyRoute,
   SellRoute: SellRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,

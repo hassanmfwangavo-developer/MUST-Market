@@ -52,7 +52,7 @@ function MeetTheFounder() {
         {/* Kitufe cha Kurudi Nyuma kilichopo juu ya picha */}
         <div className="absolute top-6 left-4 z-20">
           <Link
-            to="/"
+            to="/market"
             className="inline-flex items-center gap-2 text-xs text-white/80 hover:text-white transition-colors bg-black/30 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

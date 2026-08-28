@@ -1,25 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Navbar } from "@/components/navbar";
-import { Hero } from "@/components/hero";
-import { HowItWorks } from "@/components/how-it-works";
-import { ProductShelves } from "@/components/product-shelves";
-import { Testimonials } from "@/components/testimonials";
-import { FAQ } from "@/components/faq";
-import { Footer } from "@/components/footer";
+import { Portal } from "@/components/portal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MUST Market — Buy & Sell Student Gear at MUST" },
+      { title: "MUST Market — Marketplace & Msosi Fasta | Mbeya University" },
       {
         name: "description",
         content:
-          "The peer-to-peer marketplace for Mbeya University of Science and Technology students. Buy and sell laptops, books, hostel gear and more — instantly, via WhatsApp.",
+          "MUST Market — soko la kuaminika la wanafunzi wa MUST. Nunua na uze vitu used sokoni, au agiza msosi kwa haraka. Chagua huduma uipendayo kuanza.",
       },
-      { property: "og:title", content: "MUST Market — Student Marketplace at Mbeya University" },
+      { property: "og:title", content: "MUST Market — Marketplace & Msosi Fasta" },
       {
         property: "og:description",
-        content: "Buy and sell used student gear at MUST instantly.",
+        content:
+          "The MUST Market portal — buy & sell student gear in the marketplace, or order food fast with Msosi Fasta.",
       },
       { property: "og:url", content: "https://must-campus-swap.lovable.app/" },
     ],
@@ -35,7 +30,7 @@ export const Route = createFileRoute("/")({
               name: "MUST Market",
               url: "https://must-campus-swap.lovable.app/",
               description:
-                "Peer-to-peer marketplace for students at Mbeya University of Science and Technology.",
+                "Multi-service portal for students at Mbeya University of Science and Technology: a peer-to-peer marketplace and Msosi Fasta express food delivery.",
             },
             {
               "@type": "WebSite",
@@ -56,17 +51,5 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
-      <main className="flex-1">
-        <Hero />
-        <HowItWorks />
-        <ProductShelves />
-        <Testimonials />
-        <FAQ />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <Portal />;
 }

@@ -43,7 +43,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
-        <Link to="/" className="group flex shrink-0 items-center gap-2">
+        <Link to="/market" className="group flex shrink-0 items-center gap-2">
           {/* NEMBO YAKO MPYA INAKAA HAPA SASA HIVI (TUMEFUTA KIBEGI CHA LOVABLE) */}
           <img
             src="/favicon-32x32.png"
