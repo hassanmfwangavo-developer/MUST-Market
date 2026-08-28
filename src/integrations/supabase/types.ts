@@ -77,6 +77,51 @@ export type Database = {
         }
         Relationships: []
       }
+      menu_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          is_available: boolean
+          is_popular: boolean
+          name: string
+          prep_time: string
+          price: number
+          rating: number
+          vendor_name: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_popular?: boolean
+          name: string
+          prep_time?: string
+          price: number
+          rating?: number
+          vendor_name?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_popular?: boolean
+          name?: string
+          prep_time?: string
+          price?: number
+          rating?: number
+          vendor_name?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category_id: string | null
