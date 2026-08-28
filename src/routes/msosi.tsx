@@ -281,10 +281,11 @@ function MsosiFasta() {
                   <span className="text-xs font-extrabold text-[#008542] sm:text-sm">
                     {formatTsh(food.price)}
                   </span>
-                  {/* Quick action — visual only, no submit logic */}
+                  {/* Quick action — opens detail page */}
                   <button
                     type="button"
                     aria-label={`Ongeza ${food.title}`}
+                    onClick={goToDetail}
                     className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#008542] text-white shadow-xs transition-colors hover:bg-[#006e36]"
                   >
                     <Plus className="h-4 w-4" />
