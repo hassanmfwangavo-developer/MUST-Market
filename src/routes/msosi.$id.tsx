@@ -10,6 +10,7 @@ import {
   Plus,
   Minus,
   Check,
+  MapPin,
 } from "lucide-react";
 import { fetchMenuItem, formatTsh, SODA_PRICE } from "@/lib/menu";
 
@@ -85,58 +86,57 @@ function MsosiDetail() {
       />
 
       {/* ===================== HERO IMAGE + OVERLAY NAV ===================== */}
-      <div className="relative">
-        <div className="relative h-[280px] w-full overflow-hidden bg-slate-200 md:h-[350px]">
-          {dish.image_url && (
-            <img
-              src={dish.image_url}
-              alt={dish.name}
-              decoding="async"
-              className="h-full w-full object-cover"
+      <div className="relative h-[280px] w-full overflow-hidden bg-slate-200 md:h-[350px]">
+        {dish.image_url && (
+          <img
+            src={dish.image_url}
+            alt={dish.name}
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        )}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" />
+
+        <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
+          <Link
+            to="/msosi"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
+            aria-label="Rudi kwenye menu"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setFavorite((f) => !f)}
+            aria-label={favorite ? "Ondoa kwenye vipendwa" : "Ongeza kwenye vipendwa"}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
+          >
+            <Heart
+              className={`h-5 w-5 transition-colors ${favorite ? "fill-rose-500 text-rose-500" : "text-white"}`}
             />
-          )}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" />
-
-          <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
-            <Link
-              to="/msosi"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
-              aria-label="Rudi kwenye menu"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-            <button
-              type="button"
-              onClick={() => setFavorite((f) => !f)}
-              aria-label={favorite ? "Ondoa kwenye vipendwa" : "Ongeza kwenye vipendwa"}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
-            >
-              <Heart
-                className={`h-5 w-5 transition-colors ${favorite ? "fill-rose-500 text-rose-500" : "text-white"}`}
-              />
-            </button>
-          </div>
+          </button>
         </div>
-
-        <div className="relative z-10 -mt-4 rounded-t-3xl bg-[#FAFBF6]" />
       </div>
 
-      {/* ===================== MAIN CONTENT ===================== */}
-      <main className="relative z-10 mx-auto max-w-2xl px-4 pb-32">
-        <div className="-mt-2 flex items-start justify-between gap-3">
+      {/* ===================== CONTENT SHEET (overlaps hero) ===================== */}
+      <main className="relative z-10 mx-auto -mt-6 max-w-2xl rounded-t-3xl bg-[#FAFBF6] px-4 pb-32 pt-6">
+        {/* Title row */}
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
           <div className="min-w-0">
-            <h1 className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900">
+            <h1 className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl">
               {dish.name}
             </h1>
-            <p className="mt-1 text-sm font-medium text-slate-500">
-              Vendor: {dish.vendor_name}
+            <p className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-500">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-[#008542]" />
+              <span className="truncate">{dish.vendor_name}</span>
             </p>
           </div>
-          <span className="shrink-0 rounded-lg bg-amber-400 px-3 py-1.5 text-sm font-bold text-amber-950 shadow-xs">
+          <span className="shrink-0 rounded-xl bg-amber-400 px-3 py-1.5 text-sm font-bold text-amber-950 shadow-xs">
             {formatTsh(dish.price, "TSh")}
           </span>
         </div>
 
+        {/* Badges row */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-bold text-slate-900 shadow-xs ring-1 ring-slate-200">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
