@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -106,8 +106,11 @@ const BOTTOM_TABS = [
 /* ----------------------------- Component ----------------------------- */
 
 function MsosiFasta() {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string>("Zote");
   const [activeSlide, setActiveSlide] = useState(0);
+
+  const goToDetail = () => navigate({ to: "/msosi/detail" });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6] pb-20 md:pb-0">
@@ -247,7 +250,8 @@ function MsosiFasta() {
           {FOOD_GRID.map((food) => (
             <article
               key={food.id}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all hover:shadow-sm"
+              onClick={goToDetail}
+              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all hover:shadow-sm md:cursor-pointer"
             >
               {/* Image area */}
               <div className="relative aspect-square overflow-hidden">
@@ -277,10 +281,11 @@ function MsosiFasta() {
                   <span className="text-xs font-extrabold text-[#008542] sm:text-sm">
                     {formatTsh(food.price)}
                   </span>
-                  {/* Quick action — visual only, no submit logic */}
+                  {/* Quick action — opens detail page */}
                   <button
                     type="button"
                     aria-label={`Ongeza ${food.title}`}
+                    onClick={goToDetail}
                     className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#008542] text-white shadow-xs transition-colors hover:bg-[#006e36]"
                   >
                     <Plus className="h-4 w-4" />
