@@ -87,7 +87,7 @@ function NotFoundPage() {
           This listing may have been removed or sold.
         </p>
         <Link
-          to="/"
+          to="/market"
           className="mt-6 inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
         >
           Back to market
@@ -112,7 +112,7 @@ function ProductPage() {
       <Navbar />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
         <Link
-          to="/"
+          to="/market"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

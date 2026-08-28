@@ -66,7 +66,7 @@ function BrowsePage() {
       <Navbar />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <Link
-          to="/"
+          to="/market"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

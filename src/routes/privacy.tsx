@@ -29,7 +29,7 @@ function PrivacyPage() {
       <Navbar />
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6 sm:py-16">
         <Link
-          to="/"
+          to="/market"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Homepage
