@@ -250,7 +250,8 @@ function MsosiFasta() {
           {FOOD_GRID.map((food) => (
             <article
               key={food.id}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all hover:shadow-sm"
+              onClick={goToDetail}
+              className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all hover:shadow-sm md:cursor-pointer"
             >
               {/* Image area */}
               <div className="relative aspect-square overflow-hidden">
