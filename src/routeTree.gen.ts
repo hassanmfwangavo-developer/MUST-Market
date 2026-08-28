@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiDetailRouteImport } from './routes/msosi.detail'
+import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -100,6 +101,11 @@ const MsosiDetailRoute = MsosiDetailRouteImport.update({
   path: '/detail',
   getParentRoute: () => MsosiRoute,
 } as any)
+const MsosiIdRoute = MsosiIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MsosiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/$id': typeof MsosiIdRoute
   '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/$id': typeof MsosiIdRoute
   '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/$id': typeof MsosiIdRoute
   '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/$id'
     | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/$id'
     | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/$id'
     | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
@@ -331,14 +343,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiDetailRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/msosi/$id': {
+      id: '/msosi/$id'
+      path: '/$id'
+      fullPath: '/msosi/$id'
+      preLoaderRoute: typeof MsosiIdRouteImport
+      parentRoute: typeof MsosiRoute
+    }
   }
 }
 
 interface MsosiRouteChildren {
+  MsosiIdRoute: typeof MsosiIdRoute
   MsosiDetailRoute: typeof MsosiDetailRoute
 }
 
 const MsosiRouteChildren: MsosiRouteChildren = {
+  MsosiIdRoute: MsosiIdRoute,
   MsosiDetailRoute: MsosiDetailRoute,
 }
 
