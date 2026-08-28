@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as MsosiDetailRouteImport } from './routes/msosi.detail'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -94,6 +95,11 @@ const ProductIdRoute = ProductIdRouteImport.update({
   path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MsosiDetailRoute = MsosiDetailRouteImport.update({
+  id: '/detail',
+  path: '/detail',
+  getParentRoute: () => MsosiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,11 +109,12 @@ export interface FileRoutesByFullPath {
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
-  '/msosi': typeof MsosiRoute
+  '/msosi': typeof MsosiRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -119,11 +126,12 @@ export interface FileRoutesByTo {
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
-  '/msosi': typeof MsosiRoute
+  '/msosi': typeof MsosiRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -136,11 +144,12 @@ export interface FileRoutesById {
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
-  '/msosi': typeof MsosiRoute
+  '/msosi': typeof MsosiRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/msosi/detail': typeof MsosiDetailRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
 }
@@ -159,6 +168,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
   id:
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
+    | '/msosi/detail'
     | '/product/$id'
     | '/report/$id'
   fileRoutesById: FileRoutesById
@@ -203,7 +215,7 @@ export interface RootRouteChildren {
   FeedbackRoute: typeof FeedbackRoute
   MarketRoute: typeof MarketRoute
   MeetTheFounderRoute: typeof MeetTheFounderRoute
-  MsosiRoute: typeof MsosiRoute
+  MsosiRoute: typeof MsosiRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   SellRoute: typeof SellRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -312,8 +324,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/msosi/detail': {
+      id: '/msosi/detail'
+      path: '/detail'
+      fullPath: '/msosi/detail'
+      preLoaderRoute: typeof MsosiDetailRouteImport
+      parentRoute: typeof MsosiRoute
+    }
   }
 }
+
+interface MsosiRouteChildren {
+  MsosiDetailRoute: typeof MsosiDetailRoute
+}
+
+const MsosiRouteChildren: MsosiRouteChildren = {
+  MsosiDetailRoute: MsosiDetailRoute,
+}
+
+const MsosiRouteWithChildren = MsosiRoute._addFileChildren(MsosiRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -323,7 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedbackRoute: FeedbackRoute,
   MarketRoute: MarketRoute,
   MeetTheFounderRoute: MeetTheFounderRoute,
-  MsosiRoute: MsosiRoute,
+  MsosiRoute: MsosiRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   SellRoute: SellRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
