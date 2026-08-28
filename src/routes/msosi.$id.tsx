@@ -248,7 +248,7 @@ function MsosiDetail() {
                 itemId: dish.id,
                 name: dish.name,
                 price: dish.price,
-                imageUrl: dish.image_url,
+                imageUrl: dish.image_url ?? undefined,
                 vendorName: dish.vendor_name,
                 quantity,
                 addSoda,
