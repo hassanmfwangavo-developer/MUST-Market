@@ -136,9 +136,14 @@ function ProfilePage() {
     [orders],
   );
 
+  const [origin, setOrigin] = useState("https://mustmarket.store");
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
+
   const referralLink = user
-    ? `https://mustmarket.store/msosi?ref=${user.id}`
-    : "https://mustmarket.store/msosi";
+    ? `${origin}/msosi?ref=${user.id}`
+    : `${origin}/msosi`;
 
   const copyReferral = async () => {
     try {
