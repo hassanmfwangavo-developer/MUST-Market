@@ -118,6 +118,13 @@ export async function applyOrderRewards(
         .update({ order_counted: true })
         .eq("id", referral.id);
       referralBonusAwarded = true;
+    } else {
+      // Referred user had already ordered before claiming — close out the
+      // referral without a bonus so it doesn't stay pending forever.
+      await admin
+        .from("referrals")
+        .update({ order_counted: true })
+        .eq("id", referral.id);
     }
   }
 
