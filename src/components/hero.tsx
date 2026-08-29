@@ -1,4 +1,4 @@
-import { Sparkles, ShieldCheck } from "lucide-react";
+import { Sparkles, ShieldCheck, ArrowLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { categoryLabel, categoryEmoji } from "@/lib/demo-data";
@@ -52,6 +52,17 @@ export function Hero() {
     <section className="hero-gradient relative overflow-hidden">
       <div className="mesh-dots absolute inset-0 opacity-70" />
       <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-14 sm:px-6 sm:pb-20 sm:pt-20 lg:px-8">
+        {/* Back to main interface */}
+        <div className="mb-4 flex justify-start sm:mb-5">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface/70 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-soft backdrop-blur transition-colors hover:border-primary/30 hover:text-primary"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Back to Home</span>
+          </Link>
+        </div>
+
         {/* Trust chip */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-surface/70 px-3.5 py-1.5 text-xs font-medium text-primary shadow-soft backdrop-blur">
