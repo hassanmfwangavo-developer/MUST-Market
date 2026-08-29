@@ -91,7 +91,16 @@ function MsosiCheckout() {
 
   const [claimed] = useState(() => getClaimedOffer());
 
-  const subtotal = order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
+  const cart = useCart();
+  const cartMode = !locationState?.name && cart.items.length > 0;
+  const cartItems: OrderItem[] = cartMode ? cart.items : [];
+
+  const subtotal = cartMode
+    ? cartItems.reduce(
+        (sum, i) => sum + i.price * i.quantity + (i.addSoda ? SODA_PRICE : 0),
+        0,
+      )
+    : order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
   const discount = claimed?.discountPercent
     ? Math.round((subtotal * claimed.discountPercent) / 100)
     : 0;
@@ -121,17 +130,19 @@ function MsosiCheckout() {
       if (uid) {
         orderId = await createOrder({
           userId: uid,
-          items: [
-            {
-              itemId: order.itemId,
-              name: order.name,
-              price: order.price,
-              quantity: order.quantity,
-              imageUrl: order.imageUrl || undefined,
-              vendorName: order.vendorName || undefined,
-              addSoda: order.addSoda,
-            },
-          ],
+          items: cartMode
+            ? cartItems
+            : [
+                {
+                  itemId: order.itemId,
+                  name: order.name,
+                  price: order.price,
+                  quantity: order.quantity,
+                  imageUrl: order.imageUrl || undefined,
+                  vendorName: order.vendorName || undefined,
+                  addSoda: order.addSoda,
+                },
+              ],
           total,
           area,
           room: room.trim(),
@@ -139,6 +150,7 @@ function MsosiCheckout() {
         });
       }
       clearClaimedOffer();
+      if (cartMode) cart.clear();
       // Payment integration (Snippe STK push) will be wired here.
 
       toast.success(
