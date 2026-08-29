@@ -87,8 +87,14 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [claimed] = useState(() => getClaimedOffer());
+
   const subtotal = order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
-  const total = subtotal + DELIVERY_FEE;
+  const discount = claimed?.discountPercent
+    ? Math.round((subtotal * claimed.discountPercent) / 100)
+    : 0;
+  const total = subtotal - discount + DELIVERY_FEE;
+
 
   const handlePay = async () => {
     const cleanName = fullName.trim();
