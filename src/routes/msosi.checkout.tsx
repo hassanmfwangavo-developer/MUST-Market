@@ -371,7 +371,7 @@ function MsosiCheckout() {
         >
           <Lock className="h-4 w-4 shrink-0" />
           <span className="whitespace-nowrap text-xs sm:text-sm">
-            Lipa Sasa kwa M-Pesa / Tigo Pesa via Snippe
+             Lipa kwa Simu Sasa
           </span>
         </button>
       </div>
