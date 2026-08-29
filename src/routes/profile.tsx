@@ -6,6 +6,7 @@ import {
   Clock,
   Copy,
   Flame,
+  LogOut,
   MapPin,
   Moon,
   Phone,
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/profile")({
 
 type ProfileRow = {
   full_name: string | null;
+  avatar_url: string | null;
   whatsapp_number: string | null;
   hostel: string | null;
   current_streak: number;
@@ -82,7 +84,7 @@ function ProfilePage() {
       const [{ data: p }, o, l] = await Promise.all([
         supabase
           .from("profiles")
-          .select("full_name, whatsapp_number, hostel, current_streak, reward_points")
+          .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points")
           .eq("id", userId)
           .maybeSingle(),
         fetchOrders(userId),
@@ -102,10 +104,18 @@ function ProfilePage() {
     if (!initialized) return;
     if (!user) {
       setLoading(false);
+      // Unauthenticated visit: bring up the global auth modal automatically.
+      openAuthModal("/profile");
       return;
     }
     void load(user.id);
   }, [initialized, user, load]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Umeondoka. Tutaonana tena! 👋");
+    void navigate({ to: "/", replace: true });
+  };
 
   const toggleDark = () => {
     const next = !dark;
@@ -273,23 +283,47 @@ function ProfilePage() {
             {/* ===== PROFILE HEADER ===== */}
             <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs">
               <div className="flex items-center gap-4">
-                <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-emerald-50 text-2xl font-extrabold text-[#008542] ring-1 ring-emerald-100">
-                  {(profile?.full_name ?? user.email ?? "M").charAt(0).toUpperCase()}
-                </div>
-                <div className="min-w-0">
-                  <h2 className="truncate text-xl font-extrabold tracking-tight text-slate-900">
-                    {profile?.full_name || user.email || "Mwanafunzi wa MUST"}
-                  </h2>
-                  <p className="truncate text-sm text-slate-500">
-                    {profile?.whatsapp_number
-                      ? `+${sanitizeTzPhone(profile.whatsapp_number)}`
-                      : "Namba haijawekwa"}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1 truncate text-sm text-slate-500">
-                    <MapPin className="h-3.5 w-3.5 text-[#008542]" />
-                    {profile?.hostel || "Hostel haijachaguliwa"}
-                  </p>
-                </div>
+                {(() => {
+                  const meta = user.user_metadata ?? {};
+                  const avatarUrl: string =
+                    profile?.avatar_url || meta.avatar_url || meta.picture || "";
+                  const displayName: string =
+                    profile?.full_name || meta.full_name || meta.name || user.email || "";
+                  return (
+                    <>
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt={displayName || "Profile photo"}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-16 w-16 shrink-0 rounded-full object-cover ring-1 ring-emerald-100"
+                        />
+                      ) : (
+                        <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-emerald-50 text-2xl font-extrabold text-[#008542] ring-1 ring-emerald-100">
+                          {(displayName || "M").charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <h2 className="truncate text-xl font-extrabold tracking-tight text-slate-900">
+                          {displayName || "Mwanafunzi wa MUST"}
+                        </h2>
+                        {user.email && (
+                          <p className="truncate text-sm text-slate-500">{user.email}</p>
+                        )}
+                        <p className="truncate text-sm text-slate-500">
+                          {profile?.whatsapp_number
+                            ? `+${sanitizeTzPhone(profile.whatsapp_number)}`
+                            : "Namba haijawekwa"}
+                        </p>
+                        <p className="mt-1 flex items-center gap-1 truncate text-sm text-slate-500">
+                          <MapPin className="h-3.5 w-3.5 text-[#008542]" />
+                          {profile?.hostel || "Hostel haijachaguliwa"}
+                        </p>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
 
               <div className="mt-5 grid grid-cols-3 gap-3">
@@ -425,6 +459,16 @@ function ProfilePage() {
                 ))}
               </div>
             </section>
+
+            {/* ===== LOGOUT ===== */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-white py-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+            >
+              <LogOut className="h-4 w-4" />
+              Ondoka (Logout)
+            </button>
           </>
         )}
       </main>

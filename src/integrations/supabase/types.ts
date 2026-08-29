@@ -237,6 +237,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           current_streak: number
+          email: string | null
           full_name: string | null
           hostel: string | null
           id: string
@@ -249,6 +250,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           current_streak?: number
+          email?: string | null
           full_name?: string | null
           hostel?: string | null
           id: string
@@ -261,6 +263,7 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           current_streak?: number
+          email?: string | null
           full_name?: string | null
           hostel?: string | null
           id?: string

@@ -39,6 +39,21 @@ function emitUser() {
   userListeners.forEach((l) => l());
 }
 
+/** Capture every signed-in user into profiles (email marketing pipeline). */
+async function upsertProfile(u: User) {
+  const meta = u.user_metadata ?? {};
+  await supabase.from("profiles").upsert(
+    {
+      id: u.id,
+      email: u.email ?? null,
+      full_name: meta.full_name || meta.name || "",
+      avatar_url: meta.avatar_url || meta.picture || "",
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "id" },
+  );
+}
+
 if (typeof window !== "undefined") {
   supabase.auth.getUser().then(({ data }) => {
     // Treat anonymous users as "not signed in" for dashboard purposes.
@@ -46,11 +61,12 @@ if (typeof window !== "undefined") {
     initialized = true;
     emitUser();
   });
-  supabase.auth.onAuthStateChange((_e, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
     const u = session?.user;
     user = u && !u.is_anonymous ? u : null;
     initialized = true;
     emitUser();
+    if (event === "SIGNED_IN" && user) void upsertProfile(user);
   });
 }
 
