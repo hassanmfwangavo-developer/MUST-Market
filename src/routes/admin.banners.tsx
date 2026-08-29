@@ -14,6 +14,7 @@ import {
   BANNER_TYPES,
   bannerTypeLabel,
   fetchBanners,
+  removeAdminImage,
   uploadAdminImage,
   type Banner,
 } from "@/lib/admin-media";
@@ -77,7 +78,7 @@ function AdminBannersPage() {
 
   const create = useMutation({
     mutationFn: async () => {
-      const image_url = file ? await uploadAdminImage(file, "banners") : null;
+      const uploaded = file ? await uploadAdminImage(file, "banners") : null;
       const { error } = await supabase.from("banners").insert({
         title: title.trim(),
         subtitle: subtitle.trim(),
@@ -85,9 +86,15 @@ function AdminBannersPage() {
         discount_percent: discount ? Number(discount) : null,
         banner_type: bannerType,
         countdown_ends_at: endsAt ? new Date(endsAt).toISOString() : null,
-        image_url,
+        image_url: uploaded?.url ?? null,
       });
-      if (error) throw error;
+      if (error) {
+        if (uploaded) await removeAdminImage(uploaded.path);
+        if (error.code === "42501") {
+          throw new Error("Banner save failed: administrator access could not be verified.");
+        }
+        throw new Error(`Banner save failed: ${error.message}`);
+      }
     },
     onSuccess: () => {
       resetForm();

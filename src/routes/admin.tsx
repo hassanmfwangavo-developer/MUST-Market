@@ -2,8 +2,7 @@ import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { ADMIN_EMAIL } from "@/lib/admin";
+import { isCurrentUserAdmin } from "@/lib/admin";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
@@ -16,9 +15,7 @@ function AdminLayout() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase.auth.getUser();
-      const email = data.user?.email?.toLowerCase();
-      const ok = email === ADMIN_EMAIL;
+      const ok = await isCurrentUserAdmin();
       if (cancelled) return;
       setAllowed(ok);
       if (!ok) {

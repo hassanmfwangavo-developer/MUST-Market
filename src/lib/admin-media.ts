@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { requireAdminUser } from "@/lib/admin";
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
@@ -6,20 +7,37 @@ const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
  * Uploads an admin asset (banner artwork, category icon) to storage and
  * returns a long-lived signed URL that can be rendered anywhere in the app.
  */
-export async function uploadAdminImage(file: File, folder: "banners" | "category-icons") {
+export interface UploadedAdminImage {
+  url: string;
+  path: string;
+}
+
+export async function uploadAdminImage(
+  file: File,
+  folder: "banners" | "category-icons",
+): Promise<UploadedAdminImage> {
+  const user = await requireAdminUser();
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+  const path = `${user.id}/${folder}/${crypto.randomUUID()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from("product-images")
     .upload(path, file, { contentType: file.type, upsert: false });
-  if (uploadError) throw uploadError;
+  if (uploadError) throw new Error(`Image upload failed: ${uploadError.message}`);
 
   const { data, error } = await supabase.storage
     .from("product-images")
     .createSignedUrl(path, TEN_YEARS);
-  if (error || !data?.signedUrl) throw error ?? new Error("Could not sign the uploaded image.");
-  return data.signedUrl;
+  if (error || !data?.signedUrl) {
+    await supabase.storage.from("product-images").remove([path]);
+    throw new Error(`Image upload failed: ${error?.message ?? "Could not create its display URL."}`);
+  }
+  return { url: data.signedUrl, path };
+}
+
+export async function removeAdminImage(path: string) {
+  const { error } = await supabase.storage.from("product-images").remove([path]);
+  if (error) console.error("Could not clean up admin image", error);
 }
 
 export interface Banner {
