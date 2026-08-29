@@ -451,7 +451,7 @@ function MsosiFasta() {
                     </span>
                     <button
                       type="button"
-                      aria-label={`Ongeza ${food.name}`}
+                      aria-label={`Add ${food.name}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         openDish(food.id);
@@ -468,6 +468,64 @@ function MsosiFasta() {
         )}
       </section>
 
+      {/* ============ CONNECT WITH FAVOURITE RESTAURANTS ============ */}
+      {vendors.length > 0 && (
+        <section className="relative z-10 mx-auto max-w-5xl px-4 pb-8">
+          <h2 className="mb-3 flex items-center justify-between text-lg font-bold text-[#0F172A] sm:text-xl">
+            Connect with all your favourite restaurants
+            {activeVendor && (
+              <button
+                type="button"
+                onClick={() => setActiveVendor(null)}
+                className="text-xs font-semibold text-[#008542] hover:underline"
+              >
+                Clear filter
+              </button>
+            )}
+          </h2>
+          <p className="mb-4 text-xs text-slate-500 sm:text-sm">
+            Top trusted cafeterias &amp; canteens around campus
+          </p>
+
+          <div className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+            <div className="marquee-track flex w-max gap-3">
+              {[...vendors, ...vendors].map((v, i) => {
+                const active = activeVendor === v.name;
+                return (
+                  <button
+                    key={`${v.id}-${i}`}
+                    type="button"
+                    onClick={() => setActiveVendor(active ? null : v.name)}
+                    className={`flex min-w-[160px] cursor-pointer items-center gap-3 rounded-2xl border bg-white p-3 shadow-2xs transition-all hover:border-[#008542] ${
+                      active ? "border-[#008542] ring-2 ring-[#008542]/15" : "border-slate-200/80"
+                    }`}
+                  >
+                    {v.logo_url ? (
+                      <img
+                        src={v.logo_url}
+                        alt={v.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-10 w-10 rounded-full border border-slate-100 object-cover"
+                      />
+                    ) : (
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-slate-100 bg-emerald-50 text-[#008542]">
+                        <Utensils className="h-4 w-4" />
+                      </span>
+                    )}
+                    <span className="truncate text-left text-sm font-semibold text-slate-900">
+                      {v.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+
+
       <div className="relative z-10 hidden md:block">
         <Footer />
       </div>
@@ -478,19 +536,19 @@ function MsosiFasta() {
           const cls = `flex flex-col items-center gap-0.5 px-2 text-[10px] font-semibold transition-colors ${
             tab.active ? "text-[#008542]" : "text-slate-400"
           }`;
-          if (tab.key === "account" || tab.key === "orders") {
-            return (
-              <Link key={tab.key} to="/profile" className={cls}>
-                <Icon className="h-5 w-5" />
-                {tab.label}
-              </Link>
-            );
-          }
+          const to =
+            tab.key === "account"
+              ? "/profile"
+              : tab.key === "orders"
+                ? "/orders"
+                : tab.key === "help"
+                  ? "/feedback"
+                  : "/msosi";
           return (
-            <button key={tab.key} className={cls}>
+            <Link key={tab.key} to={to} className={cls}>
               <Icon className="h-5 w-5" />
               {tab.label}
-            </button>
+            </Link>
           );
         })}
 
