@@ -15,7 +15,7 @@ import {
   Utensils,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
+import { fetchMenuItems, formatTsh } from "@/lib/menu";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 
@@ -371,7 +371,7 @@ function MsosiFasta() {
           </h2>
           <button
             onClick={() => {
-              setActiveCategory("Zote");
+              setActiveCategory(null);
               setQuery("");
             }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-[#008542] hover:underline"
