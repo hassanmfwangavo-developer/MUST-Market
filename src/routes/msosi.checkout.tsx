@@ -288,7 +288,7 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Phone Number (for M-Pesa / Tigo Pesa PIN push)
+              Phone Number (Ya Malipo)
             </label>
             <div className="relative mt-1.5">
               <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -334,7 +334,7 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Jina la Gheto / Namba ya Chumba
+              Mtaa uliopo / Namba ya Chumba
             </label>
             <input
               type="text"
@@ -355,7 +355,7 @@ function MsosiCheckout() {
           >
             <Lock className="h-4 w-4 shrink-0" />
             <span className="whitespace-nowrap text-sm">
-              Lipa Sasa kwa M-Pesa / Tigo Pesa via Snippe
+              Lipa Kwa Simu Sasa
             </span>
           </button>
         </section>
