@@ -1,41 +1,62 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ArrowLeft,
-  ClipboardList,
-  MapPin,
-  Phone,
-  ShoppingBag,
-  Utensils,
-} from "lucide-react";
+import { ArrowLeft, ClipboardList, ShoppingBag, Utensils } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Footer } from "@/components/footer";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { fetchOrders, STATUS_LABEL, type FoodOrder } from "@/lib/orders";
+import { fetchOrders, type FoodOrder } from "@/lib/orders";
+import { setCartItems } from "@/lib/cart";
 import { formatTsh } from "@/lib/menu";
 
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
-      { title: "My Orders – MUST Food Fasta" },
+      { title: "Recent Orders – MUST Food Fasta" },
       {
         name: "description",
         content:
-          "View your MUST Food Fasta orders — status, delivery location and totals.",
+          "Your recent MUST Food Fasta orders — reorder your favourite campus meals in one tap.",
       },
-      { property: "og:title", content: "My Orders – MUST Food Fasta" },
+      { property: "og:title", content: "Recent Orders – MUST Food Fasta" },
       {
         property: "og:description",
-        content: "View your MUST Food Fasta orders on MUST Market.",
+        content: "View and reorder your past MUST Food Fasta orders.",
       },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/orders" }],
   }),
   component: OrdersPage,
 });
 
+function formatOrderDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const STATUS_STYLE: Record<string, string> = {
+  delivered: "bg-emerald-100/60 text-emerald-600",
+  pending: "bg-amber-100/70 text-amber-700",
+  preparing: "bg-amber-100/70 text-amber-700",
+  on_the_way: "bg-amber-100/70 text-amber-700",
+  cancelled: "bg-slate-200/70 text-slate-500",
+};
+
+const STATUS_TEXT: Record<string, string> = {
+  delivered: "Delivered",
+  pending: "Pending",
+  preparing: "Preparing",
+  on_the_way: "On the way",
+  cancelled: "Cancelled",
+};
+
 function OrdersPage() {
-  const navigate = useNavigate();
   const { user, initialized } = useAuthUser();
 
   const { data: orders, isLoading } = useQuery<FoodOrder[]>({
@@ -43,11 +64,6 @@ function OrdersPage() {
     queryFn: () => fetchOrders(user!.id),
     enabled: !!user,
   });
-
-  const hasActive = useMemo(
-    () => (orders ?? []).some((o) => ["pending", "preparing", "on_the_way"].includes(o.status)),
-    [orders],
-  );
 
   useEffect(() => {
     if (initialized && !user) {
@@ -57,17 +73,19 @@ function OrdersPage() {
 
   if (initialized && !user) {
     return (
-      <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex min-h-screen flex-col bg-white">
         <TopBar />
         <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-20 text-center">
-          <ClipboardList className="h-12 w-12 text-muted-foreground" />
-          <h1 className="mt-4 text-xl font-semibold tracking-tight">Sign in to your account</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            You need to sign in to view your MUST Food Fasta orders.
+          <ClipboardList className="h-12 w-12 text-slate-300" />
+          <h1 className="mt-4 text-xl font-bold tracking-tight text-slate-900">
+            Sign in to your account
+          </h1>
+          <p className="mt-2 text-sm text-slate-500">
+            You need to sign in to view your recent orders.
           </p>
           <button
             onClick={() => openAuthModal("/orders")}
-            className="mt-6 rounded-full bg-amber-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+            className="mt-6 rounded-full bg-[#2ECC71] px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#27ae60]"
           >
             Sign In / Join
           </button>
@@ -78,50 +96,46 @@ function OrdersPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-white">
       <TopBar />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 sm:px-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight">My Orders</h1>
-            <p className="text-sm text-muted-foreground">
-              {orders?.length ? `${orders.length} order${orders.length === 1 ? "" : "s"}` : "No orders yet"}
-            </p>
-          </div>
-          {hasActive && (
-            <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600">
-              ● Active order
-            </span>
-          )}
-        </div>
+        <h1 className="mb-6 text-xl font-bold text-slate-900 md:text-2xl">
+          Recent Orders
+        </h1>
 
-        <div className="mt-5 space-y-3">
-          {isLoading
-            ? Array.from({ length: 3 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-28 animate-pulse rounded-2xl border border-border bg-surface"
-                />
-              ))
-            : orders && orders.length > 0
-              ? orders.map((o) => <OrderCard key={o.id} order={o} />)
-              : (
-                <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
-                  <ShoppingBag className="mx-auto h-8 w-8 text-muted-foreground" />
-                  <p className="mt-3 text-sm font-medium">No past orders found</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Start by ordering food from campus cafeterias.
-                  </p>
-                  <Link
-                    to="/msosi"
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
-                  >
-                    <Utensils className="h-4 w-4" />
-                    Order Now
-                  </Link>
-                </div>
-              )}
-        </div>
+        {isLoading ? (
+          <div>
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div
+                key={i}
+                className="mb-4 h-44 animate-pulse rounded-2xl border border-slate-200/90 bg-[#F8F9FA]"
+              />
+            ))}
+          </div>
+        ) : orders && orders.length > 0 ? (
+          <div>
+            {orders.map((o) => (
+              <OrderCard key={o.id} order={o} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-slate-200 bg-[#F8F9FA] p-10 text-center">
+            <ShoppingBag className="mx-auto h-8 w-8 text-slate-300" />
+            <p className="mt-3 text-sm font-semibold text-slate-900">
+              No past orders found.
+            </p>
+            <p className="mt-1 text-xs text-slate-500">
+              Start by ordering food from campus cafeterias.
+            </p>
+            <Link
+              to="/msosi"
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#2ECC71] px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#27ae60]"
+            >
+              <Utensils className="h-4 w-4" />
+              Order Now
+            </Link>
+          </div>
+        )}
       </main>
       <Footer />
     </div>
@@ -131,71 +145,73 @@ function OrdersPage() {
 function TopBar() {
   const navigate = useNavigate();
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-2xl items-center gap-3 px-4 sm:px-6">
         <button
           onClick={() => navigate({ to: "/msosi" })}
-          className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2"
+          className="grid h-9 w-9 place-items-center rounded-full text-slate-700 transition-colors hover:bg-slate-100"
           aria-label="Go back"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <span className="text-base font-semibold tracking-tight">My Orders</span>
+        <span className="text-base font-bold tracking-tight text-slate-900">
+          MUST Food Fasta
+        </span>
       </div>
     </header>
   );
 }
 
 function OrderCard({ order }: { order: FoodOrder }) {
-  const firstItem = order.items?.[0];
-  const extra = Math.max(0, (order.items?.length ?? 0) - 1);
-  const active = ["pending", "preparing", "on_the_way"].includes(order.status);
+  const navigate = useNavigate();
+  const items = order.items ?? [];
+  const title =
+    items.length > 0
+      ? items
+          .map(
+            (i) => i.name + (i.addSoda ? " + Soda" : ""),
+          )
+          .join(" + ")
+      : "Order";
+  const statusClass = STATUS_STYLE[order.status] ?? "bg-slate-200/70 text-slate-500";
+  const statusText = STATUS_TEXT[order.status] ?? order.status;
+
+  const handleReorder = () => {
+    if (items.length === 0) {
+      toast.error("This order has no items to reorder.");
+      return;
+    }
+    setCartItems(items);
+    toast.success("Order items added to checkout!");
+    navigate({ to: "/msosi/checkout" });
+  };
 
   return (
-    <Link
-      to="/msosi/success/$orderId"
-      params={{ orderId: order.id }}
-      className="block rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-primary/40"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold">
-            {firstItem?.name ?? "Order"}
-            {extra > 0 && <span className="text-muted-foreground"> +{extra} more</span>}
-          </p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            #{order.id.slice(0, 8)}
-          </p>
-        </div>
-        <span className="whitespace-nowrap text-sm font-bold text-amber-600">
-          {formatTsh(order.total_tsh)}
+    <article className="shadow-2xs mb-4 space-y-3 rounded-2xl border border-slate-200/90 bg-[#F8F9FA] p-5 sm:bg-white">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-xs font-medium text-slate-500">
+          {formatOrderDate(order.created_at)}
+        </span>
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClass}`}
+        >
+          {statusText}
         </span>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-1 font-semibold ${
-            active
-              ? "bg-emerald-500/10 text-emerald-600"
-              : "bg-surface-2 text-muted-foreground"
-          }`}
-        >
-          {STATUS_LABEL[order.status] ?? order.status}
-        </span>
-        {order.delivery_area && (
-          <span className="inline-flex items-center gap-1">
-            <MapPin className="h-3 w-3" />
-            {order.delivery_area}
-            {order.room ? ` · ${order.room}` : ""}
-          </span>
-        )}
-        {order.phone && (
-          <span className="inline-flex items-center gap-1">
-            <Phone className="h-3 w-3" />
-            {order.phone}
-          </span>
-        )}
-      </div>
-    </Link>
+      <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+
+      <p className="text-lg font-bold text-slate-900 sm:text-xl">
+        {formatTsh(order.total_tsh, "TZS")}
+      </p>
+
+      <button
+        type="button"
+        onClick={handleReorder}
+        className="w-full rounded-full bg-[#2ECC71] px-6 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-[#27ae60] active:scale-[0.98]"
+      >
+        Reorder
+      </button>
+    </article>
   );
 }
