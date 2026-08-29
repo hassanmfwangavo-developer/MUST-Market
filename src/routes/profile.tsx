@@ -6,6 +6,7 @@ import {
   Clock,
   Copy,
   Flame,
+  LogOut,
   MapPin,
   Moon,
   Phone,
