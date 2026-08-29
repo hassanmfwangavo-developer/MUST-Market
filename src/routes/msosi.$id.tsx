@@ -164,7 +164,7 @@ function MsosiDetail() {
         {/* ===================== ADD-ONS ===================== */}
         <section className="mt-6">
           <h2 className="mb-2 text-sm font-bold tracking-tight text-slate-900">
-            Viongezo (hiari)
+            Add-ons <span className="font-medium text-slate-400">(Optional)</span>
           </h2>
           <button
             type="button"
