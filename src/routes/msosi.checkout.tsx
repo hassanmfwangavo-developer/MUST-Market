@@ -362,7 +362,7 @@ function MsosiCheckout() {
       </div>
 
       {/* ===================== STICKY BOTTOM PAYMENT CTA ===================== */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden">
         <button
           type="button"
           onClick={handlePay}
