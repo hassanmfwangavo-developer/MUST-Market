@@ -1,0 +1,85 @@
+import { supabase } from "@/integrations/supabase/client";
+
+export type OrderItem = {
+  itemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  imageUrl?: string;
+  vendorName?: string;
+  addSoda?: boolean;
+};
+
+export type FoodOrder = {
+  id: string;
+  user_id: string;
+  items: OrderItem[];
+  total_tsh: number;
+  status: string;
+  delivery_area: string;
+  room: string;
+  phone: string;
+  eta_minutes: number;
+  created_at: string;
+};
+
+export const ACTIVE_STATUSES = ["pending", "preparing", "on_the_way"] as const;
+
+export const STATUS_LABEL: Record<string, string> = {
+  pending: "🧾 Agizo limepokelewa",
+  preparing: "🍲 Jikoni Inapikwa",
+  on_the_way: "🚴 Njiani kuja kwako",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
+};
+
+export type SavedLocation = {
+  id: string;
+  label: string;
+  area: string;
+  room: string;
+  is_default: boolean;
+};
+
+export async function fetchOrders(userId: string): Promise<FoodOrder[]> {
+  const { data, error } = await supabase
+    .from("food_orders")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []).map((row) => ({
+    ...row,
+    items: (Array.isArray(row.items) ? row.items : []) as unknown as OrderItem[],
+  })) as FoodOrder[];
+}
+
+export async function fetchLocations(userId: string): Promise<SavedLocation[]> {
+  const { data, error } = await supabase
+    .from("user_locations")
+    .select("id, label, area, room, is_default")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as SavedLocation[];
+}
+
+export async function createOrder(input: {
+  userId: string;
+  items: OrderItem[];
+  total: number;
+  area: string;
+  room: string;
+  phone: string;
+}) {
+  const { error } = await supabase.from("food_orders").insert({
+    user_id: input.userId,
+    items: input.items as unknown as never,
+    total_tsh: input.total,
+    delivery_area: input.area,
+    room: input.room,
+    phone: input.phone,
+    status: "preparing",
+  });
+  if (error) throw error;
+}
