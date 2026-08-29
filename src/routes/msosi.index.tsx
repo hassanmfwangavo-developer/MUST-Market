@@ -18,22 +18,25 @@ import { Footer } from "@/components/footer";
 import { fetchMenuItems, formatTsh } from "@/lib/menu";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
+import { fetchVendors } from "@/lib/vendors";
 
 
 export const Route = createFileRoute("/msosi/")({
   head: () => ({
     meta: [
-      { title: "Msosi Fasta – Agiza Chakula cha Cafeteria MUST" },
+      { title: "MUST Food Fasta – Order Cafeteria Food on Campus" },
       {
         name: "description",
         content:
-          "Agiza msosi utokeapo cafeterias na kufikishiwa mlangoni kwa dakika chache. Msosi Fasta — huduma ya haraka ya wanafunzi wa MUST.",
+          "Order fast food from MUST campus cafeterias and get it delivered to your doorstep in minutes. Browse menus, offers and trusted restaurants.",
       },
-      { property: "og:title", content: "Msosi Fasta — Express Campus Delivery" },
+      { property: "og:title", content: "MUST Food Fasta — Express Campus Delivery" },
       {
         property: "og:description",
-        content: "Agiza msosi ufiwe mlangoni kwa dk chache. MUST Market.",
+        content: "Order food delivered to your doorstep in minutes. MUST Market.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "https://must-campus-swap.lovable.app/msosi" },
     ],
     links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/msosi" }],
@@ -44,35 +47,35 @@ export const Route = createFileRoute("/msosi/")({
 const FALLBACK_CATEGORIES: FoodCategory[] = [
   {
     id: "fb-biryani",
-    name: "Biryani",
+    name: "Rice & Biryani",
     icon_url: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=200&q=80",
     display_order: 0,
     is_active: true,
   },
   {
     id: "fb-chips",
-    name: "Chips",
+    name: "Chips & Fast Food",
     icon_url: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&q=80",
     display_order: 1,
     is_active: true,
   },
   {
     id: "fb-swahili",
-    name: "Swahili",
+    name: "Swahili Dishes",
     icon_url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80",
     display_order: 2,
     is_active: true,
   },
   {
-    id: "fb-burger",
-    name: "Burger",
+    id: "fb-snacks",
+    name: "Snacks",
     icon_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80",
     display_order: 3,
     is_active: true,
   },
   {
     id: "fb-drinks",
-    name: "Vinywaji",
+    name: "Drinks & Juices",
     icon_url: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=200&q=80",
     display_order: 4,
     is_active: true,
@@ -111,15 +114,16 @@ function useCountdown(endsAt: string | null) {
 }
 
 const BOTTOM_TABS = [
-  { key: "home", label: "Nyumbani", icon: Home, active: true },
-  { key: "orders", label: "Maagizo", icon: ClipboardList, active: false },
-  { key: "cart", label: "Kikapu", icon: ShoppingCart, active: false },
-  { key: "account", label: "Akaunti", icon: User, active: false },
+  { key: "home", label: "Home", icon: Home, active: true },
+  { key: "orders", label: "Orders", icon: ClipboardList, active: false },
+  { key: "help", label: "Help", icon: LifeBuoy, active: false },
+  { key: "account", label: "Account", icon: User, active: false },
 ] as const;
 
 function MsosiFasta() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeVendor, setActiveVendor] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -136,6 +140,11 @@ function MsosiFasta() {
   const { data: dbCategories } = useQuery({
     queryKey: ["food_categories_public"],
     queryFn: fetchFoodCategories,
+  });
+
+  const { data: vendors = [] } = useQuery({
+    queryKey: ["vendors_public"],
+    queryFn: fetchVendors,
   });
 
   const categories = useMemo(() => {
@@ -160,18 +169,23 @@ function MsosiFasta() {
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
     const cat = activeCategory?.toLowerCase() ?? null;
+    const vendor = activeVendor?.toLowerCase() ?? null;
     return menu.filter((item) => {
       const catOk =
         !cat ||
         item.category.toLowerCase().includes(cat) ||
         item.name.toLowerCase().includes(cat);
+      const vendorOk =
+        !vendor ||
+        item.vendor_name.toLowerCase().includes(vendor) ||
+        vendor.includes(item.vendor_name.toLowerCase());
       const qOk =
         !q ||
         item.name.toLowerCase().includes(q) ||
         item.vendor_name.toLowerCase().includes(q);
-      return catOk && qOk;
+      return catOk && vendorOk && qOk;
     });
-  }, [menu, activeCategory, query]);
+  }, [menu, activeCategory, activeVendor, query]);
 
   const openDish = (id: string) => navigate({ to: "/msosi/$id", params: { id } });
 
@@ -180,8 +194,8 @@ function MsosiFasta() {
     await claimOffer(slide);
     toast.success(
       slide.promo_code
-        ? `Ofa imehifadhiwa! Code ${slide.promo_code} itatumika kwenye malipo.`
-        : "Ofa imehifadhiwa! Itatumika kwenye malipo.",
+        ? `Offer saved! Code ${slide.promo_code} will be applied at checkout.`
+        : "Offer saved! It will be applied at checkout.",
     );
     const first = menu[0];
     if (first) openDish(first.id);
@@ -214,7 +228,7 @@ function MsosiFasta() {
             <Link
               to="/"
               className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-xs transition-colors hover:bg-slate-50 hover:text-[#008542]"
-              aria-label="Rudi kwenye Portal"
+              aria-label="Back to portal"
             >
               <ArrowLeft className="h-4 w-4" />
             </Link>
@@ -223,7 +237,7 @@ function MsosiFasta() {
                 MUST Food <span className="text-[#008542]">Fasta</span>
               </h1>
               <p className="truncate text-[11px] font-medium text-slate-500">
-                Agiza ufikishiwe mpaka mlangoni
+                Order fast food delivered to your doorstep
               </p>
             </div>
           </div>
@@ -234,8 +248,8 @@ function MsosiFasta() {
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              aria-label="Tafuta chakula"
-              placeholder="Tafuta chakula, mf. Chips Kuku…"
+              aria-label="Search food or restaurant"
+              placeholder="Search food or restaurant..."
               className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 shadow-xs placeholder:text-slate-400 focus:border-[#008542] focus:outline-none focus:ring-2 focus:ring-[#008542]/15"
             />
           </div>
