@@ -263,6 +263,16 @@ function MsosiCheckout() {
                   {formatTsh(subtotal, "TSh")}
                 </span>
               </div>
+              {discount > 0 && (
+                <div className="flex items-center justify-between text-[#008542]">
+                  <span className="font-semibold">
+                    Punguzo {claimed?.promoCode ? `(${claimed.promoCode})` : ""} −
+                    {claimed?.discountPercent}%
+                  </span>
+                  <span className="font-bold">− {formatTsh(discount, "TSh")}</span>
+                </div>
+              )}
+
               <div className="flex items-center justify-between text-slate-600">
                 <span>Delivery Fee</span>
                 <span className="font-semibold text-slate-900">
