@@ -668,7 +668,13 @@ function VendorsTab() {
   });
 
   const update = useMutation({
-    mutationFn: async ({ id, patch }: { id: string; patch: Record<string, unknown> }) => {
+    mutationFn: async ({
+      id,
+      patch,
+    }: {
+      id: string;
+      patch: { name?: string; is_featured?: boolean };
+    }) => {
       const { error } = await supabase.from("vendors").update(patch).eq("id", id);
       if (error) throw new Error(error.message);
     },
