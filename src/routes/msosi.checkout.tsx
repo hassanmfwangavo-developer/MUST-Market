@@ -15,6 +15,7 @@ import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
 import { supabase } from "@/integrations/supabase/client";
 import { createOrder } from "@/lib/orders";
+import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 
 
 const DELIVERY_FEE = 1000;
@@ -87,8 +88,14 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const [claimed] = useState(() => getClaimedOffer());
+
   const subtotal = order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
-  const total = subtotal + DELIVERY_FEE;
+  const discount = claimed?.discountPercent
+    ? Math.round((subtotal * claimed.discountPercent) / 100)
+    : 0;
+  const total = subtotal - discount + DELIVERY_FEE;
+
 
   const handlePay = async () => {
     const cleanName = fullName.trim();
@@ -130,7 +137,9 @@ function MsosiCheckout() {
           phone: cleanPhone,
         });
       }
+      clearClaimedOffer();
       // Payment integration (Snippe STK push) will be wired here.
+
       toast.success(
         `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
       );
@@ -256,6 +265,16 @@ function MsosiCheckout() {
                   {formatTsh(subtotal, "TSh")}
                 </span>
               </div>
+              {discount > 0 && (
+                <div className="flex items-center justify-between text-[#008542]">
+                  <span className="font-semibold">
+                    Punguzo {claimed?.promoCode ? `(${claimed.promoCode})` : ""} −
+                    {claimed?.discountPercent}%
+                  </span>
+                  <span className="font-bold">− {formatTsh(discount, "TSh")}</span>
+                </div>
+              )}
+
               <div className="flex items-center justify-between text-slate-600">
                 <span>Delivery Fee</span>
                 <span className="font-semibold text-slate-900">

@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Search,
@@ -11,9 +12,13 @@ import {
   Plus,
   Star,
   ChevronRight,
+  Utensils,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
+import { fetchMenuItems, formatTsh } from "@/lib/menu";
+import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
+import { fetchActiveBanners, claimOffer } from "@/lib/offers";
+
 
 export const Route = createFileRoute("/msosi/")({
   head: () => ({
@@ -36,14 +41,74 @@ export const Route = createFileRoute("/msosi/")({
   component: MsosiFasta,
 });
 
-const CATEGORIES = [
-  "Zote",
-  "Wali / Biryani",
-  "Chips / Fast Food",
-  "Ugali / Swahili",
-  "Vinywaji",
-  "Snacks",
-] as const;
+const FALLBACK_CATEGORIES: FoodCategory[] = [
+  {
+    id: "fb-biryani",
+    name: "Biryani",
+    icon_url: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=200&q=80",
+    display_order: 0,
+    is_active: true,
+  },
+  {
+    id: "fb-chips",
+    name: "Chips",
+    icon_url: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&q=80",
+    display_order: 1,
+    is_active: true,
+  },
+  {
+    id: "fb-swahili",
+    name: "Swahili",
+    icon_url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80",
+    display_order: 2,
+    is_active: true,
+  },
+  {
+    id: "fb-burger",
+    name: "Burger",
+    icon_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80",
+    display_order: 3,
+    is_active: true,
+  },
+  {
+    id: "fb-drinks",
+    name: "Vinywaji",
+    icon_url: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=200&q=80",
+    display_order: 4,
+    is_active: true,
+  },
+];
+
+const BANNER_GRADIENTS: Record<string, string> = {
+  flash_sale: "from-orange-500 to-amber-500",
+  first_order: "from-[#008542] to-emerald-500",
+  ijumaa_booking: "from-emerald-600 to-teal-500",
+  jpili_booking: "from-rose-500 to-orange-500",
+};
+
+const BANNER_CTA: Record<string, string> = {
+  flash_sale: "Order Now",
+  first_order: "Order Now",
+  ijumaa_booking: "Book Now",
+  jpili_booking: "Book Now",
+};
+
+function useCountdown(endsAt: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!endsAt) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [endsAt]);
+  if (!endsAt) return null;
+  const diff = new Date(endsAt).getTime() - now;
+  if (Number.isNaN(diff) || diff <= 0) return null;
+  const h = Math.floor(diff / 3_600_000);
+  const m = Math.floor((diff % 3_600_000) / 60_000);
+  const s = Math.floor((diff % 60_000) / 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
 
 const BOTTOM_TABS = [
   { key: "home", label: "Nyumbani", icon: Home, active: true },
@@ -54,7 +119,7 @@ const BOTTOM_TABS = [
 
 function MsosiFasta() {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState<string>("Zote");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -63,13 +128,43 @@ function MsosiFasta() {
     queryFn: fetchMenuItems,
   });
 
-  const heroSlides = useMemo(() => menu.slice(0, 3), [menu]);
-  const hero: MenuItem | undefined = heroSlides[activeSlide] ?? heroSlides[0];
+  const { data: banners = [] } = useQuery({
+    queryKey: ["active_banners"],
+    queryFn: fetchActiveBanners,
+  });
+
+  const { data: dbCategories } = useQuery({
+    queryKey: ["food_categories_public"],
+    queryFn: fetchFoodCategories,
+  });
+
+  const categories = useMemo(() => {
+    const active = (dbCategories ?? []).filter((c) => c.is_active).slice(0, 5);
+    return active.length ? active : FALLBACK_CATEGORIES;
+  }, [dbCategories]);
+
+  const slide = banners[activeSlide] ?? banners[0];
+  const countdown = useCountdown(
+    slide?.banner_type === "flash_sale" ? (slide?.countdown_ends_at ?? null) : null,
+  );
+
+  // Auto-play the banner carousel.
+  useEffect(() => {
+    if (banners.length < 2) return;
+    const t = setInterval(() => {
+      setActiveSlide((i) => (i + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(t);
+  }, [banners.length]);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const cat = activeCategory?.toLowerCase() ?? null;
     return menu.filter((item) => {
-      const catOk = activeCategory === "Zote" || item.category === activeCategory;
+      const catOk =
+        !cat ||
+        item.category.toLowerCase().includes(cat) ||
+        item.name.toLowerCase().includes(cat);
       const qOk =
         !q ||
         item.name.toLowerCase().includes(q) ||
@@ -79,6 +174,19 @@ function MsosiFasta() {
   }, [menu, activeCategory, query]);
 
   const openDish = (id: string) => navigate({ to: "/msosi/$id", params: { id } });
+
+  const handleClaim = async () => {
+    if (!slide) return;
+    await claimOffer(slide);
+    toast.success(
+      slide.promo_code
+        ? `Ofa imehifadhiwa! Code ${slide.promo_code} itatumika kwenye malipo.`
+        : "Ofa imehifadhiwa! Itatumika kwenye malipo.",
+    );
+    const first = menu[0];
+    if (first) openDish(first.id);
+  };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6] pb-20 md:pb-0">
@@ -134,77 +242,126 @@ function MsosiFasta() {
         </div>
       </header>
 
-      {/* ===================== CATEGORY SHELF ===================== */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4">
-        <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto py-3 scrollbar-none">
-          {CATEGORIES.map((cat) => {
-            const active = cat === activeCategory;
+      {/* ===================== PROMO BANNER CAROUSEL ===================== */}
+      {slide && (
+        <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
+          <div
+            className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${
+              BANNER_GRADIENTS[slide.banner_type] ?? "from-orange-500 to-amber-500"
+            } p-5 shadow-sm sm:p-7`}
+          >
+            {slide.image_url && (
+              <img
+                src={slide.image_url}
+                alt=""
+                aria-hidden
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-35"
+              />
+            )}
+            <div className="relative flex items-center gap-4">
+              <div className="min-w-0 flex-1">
+                {slide.promo_code && (
+                  <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur">
+                    Use code {slide.promo_code}
+                  </span>
+                )}
+                <h2 className="mt-2 text-lg font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
+                  {slide.title}
+                </h2>
+                {slide.subtitle && (
+                  <p className="mt-1 line-clamp-2 text-xs font-medium text-white/85 sm:text-sm">
+                    {slide.subtitle}
+                  </p>
+                )}
+                {countdown && (
+                  <p className="mt-2 inline-flex items-center rounded-lg bg-black/25 px-2.5 py-1 font-mono text-xs font-bold text-white">
+                    ⏳ {countdown}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleClaim}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-sm font-bold text-slate-900 shadow-xs transition-transform hover:scale-[1.03]"
+                >
+                  {BANNER_CTA[slide.banner_type] ?? "Order Now"}
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+              {slide.discount_percent ? (
+                <div className="hidden shrink-0 rounded-2xl bg-white/20 px-4 py-3 text-center text-white backdrop-blur sm:block">
+                  <p className="text-3xl font-extrabold leading-none">
+                    {slide.discount_percent}%
+                  </p>
+                  <p className="text-[11px] font-bold uppercase tracking-wide">Off</p>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {banners.length > 1 && (
+            <div className="mt-2.5 flex justify-center gap-1.5">
+              {banners.map((b, i) => (
+                <button
+                  key={b.id}
+                  onClick={() => setActiveSlide(i)}
+                  aria-label={`Banner ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === activeSlide ? "w-5 bg-[#008542]" : "w-1.5 bg-slate-400/60"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ===================== TOP 5 CATEGORY CARDS ===================== */}
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pt-5">
+        <div className="flex items-start justify-between gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {categories.map((cat) => {
+            const active = activeCategory === cat.name;
             return (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`shrink-0 snap-start whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold shadow-xs transition-all ${
-                  active
-                    ? "bg-[#008542] text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-[#008542]/40 hover:text-[#008542]"
-                }`}
+                key={cat.id}
+                type="button"
+                onClick={() => setActiveCategory(active ? null : cat.name)}
+                className="flex shrink-0 basis-0 grow flex-col items-center"
               >
-                {cat}
+                <span
+                  className={`flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-white p-2 shadow-sm transition-transform hover:scale-105 sm:h-20 sm:w-20 ${
+                    active
+                      ? "border-2 border-[#008542] ring-4 ring-[#008542]/15"
+                      : "border border-slate-200"
+                  }`}
+                >
+                  {cat.icon_url ? (
+                    <img
+                      src={cat.icon_url}
+                      alt={cat.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-12 w-12 rounded-xl object-contain"
+                    />
+                  ) : (
+                    <Utensils className="h-7 w-7 text-[#008542]" />
+                  )}
+                </span>
+                <span
+                  className={`mt-1 text-center text-xs font-semibold sm:text-sm ${
+                    active ? "text-[#008542]" : "text-slate-800"
+                  }`}
+                >
+                  {cat.name}
+                </span>
               </button>
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* ===================== HERO SHOWCASE ===================== */}
-      {hero && (
-        <section className="relative z-10 mx-auto max-w-5xl px-4">
-          <button
-            type="button"
-            onClick={() => openDish(hero.id)}
-            className="relative block h-[180px] w-full overflow-hidden rounded-2xl text-left shadow-xs md:h-[260px]"
-          >
-            {hero.image_url && (
-              <img
-                src={hero.image_url}
-                alt={hero.name}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              />
-            )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-            <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-              <span className="mb-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-[#008542] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-xs">
-                ⭐ Lugha ya siku
-              </span>
-              <h2 className="text-lg font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
-                {hero.name}
-              </h2>
-              <p className="text-xs font-medium text-white/80 sm:text-sm">
-                {hero.vendor_name}
-              </p>
-              <span className="mt-2 inline-flex w-fit items-center rounded-lg bg-amber-400 px-2.5 py-1 text-xs font-bold text-amber-950 shadow-xs">
-                {formatTsh(hero.price)}
-              </span>
-            </div>
-          </button>
-
-          <div className="mt-2 flex justify-end gap-1.5">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveSlide(i)}
-                aria-label={`Slaidi ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === activeSlide ? "w-5 bg-[#008542]" : "w-1.5 bg-slate-400/60"
-                }`}
-              />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* ===================== FOOD GRID FEED ===================== */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-5">
@@ -214,7 +371,7 @@ function MsosiFasta() {
           </h2>
           <button
             onClick={() => {
-              setActiveCategory("Zote");
+              setActiveCategory(null);
               setQuery("");
             }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-[#008542] hover:underline"

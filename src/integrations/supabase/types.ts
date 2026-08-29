@@ -346,6 +346,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_claimed_offers: {
+        Row: {
+          banner_id: string | null
+          created_at: string
+          discount_percent: number
+          id: string
+          promo_code: string | null
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          banner_id?: string | null
+          created_at?: string
+          discount_percent?: number
+          id?: string
+          promo_code?: string | null
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          banner_id?: string | null
+          created_at?: string
+          discount_percent?: number
+          id?: string
+          promo_code?: string | null
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_claimed_offers_banner_id_fkey"
+            columns: ["banner_id"]
+            isOneToOne: false
+            referencedRelation: "banners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_locations: {
         Row: {
           area: string
