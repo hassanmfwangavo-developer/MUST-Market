@@ -13,6 +13,9 @@ import {
 import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
+import { supabase } from "@/integrations/supabase/client";
+import { createOrder } from "@/lib/orders";
+
 
 const DELIVERY_FEE = 1000;
 
