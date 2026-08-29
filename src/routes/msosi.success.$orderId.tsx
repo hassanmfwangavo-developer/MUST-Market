@@ -119,8 +119,8 @@ function MsosiSuccess() {
     try {
       setBusy("download");
       const blob = await makeReceipt();
-      downloadBlob(blob, `Risiti-${orderRef}.png`);
-      toast.success("Risiti imepakuliwa kwenye simu yako.");
+      downloadBlob(blob, `Receipt-${orderRef}.png`);
+      toast.success("Receipt downloaded to your phone.");
     } catch {
       toast.error("Could not generate the receipt. Please try again.");
     } finally {
@@ -134,11 +134,11 @@ function MsosiSuccess() {
       const blob = await makeReceipt();
       const shared = await shareBlob(
         blob,
-        `Risiti-${orderRef}.png`,
+        `Receipt-${orderRef}.png`,
         `Receipt for order #${orderRef} — MUST Food Fasta`,
       );
       if (!shared) {
-        downloadBlob(blob, `Risiti-${orderRef}.png`);
+        downloadBlob(blob, `Receipt-${orderRef}.png`);
         toast.success("Sharing unavailable — the receipt was downloaded instead.");
       }
     } catch {
@@ -219,7 +219,7 @@ function MsosiSuccess() {
 
             <DetailRow
               icon={<MessageCircle className="h-4 w-4 text-[#008542]" />}
-              label="Mpishi / Jikoni"
+              label="Restaurant"
             >
               <span className="font-semibold text-slate-900">{vendorName}</span>
             </DetailRow>
