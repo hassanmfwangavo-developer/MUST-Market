@@ -46,7 +46,7 @@ declare module "@tanstack/react-router" {
 export const Route = createFileRoute("/msosi/checkout")({
   head: () => ({
     meta: [
-      { title: "Checkout — Msosi Fasta | MUST Market" },
+      { title: "Checkout – MUST Food Fasta" },
       {
         name: "description",
         content:

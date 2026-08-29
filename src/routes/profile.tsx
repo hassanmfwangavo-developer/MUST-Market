@@ -39,7 +39,7 @@ const AREAS = [
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "My Profile & Orders — MUST Market" },
+      { title: "Akaunti Yangu – MUST Market" },
       {
         name: "description",
         content:

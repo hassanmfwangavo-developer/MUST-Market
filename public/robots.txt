@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 
-Sitemap: https://must-campus-swap.lovable.app/sitemap.xml
+Sitemap: https://mustmarket.store/sitemap.xml

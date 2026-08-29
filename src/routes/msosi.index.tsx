@@ -23,7 +23,7 @@ import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 export const Route = createFileRoute("/msosi/")({
   head: () => ({
     meta: [
-      { title: "Msosi Fasta — Express Campus Delivery | MUST Market" },
+      { title: "Msosi Fasta – Agiza Chakula cha Cafeteria MUST" },
       {
         name: "description",
         content:
