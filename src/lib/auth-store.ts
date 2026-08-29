@@ -1,6 +1,8 @@
 import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { claimReferral } from "@/lib/rewards.functions";
+import { clearStoredReferral, getStoredReferral } from "@/lib/referral";
 
 let open = false;
 let pendingRedirect: string | null = null;
@@ -66,7 +68,20 @@ if (typeof window !== "undefined") {
     user = u && !u.is_anonymous ? u : null;
     initialized = true;
     emitUser();
-    if (event === "SIGNED_IN" && user) void upsertProfile(user);
+    if (event === "SIGNED_IN" && user) {
+      void upsertProfile(user);
+      // Attribute a pending referral link (?ref=) to this account — first claim wins.
+      const ref = getStoredReferral();
+      if (ref) {
+        void claimReferral({ data: { inviterId: ref } })
+          .then((r) => {
+            if (r.claimed) clearStoredReferral();
+          })
+          .catch(() => {
+            /* retry on next sign-in */
+          });
+      }
+    }
   });
 }
 
