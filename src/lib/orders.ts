@@ -26,9 +26,9 @@ export type FoodOrder = {
 export const ACTIVE_STATUSES = ["pending", "preparing", "on_the_way"] as const;
 
 export const STATUS_LABEL: Record<string, string> = {
-  pending: "🧾 Agizo limepokelewa",
-  preparing: "🍲 Jikoni Inapikwa",
-  on_the_way: "🚴 Njiani kuja kwako",
+  pending: "🧾 Order received",
+  preparing: "🍲 Being prepared",
+  on_the_way: "🚴 On the way",
   delivered: "Delivered",
   cancelled: "Cancelled",
 };
