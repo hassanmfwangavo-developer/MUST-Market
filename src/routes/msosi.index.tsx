@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Search,
@@ -11,9 +12,13 @@ import {
   Plus,
   Star,
   ChevronRight,
+  Utensils,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
+import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
+import { fetchActiveBanners, claimOffer } from "@/lib/offers";
+
 
 export const Route = createFileRoute("/msosi/")({
   head: () => ({
