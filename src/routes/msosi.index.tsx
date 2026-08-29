@@ -245,38 +245,44 @@ function MsosiFasta() {
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {slide && (
         <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
-          <div
-            className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${
-              BANNER_GRADIENTS[slide.banner_type] ?? "from-orange-500 to-amber-500"
-            } p-5 shadow-sm sm:p-7`}
-          >
-            {slide.image_url && (
+          <div className="relative overflow-hidden rounded-3xl bg-slate-900 shadow-sm sm:min-h-[160px]">
+            {slide.image_url ? (
               <img
                 src={slide.image_url}
-                alt=""
-                aria-hidden
+                alt={slide.title}
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover opacity-35"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <div
+                className={`absolute inset-0 bg-gradient-to-r ${
+                  BANNER_GRADIENTS[slide.banner_type] ?? "from-orange-500 to-amber-500"
+                }`}
               />
             )}
-            <div className="relative flex items-center gap-4">
+            {/* Very subtle scrim so text stays readable without dimming the image */}
+            <div
+              aria-hidden
+              className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent"
+            />
+            <div className="relative flex items-center gap-4 p-5 sm:p-7">
               <div className="min-w-0 flex-1">
                 {slide.promo_code && (
                   <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur">
                     Use code {slide.promo_code}
                   </span>
                 )}
-                <h2 className="mt-2 text-lg font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
+                <h2 className="mt-2 text-lg font-extrabold leading-tight tracking-tight text-white drop-shadow-sm sm:text-2xl">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="mt-1 line-clamp-2 text-xs font-medium text-white/85 sm:text-sm">
+                  <p className="mt-1 line-clamp-2 text-xs font-medium text-white/90 drop-shadow-sm sm:text-sm">
                     {slide.subtitle}
                   </p>
                 )}
                 {countdown && (
-                  <p className="mt-2 inline-flex items-center rounded-lg bg-black/25 px-2.5 py-1 font-mono text-xs font-bold text-white">
+                  <p className="mt-2 inline-flex items-center rounded-lg bg-black/40 px-2.5 py-1 font-mono text-xs font-bold text-white backdrop-blur">
                     ⏳ {countdown}
                   </p>
                 )}
