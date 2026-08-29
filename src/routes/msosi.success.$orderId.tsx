@@ -183,27 +183,6 @@ function MsosiSuccess() {
           na jikoni imeanza kuandaliwa.
         </p>
 
-        {/* ===================== PROGRESS STEPPER ===================== */}
-        <section className="mt-8 w-full rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.35)] sm:p-8">
-          <div className="mb-5 flex items-center justify-between gap-3">
-            <h2 className="text-sm font-bold tracking-tight text-slate-900">
-              Hali ya Oda
-            </h2>
-            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-[#008542]">
-              <Clock className="h-3.5 w-3.5" />
-              {order?.eta_minutes ?? 20} min
-            </span>
-          </div>
-
-          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto] items-start gap-x-2 sm:gap-x-4">
-            <Step label="Lipa" caption="Imekamilika" state="done" />
-            <Connector filled />
-            <Step label="Inapikwa" caption="Sasa hivi" state="active" />
-            <Connector />
-            <Step label="Njiani" caption="Inafuata" state="pending" />
-          </div>
-        </section>
-
         {/* ===================== RECEIPT CARD ===================== */}
         <section className="mt-5 w-full overflow-hidden rounded-3xl border border-slate-200/80 bg-white text-left shadow-[0_10px_30px_-18px_rgba(15,23,42,0.35)]">
           <div className="flex items-center justify-between gap-3 border-b border-dashed border-slate-200 px-6 py-5 sm:px-8">
@@ -320,70 +299,6 @@ function MsosiSuccess() {
 }
 
 /* ----------------------------- Sub-components ----------------------------- */
-
-type StepState = "done" | "active" | "pending";
-
-function Step({
-  label,
-  caption,
-  state,
-}: {
-  label: string;
-  caption: string;
-  state: StepState;
-}) {
-  const dot =
-    state === "done"
-      ? "bg-[#008542] text-white shadow-[0_6px_16px_-6px_rgba(0,133,66,0.7)]"
-      : state === "active"
-        ? "bg-white text-[#008542] ring-2 ring-[#008542] shadow-[0_0_0_6px_rgba(0,133,66,0.12)]"
-        : "bg-slate-100 text-slate-400 ring-1 ring-slate-200";
-
-  return (
-    <div className="flex w-16 flex-col items-center gap-2 sm:w-20">
-      <span
-        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors ${dot}`}
-      >
-        {state === "done" ? (
-          <Check className="h-5 w-5" strokeWidth={3} />
-        ) : state === "active" ? (
-          <span className="relative flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#008542] opacity-60" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-[#008542]" />
-          </span>
-        ) : (
-          <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
-        )}
-      </span>
-      <span
-        className={`text-xs font-bold leading-tight ${
-          state === "pending"
-            ? "text-slate-400"
-            : state === "active"
-              ? "text-[#008542]"
-              : "text-slate-700"
-        }`}
-      >
-        {label}
-      </span>
-      <span className="text-[10px] leading-tight text-slate-400 sm:text-[11px]">
-        {caption}
-      </span>
-    </div>
-  );
-}
-
-function Connector({ filled }: { filled?: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={`mt-[21px] h-1 w-full rounded-full ${
-        filled ? "bg-[#008542]" : "bg-slate-200"
-      }`}
-    />
-  );
-}
-
 
 function DetailRow({
   icon,
