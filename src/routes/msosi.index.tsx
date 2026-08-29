@@ -387,16 +387,17 @@ function MsosiFasta() {
       <section className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-bold tracking-tight text-slate-900 sm:text-base">
-            Menu ya sasa
+            {activeVendor ? activeVendor : "Today's Menu"}
           </h2>
           <button
             onClick={() => {
               setActiveCategory(null);
+              setActiveVendor(null);
               setQuery("");
             }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-[#008542] hover:underline"
           >
-            Zote <ChevronRight className="h-3.5 w-3.5" />
+            All <ChevronRight className="h-3.5 w-3.5" />
           </button>
         </div>
 
@@ -411,7 +412,7 @@ function MsosiFasta() {
           </div>
         ) : visible.length === 0 ? (
           <p className="rounded-2xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
-            Hakuna chakula kilichopatikana kwa utafutaji huu.
+            No food found for this search.
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
