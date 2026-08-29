@@ -27,6 +27,7 @@ import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
 import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
+import { Route as MsosiSuccessOrderIdRouteImport } from './routes/msosi.success.$orderId'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -118,6 +119,11 @@ const MsosiIdRoute = MsosiIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => MsosiRoute,
 } as any)
+const MsosiSuccessOrderIdRoute = MsosiSuccessOrderIdRouteImport.update({
+  id: '/success/$orderId',
+  path: '/success/$orderId',
+  getParentRoute: () => MsosiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/msosi/': typeof MsosiIndexRoute
+  '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/msosi': typeof MsosiIndexRoute
+  '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -178,6 +186,7 @@ export interface FileRoutesById {
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/msosi/': typeof MsosiIndexRoute
+  '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -200,6 +209,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/report/$id'
     | '/msosi/'
+    | '/msosi/success/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/report/$id'
     | '/msosi'
+    | '/msosi/success/$orderId'
   id:
     | '__root__'
     | '/'
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/product/$id'
     | '/report/$id'
     | '/msosi/'
+    | '/msosi/success/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -387,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiIdRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/msosi/success/$orderId': {
+      id: '/msosi/success/$orderId'
+      path: '/success/$orderId'
+      fullPath: '/msosi/success/$orderId'
+      preLoaderRoute: typeof MsosiSuccessOrderIdRouteImport
+      parentRoute: typeof MsosiRoute
+    }
   }
 }
 
@@ -394,12 +413,14 @@ interface MsosiRouteChildren {
   MsosiIdRoute: typeof MsosiIdRoute
   MsosiCheckoutRoute: typeof MsosiCheckoutRoute
   MsosiIndexRoute: typeof MsosiIndexRoute
+  MsosiSuccessOrderIdRoute: typeof MsosiSuccessOrderIdRoute
 }
 
 const MsosiRouteChildren: MsosiRouteChildren = {
   MsosiIdRoute: MsosiIdRoute,
   MsosiCheckoutRoute: MsosiCheckoutRoute,
   MsosiIndexRoute: MsosiIndexRoute,
+  MsosiSuccessOrderIdRoute: MsosiSuccessOrderIdRoute,
 }
 
 const MsosiRouteWithChildren = MsosiRoute._addFileChildren(MsosiRouteChildren)

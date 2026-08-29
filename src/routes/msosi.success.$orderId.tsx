@@ -64,7 +64,7 @@ function MsosiSuccess() {
   const room = order?.room ?? locationState?.room ?? "—";
   const dishName = order?.items?.[0]?.name ?? locationState?.name ?? "Oda yako";
   const vendorName =
-    order?.items?.[0]?.vendor_name ?? locationState?.vendorName ?? "Msosi Fasta";
+    order?.items?.[0]?.vendorName ?? locationState?.vendorName ?? "Msosi Fasta";
 
   const shortId = isUuid ? orderId.slice(0, 8).toUpperCase() : orderId.toUpperCase();
   const whatsappText = encodeURIComponent(
