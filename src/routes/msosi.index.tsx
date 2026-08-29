@@ -41,14 +41,74 @@ export const Route = createFileRoute("/msosi/")({
   component: MsosiFasta,
 });
 
-const CATEGORIES = [
-  "Zote",
-  "Wali / Biryani",
-  "Chips / Fast Food",
-  "Ugali / Swahili",
-  "Vinywaji",
-  "Snacks",
-] as const;
+const FALLBACK_CATEGORIES: FoodCategory[] = [
+  {
+    id: "fb-biryani",
+    name: "Biryani",
+    icon_url: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=200&q=80",
+    display_order: 0,
+    is_active: true,
+  },
+  {
+    id: "fb-chips",
+    name: "Chips",
+    icon_url: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&q=80",
+    display_order: 1,
+    is_active: true,
+  },
+  {
+    id: "fb-swahili",
+    name: "Swahili",
+    icon_url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80",
+    display_order: 2,
+    is_active: true,
+  },
+  {
+    id: "fb-burger",
+    name: "Burger",
+    icon_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80",
+    display_order: 3,
+    is_active: true,
+  },
+  {
+    id: "fb-drinks",
+    name: "Vinywaji",
+    icon_url: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=200&q=80",
+    display_order: 4,
+    is_active: true,
+  },
+];
+
+const BANNER_GRADIENTS: Record<string, string> = {
+  flash_sale: "from-orange-500 to-amber-500",
+  first_order: "from-[#008542] to-emerald-500",
+  ijumaa_booking: "from-emerald-600 to-teal-500",
+  jpili_booking: "from-rose-500 to-orange-500",
+};
+
+const BANNER_CTA: Record<string, string> = {
+  flash_sale: "Order Now",
+  first_order: "Order Now",
+  ijumaa_booking: "Book Now",
+  jpili_booking: "Book Now",
+};
+
+function useCountdown(endsAt: string | null) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!endsAt) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [endsAt]);
+  if (!endsAt) return null;
+  const diff = new Date(endsAt).getTime() - now;
+  if (Number.isNaN(diff) || diff <= 0) return null;
+  const h = Math.floor(diff / 3_600_000);
+  const m = Math.floor((diff % 3_600_000) / 60_000);
+  const s = Math.floor((diff % 60_000) / 1000);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
 
 const BOTTOM_TABS = [
   { key: "home", label: "Nyumbani", icon: Home, active: true },
@@ -59,7 +119,7 @@ const BOTTOM_TABS = [
 
 function MsosiFasta() {
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState<string>("Zote");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
 
@@ -68,13 +128,43 @@ function MsosiFasta() {
     queryFn: fetchMenuItems,
   });
 
-  const heroSlides = useMemo(() => menu.slice(0, 3), [menu]);
-  const hero: MenuItem | undefined = heroSlides[activeSlide] ?? heroSlides[0];
+  const { data: banners = [] } = useQuery({
+    queryKey: ["active_banners"],
+    queryFn: fetchActiveBanners,
+  });
+
+  const { data: dbCategories } = useQuery({
+    queryKey: ["food_categories_public"],
+    queryFn: fetchFoodCategories,
+  });
+
+  const categories = useMemo(() => {
+    const active = (dbCategories ?? []).filter((c) => c.is_active).slice(0, 5);
+    return active.length ? active : FALLBACK_CATEGORIES;
+  }, [dbCategories]);
+
+  const slide = banners[activeSlide] ?? banners[0];
+  const countdown = useCountdown(
+    slide?.banner_type === "flash_sale" ? (slide?.countdown_ends_at ?? null) : null,
+  );
+
+  // Auto-play the banner carousel.
+  useEffect(() => {
+    if (banners.length < 2) return;
+    const t = setInterval(() => {
+      setActiveSlide((i) => (i + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(t);
+  }, [banners.length]);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const cat = activeCategory?.toLowerCase() ?? null;
     return menu.filter((item) => {
-      const catOk = activeCategory === "Zote" || item.category === activeCategory;
+      const catOk =
+        !cat ||
+        item.category.toLowerCase().includes(cat) ||
+        item.name.toLowerCase().includes(cat);
       const qOk =
         !q ||
         item.name.toLowerCase().includes(q) ||
@@ -84,6 +174,19 @@ function MsosiFasta() {
   }, [menu, activeCategory, query]);
 
   const openDish = (id: string) => navigate({ to: "/msosi/$id", params: { id } });
+
+  const handleClaim = async () => {
+    if (!slide) return;
+    await claimOffer(slide);
+    toast.success(
+      slide.promo_code
+        ? `Ofa imehifadhiwa! Code ${slide.promo_code} itatumika kwenye malipo.`
+        : "Ofa imehifadhiwa! Itatumika kwenye malipo.",
+    );
+    const first = menu[0];
+    if (first) openDish(first.id);
+  };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6] pb-20 md:pb-0">
