@@ -106,7 +106,6 @@ function MsosiSuccess() {
         hour: "2-digit",
         minute: "2-digit",
       }),
-      customerName: locationState?.name && !order ? undefined : undefined,
       phone,
       area,
       room,
