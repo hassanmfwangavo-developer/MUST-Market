@@ -134,7 +134,7 @@ function TopBar() {
     <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-2xl items-center gap-3 px-4 sm:px-6">
         <button
-          onClick={() => navigate("/msosi")}
+          onClick={() => navigate({ to: "/msosi" })}
           className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2"
           aria-label="Rudi nyuma"
         >
