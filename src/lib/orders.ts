@@ -71,15 +71,35 @@ export async function createOrder(input: {
   area: string;
   room: string;
   phone: string;
-}) {
-  const { error } = await supabase.from("food_orders").insert({
-    user_id: input.userId,
-    items: input.items as unknown as never,
-    total_tsh: input.total,
-    delivery_area: input.area,
-    room: input.room,
-    phone: input.phone,
-    status: "preparing",
-  });
+}): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("food_orders")
+    .insert({
+      user_id: input.userId,
+      items: input.items as unknown as never,
+      total_tsh: input.total,
+      delivery_area: input.area,
+      room: input.room,
+      phone: input.phone,
+      status: "preparing",
+    })
+    .select("id")
+    .single();
   if (error) throw error;
+  return data?.id ?? null;
+}
+
+export async function fetchOrderById(
+  orderId: string,
+): Promise<FoodOrder | null> {
+  const { data, error } = await supabase
+    .from("food_orders")
+    .select("*")
+    .eq("id", orderId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    ...data,
+    items: (Array.isArray(data.items) ? data.items : []) as unknown as OrderItem[],
+  } as FoodOrder;
 }
