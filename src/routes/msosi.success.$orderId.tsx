@@ -324,45 +324,67 @@ function MsosiSuccess() {
 
 type StepState = "done" | "active" | "pending";
 
-function Step({ label, state }: { label: string; state: StepState }) {
-  if (state === "done") {
-    return (
-      <div className="flex flex-col items-center gap-1.5">
-        <span className="grid h-9 w-9 place-items-center rounded-full bg-[#008542] text-white shadow-sm">
-          <Check className="h-4 w-4" strokeWidth={3} />
-        </span>
-        <span className="text-xs font-semibold text-slate-700">{label}</span>
-      </div>
-    );
-  }
-  if (state === "active") {
-    return (
-      <div className="flex flex-col items-center gap-1.5">
-        <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-50 text-[#008542] shadow-[0_0_0_4px_rgba(0,133,66,0.15)] ring-1 ring-[#008542]/40">
-          <span className="h-2.5 w-2.5 animate-ping rounded-full bg-[#008542]" />
-        </span>
-        <span className="text-xs font-bold text-[#008542]">{label}</span>
-      </div>
-    );
-  }
+function Step({
+  label,
+  caption,
+  state,
+}: {
+  label: string;
+  caption: string;
+  state: StepState;
+}) {
+  const dot =
+    state === "done"
+      ? "bg-[#008542] text-white shadow-[0_6px_16px_-6px_rgba(0,133,66,0.7)]"
+      : state === "active"
+        ? "bg-white text-[#008542] ring-2 ring-[#008542] shadow-[0_0_0_6px_rgba(0,133,66,0.12)]"
+        : "bg-slate-100 text-slate-400 ring-1 ring-slate-200";
+
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      <span className="grid h-9 w-9 place-items-center rounded-full bg-slate-100 text-slate-400 ring-1 ring-slate-200">
-        <span className="h-2 w-2 rounded-full bg-slate-300" />
+    <div className="flex w-16 flex-col items-center gap-2 sm:w-20">
+      <span
+        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors ${dot}`}
+      >
+        {state === "done" ? (
+          <Check className="h-5 w-5" strokeWidth={3} />
+        ) : state === "active" ? (
+          <span className="relative flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#008542] opacity-60" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-[#008542]" />
+          </span>
+        ) : (
+          <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+        )}
       </span>
-      <span className="text-xs font-medium text-slate-400">{label}</span>
+      <span
+        className={`text-xs font-bold leading-tight ${
+          state === "pending"
+            ? "text-slate-400"
+            : state === "active"
+              ? "text-[#008542]"
+              : "text-slate-700"
+        }`}
+      >
+        {label}
+      </span>
+      <span className="text-[10px] leading-tight text-slate-400 sm:text-[11px]">
+        {caption}
+      </span>
     </div>
   );
 }
 
-function Connector() {
+function Connector({ filled }: { filled?: boolean }) {
   return (
     <span
       aria-hidden
-      className="h-0.5 flex-1 rounded-full bg-slate-200"
+      className={`mt-[21px] h-1 w-full rounded-full ${
+        filled ? "bg-[#008542]" : "bg-slate-200"
+      }`}
     />
   );
 }
+
 
 function DetailRow({
   icon,
