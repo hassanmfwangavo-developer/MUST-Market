@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { createOrder, type OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
 import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
+import { completeOrderRewards } from "@/lib/rewards.functions";
 
 
 const DELIVERY_FEE = 1000;
@@ -148,6 +149,20 @@ function MsosiCheckout() {
           room: room.trim(),
           phone: cleanPhone,
         });
+      }
+      // Award streak + reward points (idempotent server-side; non-fatal).
+      if (orderId) {
+        try {
+          const rewards = await completeOrderRewards({ data: { orderId } });
+          if (rewards.streakIncreased && rewards.streak > 1) {
+            toast.success(`🔥 ${rewards.streak}-day streak! Keep it going!`);
+          }
+          if (rewards.pointsEarned > 0) {
+            toast.success(`+${rewards.pointsEarned} reward points earned! 🎉`);
+          }
+        } catch {
+          /* rewards are best-effort */
+        }
       }
       clearClaimedOffer();
       if (cartMode) cart.clear();
@@ -342,6 +357,9 @@ function MsosiCheckout() {
                   {formatTsh(total, "TSh")}
                 </span>
               </div>
+              <p className="pt-1 text-right text-xs font-medium text-amber-600">
+                🎁 Signed-in students earn ~{Math.floor(total / 1000)} points with this order
+              </p>
             </div>
           </div>
         </section>

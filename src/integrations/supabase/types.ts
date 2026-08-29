@@ -123,6 +123,7 @@ export type Database = {
           items: Json
           payment_status: string
           phone: string
+          reward_points_awarded: boolean
           room: string
           status: string
           total_tsh: number
@@ -138,6 +139,7 @@ export type Database = {
           items?: Json
           payment_status?: string
           phone?: string
+          reward_points_awarded?: boolean
           room?: string
           status?: string
           total_tsh?: number
@@ -153,6 +155,7 @@ export type Database = {
           items?: Json
           payment_status?: string
           phone?: string
+          reward_points_awarded?: boolean
           room?: string
           status?: string
           total_tsh?: number
@@ -334,6 +337,8 @@ export type Database = {
           hostel: string | null
           id: string
           is_verified_student: boolean
+          last_order_date: string | null
+          referred_by: string | null
           reward_points: number
           updated_at: string
           whatsapp_number: string | null
@@ -347,6 +352,8 @@ export type Database = {
           hostel?: string | null
           id: string
           is_verified_student?: boolean
+          last_order_date?: string | null
+          referred_by?: string | null
           reward_points?: number
           updated_at?: string
           whatsapp_number?: string | null
@@ -360,9 +367,35 @@ export type Database = {
           hostel?: string | null
           id?: string
           is_verified_student?: boolean
+          last_order_date?: string | null
+          referred_by?: string | null
           reward_points?: number
           updated_at?: string
           whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          invited_id: string
+          inviter_id: string
+          order_counted: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          invited_id: string
+          inviter_id: string
+          order_counted?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          invited_id?: string
+          inviter_id?: string
+          order_counted?: boolean
         }
         Relationships: []
       }
