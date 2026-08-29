@@ -60,6 +60,7 @@ export const Route = createFileRoute("/profile")({
 
 type ProfileRow = {
   full_name: string | null;
+  avatar_url: string | null;
   whatsapp_number: string | null;
   hostel: string | null;
   current_streak: number;
@@ -310,21 +311,19 @@ function ProfilePage() {
                         {user.email && (
                           <p className="truncate text-sm text-slate-500">{user.email}</p>
                         )}
+                        <p className="truncate text-sm text-slate-500">
+                          {profile?.whatsapp_number
+                            ? `+${sanitizeTzPhone(profile.whatsapp_number)}`
+                            : "Namba haijawekwa"}
+                        </p>
+                        <p className="mt-1 flex items-center gap-1 truncate text-sm text-slate-500">
+                          <MapPin className="h-3.5 w-3.5 text-[#008542]" />
+                          {profile?.hostel || "Hostel haijachaguliwa"}
+                        </p>
                       </div>
                     </>
                   );
                 })()}
-                <div className="hidden">
-                  <p className="truncate text-sm text-slate-500">
-                    {profile?.whatsapp_number
-                      ? `+${sanitizeTzPhone(profile.whatsapp_number)}`
-                      : "Namba haijawekwa"}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1 truncate text-sm text-slate-500">
-                    <MapPin className="h-3.5 w-3.5 text-[#008542]" />
-                    {profile?.hostel || "Hostel haijachaguliwa"}
-                  </p>
-                </div>
               </div>
 
               <div className="mt-5 grid grid-cols-3 gap-3">
