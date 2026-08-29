@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
 import { claimReferral } from "@/lib/rewards.functions";
-import { clearStoredReferral, getStoredReferral } from "@/lib/referral";
+import { captureReferralFromUrl, clearStoredReferral, getStoredReferral } from "@/lib/referral";
 
 let open = false;
 let pendingRedirect: string | null = null;
@@ -57,6 +57,7 @@ async function upsertProfile(u: User) {
 }
 
 if (typeof window !== "undefined") {
+  captureReferralFromUrl();
   supabase.auth.getUser().then(({ data }) => {
     // Treat anonymous users as "not signed in" for dashboard purposes.
     user = data.user && !data.user.is_anonymous ? data.user : null;
