@@ -3,13 +3,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle,
-  Clock,
   Copy,
   Flame,
   LogOut,
   MapPin,
   Moon,
-  Phone,
   Plus,
   RotateCcw,
   Sun,
@@ -123,13 +121,6 @@ function ProfilePage() {
     document.documentElement.classList.toggle("dark", next);
   };
 
-  const activeOrder = useMemo(
-    () =>
-      orders.find((o) =>
-        ["pending", "preparing", "on_the_way"].includes(o.status),
-      ),
-    [orders],
-  );
   const pastOrders = useMemo(
     () => orders.filter((o) => !["pending", "preparing", "on_the_way"].includes(o.status)),
     [orders],
@@ -245,41 +236,6 @@ function ProfilePage() {
           </div>
         ) : (
           <>
-            {/* ===== ACTIVE ORDER TRACKER ===== */}
-            {activeOrder && (
-              <section className="mb-6 rounded-2xl border border-[#008542]/25 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-2xs">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-wide text-[#008542]">
-                      Agizo linaendelea
-                    </p>
-                    <p className="mt-1 text-lg font-extrabold text-slate-900">
-                      {STATUS_LABEL[activeOrder.status] ?? activeOrder.status}
-                      {activeOrder.delivery_area ? ` → ${activeOrder.delivery_area}` : ""}
-                    </p>
-                    <p className="mt-1 flex items-center gap-1.5 text-sm text-slate-600">
-                      <Clock className="h-4 w-4 text-[#008542]" />
-                      Inakadiriwa kufika ndani ya {activeOrder.eta_minutes} min
-                    </p>
-                  </div>
-                  <span className="shrink-0 rounded-full bg-[#008542] px-3 py-1 text-xs font-bold text-white">
-                    {formatTsh(activeOrder.total_tsh, "TSh")}
-                  </span>
-                </div>
-                <a
-                  href={`https://wa.me/255674044676?text=${encodeURIComponent(
-                    `Habari MUST Market, nauliza kuhusu agizo langu #${activeOrder.id.slice(0, 8)}`,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-bold text-[#008542] ring-1 ring-[#008542]/30 transition-colors hover:bg-emerald-50"
-                >
-                  <Phone className="h-4 w-4" />
-                  Msaada kwa WhatsApp (#{activeOrder.id.slice(0, 8)})
-                </a>
-              </section>
-            )}
-
             {/* ===== PROFILE HEADER ===== */}
             <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs">
               <div className="flex items-center gap-4">
