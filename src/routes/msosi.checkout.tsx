@@ -87,7 +87,7 @@ function MsosiCheckout() {
   const subtotal = order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
   const total = subtotal + DELIVERY_FEE;
 
-  const handlePay = () => {
+  const handlePay = async () => {
     const cleanName = fullName.trim();
     const cleanPhone = sanitizeTzPhone(phone);
     if (!cleanName) {
@@ -103,12 +103,40 @@ function MsosiCheckout() {
       return;
     }
     setSubmitting(true);
-    // Payment integration (Snippe STK push) will be wired here.
-    toast.success(
-      `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
-    );
-    setSubmitting(false);
+    try {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
+      if (uid) {
+        await createOrder({
+          userId: uid,
+          items: [
+            {
+              itemId: order.itemId,
+              name: order.name,
+              price: order.price,
+              quantity: order.quantity,
+              imageUrl: order.imageUrl || undefined,
+              vendorName: order.vendorName || undefined,
+              addSoda: order.addSoda,
+            },
+          ],
+          total,
+          area,
+          room: room.trim(),
+          phone: cleanPhone,
+        });
+      }
+      // Payment integration (Snippe STK push) will be wired here.
+      toast.success(
+        `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
+      );
+    } catch {
+      toast.error("Imeshindikana kuhifadhi agizo. Jaribu tena.");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6]">
