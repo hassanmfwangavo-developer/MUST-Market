@@ -349,44 +349,18 @@ function MsosiCheckout() {
       </div>
 
       {/* ===================== STICKY BOTTOM PAYMENT CTA ===================== */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 px-4 pb-4 pt-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md">
-        <div className="mx-auto max-w-2xl">
-          {/* Payment network acceptance badge strip */}
-          <p className="mb-2 flex items-center justify-center gap-1.5 text-center text-[11px] font-medium text-slate-500">
-            <Lock className="h-3 w-3" />
-            Inakubali mitandao yote ya simu kwa usalama:
-          </p>
-          <div className="mx-auto mb-2.5 flex max-w-md items-center justify-center gap-2">
-            {[
-              { label: "M-Pesa", accent: "text-[#E7000C]" },
-              { label: "Mixx", accent: "text-[#0066B3]" },
-              { label: "Airtel", accent: "text-[#E40000]" },
-              { label: "Halopesa", accent: "text-[#0EA96A]" },
-            ].map((brand) => (
-              <span
-                key={brand.label}
-                className="flex h-7 items-center justify-center rounded-lg border border-slate-200/90 bg-white px-2.5 shadow-2xs transition-all hover:border-slate-300 sm:h-8"
-              >
-                <span
-                  className={`text-[10px] font-bold tracking-tight ${brand.accent}`}
-                >
-                  {brand.label}
-                </span>
-              </span>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={handlePay}
-            disabled={submitting}
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60"
-          >
-            <Lock className="h-4 w-4 shrink-0" />
-            <span className="whitespace-nowrap text-xs sm:text-sm">
-              Lipa Sasa kwa M-Pesa / Tigo Pesa via Snippe
-            </span>
-          </button>
-        </div>
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md">
+        <button
+          type="button"
+          onClick={handlePay}
+          disabled={submitting}
+          className="flex w-full max-w-2xl items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60"
+        >
+          <Lock className="h-4 w-4 shrink-0" />
+          <span className="whitespace-nowrap text-xs sm:text-sm">
+            Lipa Sasa kwa M-Pesa / Tigo Pesa via Snippe
+          </span>
+        </button>
       </div>
     </div>
   );
