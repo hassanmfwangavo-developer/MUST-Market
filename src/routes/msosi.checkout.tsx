@@ -15,6 +15,7 @@ import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
 import { supabase } from "@/integrations/supabase/client";
 import { createOrder } from "@/lib/orders";
+import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 
 
 const DELIVERY_FEE = 1000;
