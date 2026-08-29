@@ -41,6 +41,48 @@ export type Database = {
         }
         Relationships: []
       }
+      food_orders: {
+        Row: {
+          created_at: string
+          delivery_area: string
+          eta_minutes: number
+          id: string
+          items: Json
+          phone: string
+          room: string
+          status: string
+          total_tsh: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_area?: string
+          eta_minutes?: number
+          id?: string
+          items?: Json
+          phone?: string
+          room?: string
+          status?: string
+          total_tsh?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          delivery_area?: string
+          eta_minutes?: number
+          id?: string
+          items?: Json
+          phone?: string
+          room?: string
+          status?: string
+          total_tsh?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       homepage_shelves: {
         Row: {
           category: string | null
@@ -194,32 +236,68 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          current_streak: number
           full_name: string | null
           hostel: string | null
           id: string
           is_verified_student: boolean
+          reward_points: number
           updated_at: string
           whatsapp_number: string | null
         }
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          current_streak?: number
           full_name?: string | null
           hostel?: string | null
           id: string
           is_verified_student?: boolean
+          reward_points?: number
           updated_at?: string
           whatsapp_number?: string | null
         }
         Update: {
           avatar_url?: string | null
           created_at?: string
+          current_streak?: number
           full_name?: string | null
           hostel?: string | null
           id?: string
           is_verified_student?: boolean
+          reward_points?: number
           updated_at?: string
           whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      user_locations: {
+        Row: {
+          area: string
+          created_at: string
+          id: string
+          is_default: boolean
+          label: string
+          room: string
+          user_id: string
+        }
+        Insert: {
+          area?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          label?: string
+          room?: string
+          user_id: string
+        }
+        Update: {
+          area?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          label?: string
+          room?: string
+          user_id?: string
         }
         Relationships: []
       }

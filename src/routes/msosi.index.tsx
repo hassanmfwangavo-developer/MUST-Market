@@ -297,18 +297,25 @@ function MsosiFasta() {
       <nav className="fixed inset-x-0 bottom-0 z-50 flex justify-around border-t border-slate-200 bg-white/95 py-2.5 backdrop-blur-md md:hidden">
         {BOTTOM_TABS.map((tab) => {
           const Icon = tab.icon;
+          const cls = `flex flex-col items-center gap-0.5 px-2 text-[10px] font-semibold transition-colors ${
+            tab.active ? "text-[#008542]" : "text-slate-400"
+          }`;
+          if (tab.key === "account" || tab.key === "orders") {
+            return (
+              <Link key={tab.key} to="/profile" className={cls}>
+                <Icon className="h-5 w-5" />
+                {tab.label}
+              </Link>
+            );
+          }
           return (
-            <button
-              key={tab.key}
-              className={`flex flex-col items-center gap-0.5 px-2 text-[10px] font-semibold transition-colors ${
-                tab.active ? "text-[#008542]" : "text-slate-400"
-              }`}
-            >
+            <button key={tab.key} className={cls}>
               <Icon className="h-5 w-5" />
               {tab.label}
             </button>
           );
         })}
+
       </nav>
     </div>
   );

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SellRouteImport } from './routes/sell'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MsosiRouteImport } from './routes/msosi'
 import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
@@ -40,6 +41,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const SellRoute = SellRouteImport.update({
   id: '/sell',
   path: '/sell',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -161,6 +169,7 @@ export interface FileRoutesById {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/msosi'
     | '/privacy'
+    | '/profile'
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/market'
     | '/meet-the-founder'
     | '/privacy'
+    | '/profile'
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/msosi'
     | '/privacy'
+    | '/profile'
     | '/sell'
     | '/sitemap.xml'
     | '/terms'
@@ -239,6 +251,7 @@ export interface RootRouteChildren {
   MeetTheFounderRoute: typeof MeetTheFounderRoute
   MsosiRoute: typeof MsosiRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
   SellRoute: typeof SellRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/sell'
       fullPath: '/sell'
       preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -394,6 +414,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeetTheFounderRoute: MeetTheFounderRoute,
   MsosiRoute: MsosiRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
   SellRoute: SellRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
