@@ -4,7 +4,7 @@ import { Portal } from "@/components/portal";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MUST Market — Marketplace & Msosi Fasta | Mbeya University" },
+      { title: "MUST Market | Entrance Portal" },
       {
         name: "description",
         content:

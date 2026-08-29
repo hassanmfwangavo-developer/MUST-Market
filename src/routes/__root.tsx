@@ -82,17 +82,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MUST Market — Student Marketplace at Mbeya University" },
+      { title: "MUST Market – Campus Super-App | Sokoni & Msosi Fasta" },
       {
         name: "description",
         content:
-          "Buy and sell used student gear at Mbeya University of Science and Technology. Peer-to-peer, WhatsApp-first, made for MUST students.",
+          "Jukwaa kuu la wanafunzi wa MUST Mbeya. Agiza chakula kitamu kutoka cafeterias ufikishiwe mlangoni, na uuze au ununue vitu used, electronics na vyumba kwa urahisi.",
       },
       { name: "author", content: "MUST Market" },
-      { property: "og:title", content: "MUST Market — Student Marketplace at Mbeya University" },
-      { property: "og:description", content: "Buy and sell used student gear at MUST instantly." },
+      { property: "og:title", content: "MUST Market – Campus Super-App | Sokoni & Msosi Fasta" },
+      {
+        property: "og:description",
+        content:
+          "Agiza msosi kutoka cafeterias za chuo au nunua/uza vitu used kwa wanafunzi wa MUST.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "MUST Market" },
+      { property: "og:image", content: "https://must-campus-swap.lovable.app/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "MUST Market – Campus Super-App | Sokoni & Msosi Fasta" },
+      {
+        name: "twitter:description",
+        content:
+          "Agiza msosi kutoka cafeterias za chuo au nunua/uza vitu used kwa wanafunzi wa MUST.",
+      },
+      { name: "twitter:image", content: "https://must-campus-swap.lovable.app/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

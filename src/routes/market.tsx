@@ -10,7 +10,7 @@ import { Footer } from "@/components/footer";
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "MUST Market — Buy & Sell Student Gear at MUST" },
+      { title: "Soko la Wanafunzi & Electronics – MUST Market" },
       {
         name: "description",
         content:
