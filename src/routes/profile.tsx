@@ -48,7 +48,7 @@ export const Route = createFileRoute("/profile")({
       { property: "og:title", content: "My Profile & Orders — MUST Market" },
       {
         property: "og:description",
-        content: "Track your active food order, rewards and reorder in one tap.",
+        content: "View your order history, rewards and reorder in one tap.",
       },
       { property: "og:type", content: "profile" },
     ],
