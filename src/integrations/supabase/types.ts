@@ -116,10 +116,12 @@ export type Database = {
       food_orders: {
         Row: {
           created_at: string
+          customer_name: string
           delivery_area: string
           eta_minutes: number
           id: string
           items: Json
+          payment_status: string
           phone: string
           room: string
           status: string
@@ -129,10 +131,12 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          customer_name?: string
           delivery_area?: string
           eta_minutes?: number
           id?: string
           items?: Json
+          payment_status?: string
           phone?: string
           room?: string
           status?: string
@@ -142,10 +146,12 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          customer_name?: string
           delivery_area?: string
           eta_minutes?: number
           id?: string
           items?: Json
+          payment_status?: string
           phone?: string
           room?: string
           status?: string
@@ -193,6 +199,7 @@ export type Database = {
       }
       menu_items: {
         Row: {
+          addons: Json
           category: string
           created_at: string
           description: string
@@ -204,9 +211,11 @@ export type Database = {
           prep_time: string
           price: number
           rating: number
+          vendor_id: string | null
           vendor_name: string
         }
         Insert: {
+          addons?: Json
           category?: string
           created_at?: string
           description?: string
@@ -218,9 +227,11 @@ export type Database = {
           prep_time?: string
           price: number
           rating?: number
+          vendor_id?: string | null
           vendor_name?: string
         }
         Update: {
+          addons?: Json
           category?: string
           created_at?: string
           description?: string
@@ -232,9 +243,18 @@ export type Database = {
           prep_time?: string
           price?: number
           rating?: number
+          vendor_id?: string | null
           vendor_name?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       products: {
         Row: {
@@ -432,6 +452,36 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      vendors: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_featured: boolean
+          logo_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_featured?: boolean
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_featured?: boolean
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }

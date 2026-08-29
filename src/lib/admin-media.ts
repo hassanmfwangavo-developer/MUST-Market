@@ -14,7 +14,7 @@ export interface UploadedAdminImage {
 
 export async function uploadAdminImage(
   file: File,
-  folder: "banners" | "category-icons",
+  folder: "banners" | "category-icons" | "food-items" | "vendor-logos",
 ): Promise<UploadedAdminImage> {
   const user = await requireAdminUser();
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";

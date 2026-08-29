@@ -29,6 +29,7 @@ import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
 import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
+import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as MsosiSuccessOrderIdRouteImport } from './routes/msosi.success.$orderId'
@@ -133,6 +134,11 @@ const MsosiIdRoute = MsosiIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => MsosiRoute,
 } as any)
+const AdminFoodRoute = AdminFoodRouteImport.update({
+  id: '/food',
+  path: '/food',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/food': typeof AdminFoodRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/food': typeof AdminFoodRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/food': typeof AdminFoodRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/food'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/food'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/food'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -460,6 +472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiIdRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/admin/food': {
+      id: '/admin/food'
+      path: '/food'
+      fullPath: '/admin/food'
+      preLoaderRoute: typeof AdminFoodRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -487,12 +506,14 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminBannersRoute: typeof AdminBannersRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminFoodRoute: typeof AdminFoodRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBannersRoute: AdminBannersRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminFoodRoute: AdminFoodRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
