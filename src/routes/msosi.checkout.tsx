@@ -175,7 +175,7 @@ function MsosiCheckout() {
       </header>
 
       {/* ===================== TWO-COLUMN LAYOUT ===================== */}
-      <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10">
+      <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10 md:pb-12">
         {/* LEFT — ORDER SUMMARY */}
         <section className="md:w-[42%] md:shrink-0">
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs md:p-6">
