@@ -50,9 +50,9 @@ export const Route = createFileRoute("/msosi/checkout")({
       {
         name: "description",
         content:
-          "Maliza agizo lako la chakula — ingiza jina, namba ya simu na eneo la kufikishia. Msosi Fasta ya MUST Market.",
+          "Complete your food order — enter your name, phone number and delivery location. MUST Food Fasta.",
       },
-      { property: "og:title", content: "Checkout — Msosi Fasta" },
+      { property: "og:title", content: "Checkout — MUST Food Fasta" },
       {
         property: "og:description",
         content: "Fast, frictionless payment. No login required.",
@@ -101,15 +101,15 @@ function MsosiCheckout() {
     const cleanName = fullName.trim();
     const cleanPhone = sanitizeTzPhone(phone);
     if (!cleanName) {
-      toast.error("Tafadhali ingiza jina lako kamili.");
+      toast.error("Please enter your full name.");
       return;
     }
     if (cleanPhone.length < 12) {
-      toast.error("Tafadhali ingiza namba sahihi ya simu (e.g. 0674 044 676).");
+      toast.error("Please enter a valid phone number (e.g. 0674 044 676).");
       return;
     }
     if (!room.trim()) {
-      toast.error("Tafadhali ingiza jina la gheto / namba ya chumba.");
+      toast.error("Please enter your gheto name / room number.");
       return;
     }
     setSubmitting(true);
@@ -141,7 +141,7 @@ function MsosiCheckout() {
       // Payment integration (Snippe STK push) will be wired here.
 
       toast.success(
-        `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
+        `Order received! ${formatTsh(total, "TSh")} — a PIN push has been sent to +${cleanPhone}.`,
       );
       // Short delay so the success toast is visible before navigating.
       setTimeout(() => {
@@ -160,7 +160,7 @@ function MsosiCheckout() {
         });
       }, 700);
     } catch {
-      toast.error("Imeshindikana kuhifadhi agizo. Jaribu tena.");
+      toast.error("Could not save your order. Please try again.");
       setSubmitting(false);
     }
   };
@@ -182,7 +182,7 @@ function MsosiCheckout() {
         <button
           type="button"
           onClick={() => navigate({ to: "/msosi" })}
-          aria-label="Rudi nyuma"
+          aria-label="Go back"
           className="grid h-10 w-10 place-items-center rounded-full text-slate-700 transition-colors hover:bg-slate-100"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -192,7 +192,7 @@ function MsosiCheckout() {
         </h1>
         <button
           type="button"
-          aria-label="Msaada"
+          aria-label="Help"
           className="grid h-10 w-10 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100"
         >
           <HelpCircle className="h-5 w-5" />
@@ -268,7 +268,7 @@ function MsosiCheckout() {
               {discount > 0 && (
                 <div className="flex items-center justify-between text-[#008542]">
                   <span className="font-semibold">
-                    Punguzo {claimed?.promoCode ? `(${claimed.promoCode})` : ""} −
+                    Discount {claimed?.promoCode ? `(${claimed.promoCode})` : ""} −
                     {claimed?.discountPercent}%
                   </span>
                   <span className="font-bold">− {formatTsh(discount, "TSh")}</span>
@@ -323,7 +323,7 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Phone Number (Ya Malipo)
+              Phone Number (for M-Pesa / Tigo Pesa PIN push)
             </label>
             <div className="relative mt-1.5">
               <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -369,7 +369,7 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Mtaa uliopo / Namba ya Chumba
+              Gheto Name / Room Number
             </label>
             <input
               type="text"
@@ -390,7 +390,7 @@ function MsosiCheckout() {
           >
             <Lock className="h-4 w-4 shrink-0" />
             <span className="whitespace-nowrap text-sm">
-              Lipa Kwa Simu Sasa
+              Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)
             </span>
           </button>
         </section>
@@ -406,7 +406,7 @@ function MsosiCheckout() {
         >
           <Lock className="h-4 w-4 shrink-0" />
           <span className="whitespace-nowrap text-xs sm:text-sm">
-             Lipa kwa Simu Sasa
+             Pay Now via Mobile Money
           </span>
         </button>
       </div>

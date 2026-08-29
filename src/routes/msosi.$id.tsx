@@ -17,16 +17,16 @@ import { fetchMenuItem, formatTsh, SODA_PRICE } from "@/lib/menu";
 export const Route = createFileRoute("/msosi/$id")({
   head: () => ({
     meta: [
-      { title: "Agiza Chakula — Msosi Fasta | MUST Market" },
+      { title: "Order Food — MUST Food Fasta | MUST Market" },
       {
         name: "description",
         content:
-          "Chagua chakula chako, ongeza viongezo na maelezo ya ziada, kisha endelea kwenye malipo — Msosi Fasta ya MUST Market.",
+          "Pick your dish, add extras and special instructions, then proceed to checkout — MUST Food Fasta.",
       },
-      { property: "og:title", content: "Agiza Chakula — Msosi Fasta" },
+      { property: "og:title", content: "Order Food — MUST Food Fasta" },
       {
         property: "og:description",
-        content: "Agiza chakula ufikishiwe mlangoni kwa dakika chache. Msosi Fasta.",
+        content: "Order food delivered to your doorstep in minutes.",
       },
       { property: "og:type", content: "product" },
     ],
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/msosi/$id")({
   ),
   notFoundComponent: () => (
     <div className="grid min-h-screen place-items-center p-6 text-center">
-      <p className="text-sm text-slate-600">Chakula hiki hakipatikani.</p>
+      <p className="text-sm text-slate-600">This dish is not available.</p>
     </div>
   ),
 });
@@ -102,14 +102,14 @@ function MsosiDetail() {
           <Link
             to="/msosi"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
-            aria-label="Rudi kwenye menu"
+            aria-label="Back to menu"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <button
             type="button"
             onClick={() => setFavorite((f) => !f)}
-            aria-label={favorite ? "Ondoa kwenye vipendwa" : "Ongeza kwenye vipendwa"}
+            aria-label={favorite ? "Remove from favourites" : "Add to favourites"}
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white shadow-md backdrop-blur-md transition-colors hover:bg-black/50"
           >
             <Heart
@@ -151,7 +151,7 @@ function MsosiDetail() {
           )}
           <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-xs ring-1 ring-slate-200">
             <Clock className="h-3 w-3" />
-            {dish.prep_time}
+            Prep time · {dish.prep_time}
           </span>
         </div>
 
@@ -164,7 +164,7 @@ function MsosiDetail() {
         {/* ===================== ADD-ONS ===================== */}
         <section className="mt-6">
           <h2 className="mb-2 text-sm font-bold tracking-tight text-slate-900">
-            Viongezo (hiari)
+            Add-ons <span className="font-medium text-slate-400">(Optional)</span>
           </h2>
           <button
             type="button"
@@ -187,7 +187,7 @@ function MsosiDetail() {
               <span className="block text-sm font-semibold text-slate-900">
                 Add Soda (Azam/Coca-Cola)
               </span>
-              <span className="block text-xs text-slate-500">Baridi, 500ml</span>
+              <span className="block text-xs text-slate-500">Chilled, 500ml</span>
             </span>
             <span className="shrink-0 text-sm font-bold text-[#008542]">
               + {formatTsh(SODA_PRICE, "TSh")}
@@ -198,18 +198,18 @@ function MsosiDetail() {
         {/* ===================== SPECIAL INSTRUCTIONS ===================== */}
         <section className="mt-6">
           <h2 className="mb-2 text-sm font-bold tracking-tight text-slate-900">
-            Maelezo ya ziada
+            Special Instructions
           </h2>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="E.g., No salt on chips, weka pilipili pembeni..."
+            placeholder="E.g., No salt, extra pepper on the side..."
             className="h-24 w-full rounded-xl border border-slate-200 bg-white p-4 placeholder:text-slate-400 outline-none focus:border-[#008542]"
           />
         </section>
 
         <div className="mt-5 flex items-center justify-between rounded-xl bg-white px-4 py-3 text-sm shadow-xs ring-1 ring-slate-200">
-          <span className="font-medium text-slate-500">Bei ya kitengo</span>
+          <span className="font-medium text-slate-500">Unit price</span>
           <span className="font-bold text-slate-900">{formatTsh(dish.price, "TSh")}</span>
         </div>
       </main>
@@ -220,7 +220,7 @@ function MsosiDetail() {
           <button
             type="button"
             onClick={decrement}
-            aria-label="Punguza idadi"
+            aria-label="Decrease quantity"
             className="grid h-8 w-8 place-items-center rounded-full text-slate-700 transition-colors hover:bg-slate-200 disabled:opacity-40"
             disabled={quantity <= 1}
           >
@@ -232,7 +232,7 @@ function MsosiDetail() {
           <button
             type="button"
             onClick={increment}
-            aria-label="Ongeza idadi"
+            aria-label="Increase quantity"
             className="grid h-8 w-8 place-items-center rounded-full text-slate-700 transition-colors hover:bg-slate-200"
           >
             <Plus className="h-4 w-4" />
@@ -258,7 +258,7 @@ function MsosiDetail() {
           className="flex h-[48px] flex-1 items-center justify-between overflow-hidden rounded-full bg-[#008542] px-4 text-white shadow-md transition-colors hover:bg-[#006e36]"
         >
           <span className="whitespace-nowrap text-xs font-bold sm:text-sm">
-            Endelea Kwenye Malipo
+            Proceed to Checkout
           </span>
           <span className="whitespace-nowrap text-xs font-bold sm:text-sm">
             {formatTsh(total, "TSh")}

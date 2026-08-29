@@ -17,16 +17,16 @@ import { formatTsh } from "@/lib/menu";
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
-      { title: "Maagizo Yangu – MUST Food Fasta" },
+      { title: "My Orders – MUST Food Fasta" },
       {
         name: "description",
         content:
-          "Angalia maagizo yako ya Msosi Fasta — status, muda wa kuwasili, na mahali pa kufikishiwa.",
+          "View your MUST Food Fasta orders — status, delivery location and totals.",
       },
-      { property: "og:title", content: "Maagizo Yangu – MUST Food Fasta" },
+      { property: "og:title", content: "My Orders – MUST Food Fasta" },
       {
         property: "og:description",
-        content: "Angalia maagizo yako ya Msosi Fasta kwenye MUST Market.",
+        content: "View your MUST Food Fasta orders on MUST Market.",
       },
     ],
     links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/orders" }],
@@ -61,15 +61,15 @@ function OrdersPage() {
         <TopBar />
         <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-20 text-center">
           <ClipboardList className="h-12 w-12 text-muted-foreground" />
-          <h1 className="mt-4 text-xl font-semibold tracking-tight">Ingia kwenye akaunti yako</h1>
+          <h1 className="mt-4 text-xl font-semibold tracking-tight">Sign in to your account</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Unahitaji kuingia ili kuona maagizo yako ya Msosi Fasta.
+            You need to sign in to view your MUST Food Fasta orders.
           </p>
           <button
             onClick={() => openAuthModal("/orders")}
             className="mt-6 rounded-full bg-amber-500 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
           >
-            Ingia / Jiunge
+            Sign In / Join
           </button>
         </main>
         <Footer />
@@ -83,14 +83,14 @@ function OrdersPage() {
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 sm:px-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold tracking-tight">Maagizo Yangu</h1>
+            <h1 className="text-xl font-bold tracking-tight">My Orders</h1>
             <p className="text-sm text-muted-foreground">
-              {orders?.length ? `${orders.length} agizo` : "Hakuna agizo bado"}
+              {orders?.length ? `${orders.length} order${orders.length === 1 ? "" : "s"}` : "No orders yet"}
             </p>
           </div>
           {hasActive && (
             <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-600">
-              ● Agizo haija
+              ● Active order
             </span>
           )}
         </div>
@@ -108,16 +108,16 @@ function OrdersPage() {
               : (
                 <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center">
                   <ShoppingBag className="mx-auto h-8 w-8 text-muted-foreground" />
-                  <p className="mt-3 text-sm font-medium">Bado hakuna agizo</p>
+                  <p className="mt-3 text-sm font-medium">No past orders found</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Agiza msosi kutoka cafeterias za chuo uanze.
+                    Start by ordering food from campus cafeterias.
                   </p>
                   <Link
                     to="/msosi"
                     className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
                   >
                     <Utensils className="h-4 w-4" />
-                    Agiza Sasa
+                    Order Now
                   </Link>
                 </div>
               )}
@@ -136,11 +136,11 @@ function TopBar() {
         <button
           onClick={() => navigate({ to: "/msosi" })}
           className="grid h-9 w-9 place-items-center rounded-full text-foreground transition-colors hover:bg-surface-2"
-          aria-label="Rudi nyuma"
+          aria-label="Go back"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <span className="text-base font-semibold tracking-tight">Maagizo Yangu</span>
+        <span className="text-base font-semibold tracking-tight">My Orders</span>
       </div>
     </header>
   );
@@ -160,8 +160,8 @@ function OrderCard({ order }: { order: FoodOrder }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold">
-            {firstItem?.name ?? "Agizo"}
-            {extra > 0 && <span className="text-muted-foreground"> +{extra} zaidi</span>}
+            {firstItem?.name ?? "Order"}
+            {extra > 0 && <span className="text-muted-foreground"> +{extra} more</span>}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
             #{order.id.slice(0, 8)}

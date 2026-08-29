@@ -39,11 +39,11 @@ const AREAS = [
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Akaunti Yangu – MUST Market" },
+      { title: "My Account – MUST Market" },
       {
         name: "description",
         content:
-          "Angalia akaunti yako, streaks, maeneo uliyohifadhi na historia ya maagizo ya Msosi Fasta — MUST Market.",
+          "View your account, streaks, saved locations and MUST Food Fasta order history.",
       },
       { property: "og:title", content: "My Profile & Orders — MUST Market" },
       {
@@ -92,7 +92,7 @@ function ProfilePage() {
       setOrders(o);
       setLocations(l);
     } catch {
-      toast.error("Imeshindikana kupakia taarifa zako. Jaribu tena.");
+      toast.error("Could not load your details. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ function ProfilePage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    toast.success("Umeondoka. Tutaonana tena! 👋");
+    toast.success("Logged out. See you again! 👋");
     void navigate({ to: "/", replace: true });
   };
 
@@ -133,29 +133,29 @@ function ProfilePage() {
   const copyReferral = async () => {
     try {
       await navigator.clipboard.writeText(referralLink);
-      toast.success("Link imenakiliwa! Tuma kwa roommates wako 🥤");
+      toast.success("Link copied! Share it with your roommates 🥤");
     } catch {
-      toast.error("Imeshindikana kunakili link.");
+      toast.error("Could not copy the link.");
     }
   };
 
   const addLocation = async () => {
     if (!user) return;
     if (!form.room.trim()) {
-      toast.error("Ingiza namba ya chumba / jina la gheto.");
+      toast.error("Enter your room number / gheto name.");
       return;
     }
     const { error } = await supabase.from("user_locations").insert({
       user_id: user.id,
-      label: form.label.trim() || "Nyumbani",
+      label: form.label.trim() || "Home",
       area: form.area,
       room: form.room.trim(),
     });
     if (error) {
-      toast.error("Imeshindikana kuhifadhi eneo.");
+      toast.error("Could not save the location.");
       return;
     }
-    toast.success("Eneo jipya limehifadhiwa!");
+    toast.success("New location saved!");
     setModalOpen(false);
     setForm({ label: "", area: AREAS[0], room: "" });
     setLocations(await fetchLocations(user.id));
@@ -164,7 +164,7 @@ function ProfilePage() {
   const reorder = (order: FoodOrder) => {
     const first = order.items[0];
     if (!first) {
-      toast.error("Agizo hili halina bidhaa.");
+      toast.error("This order has no items.");
       return;
     }
     toast.success("Oda imeongezwa kwenye kikapu!");
@@ -196,12 +196,12 @@ function ProfilePage() {
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white/95 px-4 py-3 backdrop-blur-md">
         <Link
           to="/msosi"
-          aria-label="Rudi nyuma"
+          aria-label="Go back"
           className="grid h-10 w-10 place-items-center rounded-full text-slate-700 transition-colors hover:bg-slate-100"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <h1 className="text-base font-bold text-slate-900 md:text-lg">Akaunti Yangu</h1>
+        <h1 className="text-base font-bold text-slate-900 md:text-lg">My Account</h1>
         <button
           type="button"
           onClick={toggleDark}
@@ -222,16 +222,16 @@ function ProfilePage() {
         ) : !user ? (
           <div className="rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-2xs">
             <User className="mx-auto h-10 w-10 text-[#008542]" />
-            <h2 className="mt-3 text-lg font-bold text-slate-900">Ingia kwenye akaunti</h2>
+            <h2 className="mt-3 text-lg font-bold text-slate-900">Sign In</h2>
             <p className="mt-1 text-sm text-slate-500">
-              Ingia ili kuona maagizo yako, streaks na maeneo uliyohifadhi.
+              Sign in to view your orders, streaks and saved locations.
             </p>
             <button
               type="button"
               onClick={() => openAuthModal("/profile")}
               className="mt-5 rounded-full bg-[#008542] px-6 py-3 text-sm font-bold text-white shadow-md transition-colors hover:bg-[#006e36]"
             >
-              Ingia sasa
+              Sign In
             </button>
           </div>
         ) : (
@@ -270,7 +270,7 @@ function ProfilePage() {
                         <p className="truncate text-sm text-slate-500">
                           {profile?.whatsapp_number
                             ? `+${sanitizeTzPhone(profile.whatsapp_number)}`
-                            : "Namba haijawekwa"}
+                            : "No phone number saved"}
                         </p>
                         <p className="mt-1 flex items-center gap-1 truncate text-sm text-slate-500">
                           <MapPin className="h-3.5 w-3.5 text-[#008542]" />
@@ -306,10 +306,10 @@ function ProfilePage() {
             {/* ===== REFERRAL CARD ===== */}
             <section className="mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs">
               <h3 className="text-base font-bold text-slate-900">
-                Alika Roommates 3, Pata Soda ya Bure! 🥤
+                Invite Roommates, Get Free Soda! 🥤
               </h3>
               <p className="mt-1 text-sm text-slate-500">
-                Shiriki link yako binafsi. Kila rafiki anaeagiza anakupa pointi.
+                Share your personal link. Every friend who orders earns you points.
               </p>
               <div className="mt-4 flex gap-2">
                 <input
@@ -360,17 +360,17 @@ function ProfilePage() {
                 className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-[#008542]/40 py-3 text-sm font-bold text-[#008542] transition-colors hover:bg-emerald-50"
               >
                 <Plus className="h-4 w-4" />
-                Ongeza Eneo Jipya
+                Add New Location
               </button>
             </section>
 
             {/* ===== ORDER HISTORY ===== */}
             <section className="mt-5">
-              <h3 className="text-base font-bold text-slate-900">Historia ya Maagizo</h3>
+              <h3 className="text-base font-bold text-slate-900">Order History</h3>
               <div className="mt-3 space-y-3">
                 {pastOrders.length === 0 && (
                   <p className="rounded-2xl border border-slate-200/80 bg-white p-5 text-sm text-slate-500 shadow-2xs">
-                    Bado hujaagiza chochote. Anza na{" "}
+                    No past orders found. Start by ordering food from{" "}
                     <Link to="/msosi" className="font-bold text-[#008542]">
                       Msosi Fasta
                     </Link>
@@ -434,7 +434,7 @@ function ProfilePage() {
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 p-0 backdrop-blur-xs sm:items-center sm:p-4">
           <div className="w-full max-w-md rounded-t-2xl bg-white p-5 shadow-xl sm:rounded-2xl">
             <div className="flex items-center justify-between">
-              <h4 className="text-base font-bold text-slate-900">Ongeza Eneo Jipya</h4>
+              <h4 className="text-base font-bold text-slate-900">Add New Location</h4>
               <button
                 type="button"
                 onClick={() => setModalOpen(false)}
@@ -445,11 +445,11 @@ function ProfilePage() {
               </button>
             </div>
 
-            <label className="mt-4 block text-xs font-semibold text-slate-600">Jina la eneo</label>
+            <label className="mt-4 block text-xs font-semibold text-slate-600">Location label</label>
             <input
               value={form.label}
               onChange={(e) => setForm({ ...form, label: e.target.value })}
-              placeholder="e.g. Nyumbani"
+              placeholder="e.g. Home"
               maxLength={40}
               className="mt-1.5 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-[#008542]"
             />
@@ -468,7 +468,7 @@ function ProfilePage() {
             </select>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Jina la Gheto / Namba ya Chumba
+              Gheto Name / Room Number
             </label>
             <input
               value={form.room}
