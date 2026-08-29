@@ -71,6 +71,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [orders, setOrders] = useState<FoodOrder[]>([]);
   const [locations, setLocations] = useState<SavedLocation[]>([]);
+  const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
   const [dark, setDark] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -79,7 +80,7 @@ function ProfilePage() {
   const load = useCallback(async (userId: string) => {
     setLoading(true);
     try {
-      const [{ data: p }, o, l] = await Promise.all([
+      const [{ data: p }, o, l, { data: refs }] = await Promise.all([
         supabase
           .from("profiles")
           .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points")
@@ -87,10 +88,19 @@ function ProfilePage() {
           .maybeSingle(),
         fetchOrders(userId),
         fetchLocations(userId),
+        supabase
+          .from("referrals")
+          .select("order_counted")
+          .eq("inviter_id", userId),
       ]);
       setProfile((p as ProfileRow | null) ?? null);
       setOrders(o);
       setLocations(l);
+      const rows = refs ?? [];
+      setRefStats({
+        friends: rows.length,
+        pointsEarned: rows.filter((r) => r.order_counted).length * 50,
+      });
     } catch {
       toast.error("Could not load your details. Please try again.");
     } finally {
@@ -309,8 +319,24 @@ function ProfilePage() {
                 Invite Roommates, Get Free Soda! 🥤
               </h3>
               <p className="mt-1 text-sm text-slate-500">
-                Share your personal link. Every friend who orders earns you points.
+                Share your personal link. When a friend signs up and places their first
+                order, you earn <span className="font-bold text-slate-700">50 points</span> and
+                they get <span className="font-bold text-slate-700">10 welcome points</span>.
               </p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <div className="rounded-xl bg-emerald-50 p-3 text-center ring-1 ring-emerald-100">
+                  <p className="text-base font-extrabold text-[#008542]">{refStats.friends}</p>
+                  <p className="mt-0.5 text-[11px] font-medium text-slate-500">Friends joined</p>
+                </div>
+                <div className="rounded-xl bg-amber-50 p-3 text-center ring-1 ring-amber-100">
+                  <p className="text-base font-extrabold text-amber-600">
+                    {refStats.pointsEarned}
+                  </p>
+                  <p className="mt-0.5 text-[11px] font-medium text-slate-500">
+                    Referral points earned
+                  </p>
+                </div>
+              </div>
               <div className="mt-4 flex gap-2">
                 <input
                   readOnly
