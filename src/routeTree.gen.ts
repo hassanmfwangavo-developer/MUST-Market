@@ -28,6 +28,7 @@ import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
 import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as MsosiSuccessOrderIdRouteImport } from './routes/msosi.success.$orderId'
 
@@ -126,6 +127,11 @@ const MsosiIdRoute = MsosiIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => MsosiRoute,
 } as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBannersRoute = AdminBannersRouteImport.update({
   id: '/banners',
   path: '/banners',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/banners'
+    | '/admin/categories'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -243,6 +253,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/banners'
+    | '/admin/categories'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -266,6 +277,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/admin/banners'
+    | '/admin/categories'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
@@ -428,6 +440,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiIdRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/banners': {
       id: '/admin/banners'
       path: '/banners'
@@ -447,11 +466,13 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminBannersRoute: typeof AdminBannersRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBannersRoute: AdminBannersRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
