@@ -84,7 +84,7 @@ function ProfilePage() {
       const [{ data: p }, o, l] = await Promise.all([
         supabase
           .from("profiles")
-          .select("full_name, whatsapp_number, hostel, current_streak, reward_points")
+          .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points")
           .eq("id", userId)
           .maybeSingle(),
         fetchOrders(userId),
@@ -459,6 +459,16 @@ function ProfilePage() {
                 ))}
               </div>
             </section>
+
+            {/* ===== LOGOUT ===== */}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-white py-3 text-sm font-bold text-red-600 transition-colors hover:bg-red-50"
+            >
+              <LogOut className="h-4 w-4" />
+              Ondoka (Logout)
+            </button>
           </>
         )}
       </main>
