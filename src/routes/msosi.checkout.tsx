@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
 import { supabase } from "@/integrations/supabase/client";
-import { createOrder } from "@/lib/orders";
+import { createOrder, type OrderItem } from "@/lib/orders";
+import { useCart } from "@/lib/cart";
 import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 
 
@@ -90,7 +91,16 @@ function MsosiCheckout() {
 
   const [claimed] = useState(() => getClaimedOffer());
 
-  const subtotal = order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
+  const cart = useCart();
+  const cartMode = !locationState?.name && cart.items.length > 0;
+  const cartItems: OrderItem[] = cartMode ? cart.items : [];
+
+  const subtotal = cartMode
+    ? cartItems.reduce(
+        (sum, i) => sum + i.price * i.quantity + (i.addSoda ? SODA_PRICE : 0),
+        0,
+      )
+    : order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
   const discount = claimed?.discountPercent
     ? Math.round((subtotal * claimed.discountPercent) / 100)
     : 0;
@@ -120,17 +130,19 @@ function MsosiCheckout() {
       if (uid) {
         orderId = await createOrder({
           userId: uid,
-          items: [
-            {
-              itemId: order.itemId,
-              name: order.name,
-              price: order.price,
-              quantity: order.quantity,
-              imageUrl: order.imageUrl || undefined,
-              vendorName: order.vendorName || undefined,
-              addSoda: order.addSoda,
-            },
-          ],
+          items: cartMode
+            ? cartItems
+            : [
+                {
+                  itemId: order.itemId,
+                  name: order.name,
+                  price: order.price,
+                  quantity: order.quantity,
+                  imageUrl: order.imageUrl || undefined,
+                  vendorName: order.vendorName || undefined,
+                  addSoda: order.addSoda,
+                },
+              ],
           total,
           area,
           room: room.trim(),
@@ -138,6 +150,7 @@ function MsosiCheckout() {
         });
       }
       clearClaimedOffer();
+      if (cartMode) cart.clear();
       // Payment integration (Snippe STK push) will be wired here.
 
       toast.success(
@@ -209,6 +222,47 @@ function MsosiCheckout() {
               Order Summary
             </h2>
 
+            {cartMode ? (
+              <div className="space-y-3">
+                {cartItems.map((item, idx) => (
+                  <div key={`${item.itemId}-${idx}`} className="flex items-center gap-3">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-16 w-16 shrink-0 rounded-xl object-cover ring-1 ring-slate-200"
+                      />
+                    ) : (
+                      <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-slate-100 text-xl ring-1 ring-slate-200">
+                        🍽️
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-slate-900">
+                        {item.name}
+                        {item.addSoda ? " + Soda" : ""}
+                      </p>
+                      {item.vendorName && (
+                        <p className="truncate text-xs text-slate-500">
+                          {item.vendorName}
+                        </p>
+                      )}
+                      <p className="mt-0.5 text-xs font-medium text-slate-500">
+                        Qty: {item.quantity}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-sm font-bold text-slate-900">
+                      {formatTsh(
+                        item.price * item.quantity + (item.addSoda ? SODA_PRICE : 0),
+                        "TSh",
+                      )}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
             <div className="flex items-center gap-3">
               {order.imageUrl ? (
                 <img
@@ -238,8 +292,9 @@ function MsosiCheckout() {
                 {formatTsh(order.price * order.quantity, "TSh")}
               </span>
             </div>
+            )}
 
-            {order.addSoda && (
+            {!cartMode && order.addSoda && (
               <div className="mt-3 flex items-center gap-3">
                 <div className="grid h-16 w-16 shrink-0 place-items-center rounded-xl bg-emerald-50 text-2xl ring-1 ring-emerald-100">
                   🥤
