@@ -109,8 +109,9 @@ function MsosiCheckout() {
     try {
       const { data } = await supabase.auth.getUser();
       const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
+      let orderId: string | null = null;
       if (uid) {
-        await createOrder({
+        orderId = await createOrder({
           userId: uid,
           items: [
             {
@@ -133,9 +134,24 @@ function MsosiCheckout() {
       toast.success(
         `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
       );
+      // Short delay so the success toast is visible before navigating.
+      setTimeout(() => {
+        navigate({
+          to: "/msosi/success/$orderId",
+          params: { orderId: orderId ?? "guest" },
+          state: {
+            orderId: orderId ?? undefined,
+            total,
+            area,
+            room: room.trim(),
+            phone: cleanPhone,
+            name: order.name,
+            vendorName: order.vendorName,
+          },
+        });
+      }, 700);
     } catch {
       toast.error("Imeshindikana kuhifadhi agizo. Jaribu tena.");
-    } finally {
       setSubmitting(false);
     }
   };
