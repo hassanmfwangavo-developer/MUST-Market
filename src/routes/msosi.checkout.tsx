@@ -137,7 +137,9 @@ function MsosiCheckout() {
           phone: cleanPhone,
         });
       }
+      clearClaimedOffer();
       // Payment integration (Snippe STK push) will be wired here.
+
       toast.success(
         `Agizo limepokelewa! ${formatTsh(total, "TSh")} — tutakutumia PIN push kwa +${cleanPhone}.`,
       );
