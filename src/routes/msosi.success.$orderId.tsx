@@ -1,8 +1,22 @@
-import { createFileRoute, Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Check, Home, MessageCircle, MapPin, Clock, Wallet } from "lucide-react";
+import { useState } from "react";
+import {
+  Check,
+  Home,
+  MessageCircle,
+  MapPin,
+  Clock,
+  Wallet,
+  Download,
+  Share2,
+  Loader2,
+} from "lucide-react";
+import { toast } from "sonner";
 import { fetchOrderById, type FoodOrder } from "@/lib/orders";
 import { formatTsh } from "@/lib/menu";
+import { buildReceiptPng, downloadBlob, shareBlob } from "@/lib/receipt";
+
 
 type SuccessState = {
   orderId?: string;
