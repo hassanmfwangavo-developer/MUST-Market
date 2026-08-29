@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      banners: {
+        Row: {
+          banner_type: string
+          countdown_ends_at: string | null
+          created_at: string
+          discount_percent: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          promo_code: string | null
+          subtitle: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          banner_type?: string
+          countdown_ends_at?: string | null
+          created_at?: string
+          discount_percent?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          promo_code?: string | null
+          subtitle?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          banner_type?: string
+          countdown_ends_at?: string | null
+          created_at?: string
+          discount_percent?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          promo_code?: string | null
+          subtitle?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -38,6 +80,36 @@ export type Database = {
           name?: string
           slug?: string
           sort_order?: number
+        }
+        Relationships: []
+      }
+      food_categories: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon_url: string | null
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon_url?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
         }
         Relationships: []
       }
