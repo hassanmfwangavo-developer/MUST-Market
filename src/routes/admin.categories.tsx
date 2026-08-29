@@ -11,6 +11,7 @@ import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import {
   MAX_ACTIVE_CATEGORIES,
   fetchFoodCategories,
+  removeAdminImage,
   uploadAdminImage,
   type FoodCategory,
 } from "@/lib/admin-media";
@@ -63,12 +64,18 @@ function AdminCategoriesPage() {
   const create = useMutation({
     mutationFn: async () => {
       if (atLimit) throw new Error(`Only ${MAX_ACTIVE_CATEGORIES} active categories are allowed.`);
-      const icon_url = file ? await uploadAdminImage(file, "category-icons") : null;
+      const uploaded = file ? await uploadAdminImage(file, "category-icons") : null;
       const nextOrder = (categories.at(-1)?.display_order ?? 0) + 1;
       const { error } = await supabase
         .from("food_categories")
-        .insert({ name: name.trim(), icon_url, display_order: nextOrder });
-      if (error) throw error;
+        .insert({ name: name.trim(), icon_url: uploaded?.url ?? null, display_order: nextOrder });
+      if (error) {
+        if (uploaded) await removeAdminImage(uploaded.path);
+        if (error.code === "42501") {
+          throw new Error("Category save failed: administrator access could not be verified.");
+        }
+        throw new Error(`Category save failed: ${error.message}`);
+      }
     },
     onSuccess: () => {
       setName("");

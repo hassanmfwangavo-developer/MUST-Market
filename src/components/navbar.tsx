@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { isAdminEmail } from "@/lib/admin";
+import { isCurrentUserAdmin } from "@/lib/admin";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -16,6 +16,7 @@ export function Navbar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,6 +27,20 @@ export function Navbar() {
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, [menuOpen]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
+    void isCurrentUserAdmin().then((allowed) => {
+      if (!cancelled) setIsAdmin(allowed);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   async function handleSignOut() {
     setMenuOpen(false);
@@ -117,7 +132,7 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                     {t.nav.dashboard}
                   </Link>
-                  {isAdminEmail(user.email) && (
+                  {isAdmin && (
                     <Link
                       to="/admin"
                       onClick={() => setMenuOpen(false)}
