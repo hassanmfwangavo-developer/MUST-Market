@@ -56,6 +56,19 @@ async function upsertProfile(u: User) {
   );
 }
 
+/** Attribute a stored referral link (?ref=) to the signed-in account — first claim wins. */
+function tryClaimReferral() {
+  const ref = getStoredReferral();
+  if (!ref) return;
+  void claimReferral({ data: { inviterId: ref } })
+    .then((r) => {
+      if (r.claimed) clearStoredReferral();
+    })
+    .catch(() => {
+      /* retry on next sign-in */
+    });
+}
+
 if (typeof window !== "undefined") {
   captureReferralFromUrl();
   supabase.auth.getUser().then(({ data }) => {
@@ -63,6 +76,8 @@ if (typeof window !== "undefined") {
     user = data.user && !data.user.is_anonymous ? data.user : null;
     initialized = true;
     emitUser();
+    // Already-signed-in visitor arriving via a referral link.
+    if (user) tryClaimReferral();
   });
   supabase.auth.onAuthStateChange((event, session) => {
     const u = session?.user;
@@ -71,17 +86,7 @@ if (typeof window !== "undefined") {
     emitUser();
     if (event === "SIGNED_IN" && user) {
       void upsertProfile(user);
-      // Attribute a pending referral link (?ref=) to this account — first claim wins.
-      const ref = getStoredReferral();
-      if (ref) {
-        void claimReferral({ data: { inviterId: ref } })
-          .then((r) => {
-            if (r.claimed) clearStoredReferral();
-          })
-          .catch(() => {
-            /* retry on next sign-in */
-          });
-      }
+      tryClaimReferral();
     }
   });
 }
