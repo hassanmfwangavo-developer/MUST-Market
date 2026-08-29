@@ -242,77 +242,126 @@ function MsosiFasta() {
         </div>
       </header>
 
-      {/* ===================== CATEGORY SHELF ===================== */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4">
-        <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto py-3 scrollbar-none">
-          {CATEGORIES.map((cat) => {
-            const active = cat === activeCategory;
+      {/* ===================== PROMO BANNER CAROUSEL ===================== */}
+      {slide && (
+        <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
+          <div
+            className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${
+              BANNER_GRADIENTS[slide.banner_type] ?? "from-orange-500 to-amber-500"
+            } p-5 shadow-sm sm:p-7`}
+          >
+            {slide.image_url && (
+              <img
+                src={slide.image_url}
+                alt=""
+                aria-hidden
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover opacity-35"
+              />
+            )}
+            <div className="relative flex items-center gap-4">
+              <div className="min-w-0 flex-1">
+                {slide.promo_code && (
+                  <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur">
+                    Use code {slide.promo_code}
+                  </span>
+                )}
+                <h2 className="mt-2 text-lg font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
+                  {slide.title}
+                </h2>
+                {slide.subtitle && (
+                  <p className="mt-1 line-clamp-2 text-xs font-medium text-white/85 sm:text-sm">
+                    {slide.subtitle}
+                  </p>
+                )}
+                {countdown && (
+                  <p className="mt-2 inline-flex items-center rounded-lg bg-black/25 px-2.5 py-1 font-mono text-xs font-bold text-white">
+                    ⏳ {countdown}
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleClaim}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-sm font-bold text-slate-900 shadow-xs transition-transform hover:scale-[1.03]"
+                >
+                  {BANNER_CTA[slide.banner_type] ?? "Order Now"}
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+              {slide.discount_percent ? (
+                <div className="hidden shrink-0 rounded-2xl bg-white/20 px-4 py-3 text-center text-white backdrop-blur sm:block">
+                  <p className="text-3xl font-extrabold leading-none">
+                    {slide.discount_percent}%
+                  </p>
+                  <p className="text-[11px] font-bold uppercase tracking-wide">Off</p>
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {banners.length > 1 && (
+            <div className="mt-2.5 flex justify-center gap-1.5">
+              {banners.map((b, i) => (
+                <button
+                  key={b.id}
+                  onClick={() => setActiveSlide(i)}
+                  aria-label={`Banner ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === activeSlide ? "w-5 bg-[#008542]" : "w-1.5 bg-slate-400/60"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ===================== TOP 5 CATEGORY CARDS ===================== */}
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pt-5">
+        <div className="flex items-start justify-between gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {categories.map((cat) => {
+            const active = activeCategory === cat.name;
             return (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`shrink-0 snap-start whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-semibold shadow-xs transition-all ${
-                  active
-                    ? "bg-[#008542] text-white"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-[#008542]/40 hover:text-[#008542]"
-                }`}
+                key={cat.id}
+                type="button"
+                onClick={() => setActiveCategory(active ? null : cat.name)}
+                className="flex shrink-0 basis-0 grow flex-col items-center"
               >
-                {cat}
+                <span
+                  className={`flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-white p-2 shadow-sm transition-transform hover:scale-105 sm:h-20 sm:w-20 ${
+                    active
+                      ? "border-2 border-[#008542] ring-4 ring-[#008542]/15"
+                      : "border border-slate-200"
+                  }`}
+                >
+                  {cat.icon_url ? (
+                    <img
+                      src={cat.icon_url}
+                      alt={cat.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-12 w-12 rounded-xl object-contain"
+                    />
+                  ) : (
+                    <Utensils className="h-7 w-7 text-[#008542]" />
+                  )}
+                </span>
+                <span
+                  className={`mt-1 text-center text-xs font-semibold sm:text-sm ${
+                    active ? "text-[#008542]" : "text-slate-800"
+                  }`}
+                >
+                  {cat.name}
+                </span>
               </button>
             );
           })}
         </div>
-      </div>
+      </section>
 
-      {/* ===================== HERO SHOWCASE ===================== */}
-      {hero && (
-        <section className="relative z-10 mx-auto max-w-5xl px-4">
-          <button
-            type="button"
-            onClick={() => openDish(hero.id)}
-            className="relative block h-[180px] w-full overflow-hidden rounded-2xl text-left shadow-xs md:h-[260px]"
-          >
-            {hero.image_url && (
-              <img
-                src={hero.image_url}
-                alt={hero.name}
-                loading="lazy"
-                decoding="async"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
-              />
-            )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-            <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-              <span className="mb-1.5 inline-flex w-fit items-center gap-1.5 rounded-full bg-[#008542] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-xs">
-                ⭐ Lugha ya siku
-              </span>
-              <h2 className="text-lg font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
-                {hero.name}
-              </h2>
-              <p className="text-xs font-medium text-white/80 sm:text-sm">
-                {hero.vendor_name}
-              </p>
-              <span className="mt-2 inline-flex w-fit items-center rounded-lg bg-amber-400 px-2.5 py-1 text-xs font-bold text-amber-950 shadow-xs">
-                {formatTsh(hero.price)}
-              </span>
-            </div>
-          </button>
-
-          <div className="mt-2 flex justify-end gap-1.5">
-            {heroSlides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveSlide(i)}
-                aria-label={`Slaidi ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === activeSlide ? "w-5 bg-[#008542]" : "w-1.5 bg-slate-400/60"
-                }`}
-              />
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* ===================== FOOD GRID FEED ===================== */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-5">
