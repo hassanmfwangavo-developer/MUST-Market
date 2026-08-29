@@ -23,11 +23,11 @@ export const FALLBACK_MENU: MenuItem[] = [
     rating: 4.8,
     image_url:
       "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80",
-    category: "Chips / Fast Food",
+    category: "Chips & Fast Food",
     prep_time: "15-20 min",
     is_popular: true,
     description:
-      "Chips kavu za dhahabu zilizokaangwa vizuri, pamoja na kuku wa kuchoma wenye viungo vya asili na kachumbari safi.",
+      "Golden crispy fries served with spiced grilled chicken and fresh kachumbari salad.",
   },
   {
     id: "chicken-biryani",
@@ -37,25 +37,25 @@ export const FALLBACK_MENU: MenuItem[] = [
     rating: 4.9,
     image_url:
       "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&q=80",
-    category: "Wali / Biryani",
+    category: "Rice & Biryani",
     prep_time: "20-25 min",
     is_popular: true,
     description:
-      "Biryani ya kuku iliyopikwa kwa viungo vya pwani, mchele mtamu na saladi.",
+      "Chicken biryani cooked with coastal spices, fragrant rice and a side salad.",
   },
   {
     id: "wali-nyama-maharage",
-    name: "Wali Nyama / Maharage",
+    name: "Rice with Beef / Beans",
     price: 3500,
     vendor_name: "Cafeteria Block E",
     rating: 4.6,
     image_url:
       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80",
-    category: "Ugali / Swahili",
+    category: "Swahili Dishes",
     prep_time: "10-15 min",
     is_popular: false,
     description:
-      "Wali mweupe pamoja na nyama au maharage, mchuzi mzito na mboga za majani.",
+      "Steamed white rice with beef or beans, rich gravy and leafy greens.",
   },
   {
     id: "chips-mayai-extra",
@@ -65,11 +65,11 @@ export const FALLBACK_MENU: MenuItem[] = [
     rating: 4.7,
     image_url:
       "https://images.unsplash.com/photo-1584947898604-1b11606d5022?w=600&q=80",
-    category: "Chips / Fast Food",
+    category: "Chips & Fast Food",
     prep_time: "10-15 min",
     is_popular: false,
     description:
-      "Chips mayai maalum na mayai matatu, kachumbari na pilipili ya kienyeji.",
+      "Special chips omelette made with three eggs, kachumbari and homemade chilli.",
   },
 ];
 
@@ -87,7 +87,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     vendor_name: String(row.vendor_name ?? ""),
     rating: Number(row.rating ?? 4.5),
     image_url: (row.image_url as string) ?? null,
-    category: String(row.category ?? "Zote"),
+    category: String(row.category ?? "All"),
     prep_time: String(row.prep_time ?? "15-20 min"),
     is_popular: Boolean(row.is_popular),
     description: String(row.description ?? ""),

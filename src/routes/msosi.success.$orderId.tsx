@@ -39,12 +39,12 @@ export const Route = createFileRoute("/msosi/success/$orderId")({
       {
         name: "description",
         content:
-          "Oda yako imepokelewa. Jikoni imeanza kuandaa chakula chako. Fuatilia hatua za maandalizo na ufikishi.",
+          "Your order has been received. The kitchen has started preparing your food.",
       },
       { property: "og:title", content: "Malipo Yamefanikiwa — Msosi Fasta" },
       {
         property: "og:description",
-        content: "Oda yako imepokelewa. Msosi Fasta ya MUST Market.",
+        content: "Your order has been received. MUST Food Fasta.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -122,7 +122,7 @@ function MsosiSuccess() {
       downloadBlob(blob, `Risiti-${orderRef}.png`);
       toast.success("Risiti imepakuliwa kwenye simu yako.");
     } catch {
-      toast.error("Imeshindikana kutengeneza risiti. Jaribu tena.");
+      toast.error("Could not generate the receipt. Please try again.");
     } finally {
       setBusy(null);
     }
@@ -135,11 +135,11 @@ function MsosiSuccess() {
       const shared = await shareBlob(
         blob,
         `Risiti-${orderRef}.png`,
-        `Risiti ya oda #${orderRef} — Msosi Fasta`,
+        `Receipt for order #${orderRef} — MUST Food Fasta`,
       );
       if (!shared) {
         downloadBlob(blob, `Risiti-${orderRef}.png`);
-        toast.success("Kushiriki hakupatikani — risiti imepakuliwa badala yake.");
+        toast.success("Sharing unavailable — the receipt was downloaded instead.");
       }
     } catch {
       /* user cancelled share */
@@ -180,7 +180,7 @@ function MsosiSuccess() {
         <p className="max-w-sm text-sm leading-relaxed text-slate-500 sm:text-base">
           Oda yako{" "}
           <span className="font-bold text-slate-700">#{orderRef}</span> imepokelewa
-          na jikoni imeanza kuandaliwa.
+          and the kitchen has started preparing it.
         </p>
 
         {/* ===================== RECEIPT CARD ===================== */}
@@ -188,7 +188,7 @@ function MsosiSuccess() {
           <div className="flex items-center justify-between gap-3 border-b border-dashed border-slate-200 px-6 py-5 sm:px-8">
             <div className="min-w-0">
               <h2 className="truncate text-base font-bold tracking-tight text-slate-900">
-                Risiti ya Oda
+                Order Receipt
               </h2>
               <p className="mt-0.5 text-xs text-slate-500">
                 Pakua au share risiti yako yenye maelezo yote.
@@ -202,7 +202,7 @@ function MsosiSuccess() {
           <div className="grid gap-5 px-6 py-6 sm:grid-cols-2 sm:px-8">
             <DetailRow
               icon={<MapPin className="h-4 w-4 text-[#008542]" />}
-              label="Eneo la Kufikishia"
+              label="Delivery Location"
             >
               <span className="font-semibold text-slate-900">{area}</span>
               <span className="mt-0.5 block text-xs text-slate-500">{room}</span>
@@ -226,7 +226,7 @@ function MsosiSuccess() {
 
             <DetailRow
               icon={<Wallet className="h-4 w-4 text-[#008542]" />}
-              label="Jumla Iliyolipwa"
+              label="Total Paid"
             >
               <span className="text-lg font-extrabold text-[#008542]">
                 {formatTsh(total, "TSh")}
@@ -279,7 +279,7 @@ function MsosiSuccess() {
             className="flex w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-colors hover:bg-[#006e36]"
           >
             <Home className="h-5 w-5 shrink-0" />
-            <span className="text-sm">Rudi Nyumbani / Soko</span>
+            <span className="text-sm">Back to Home / Market</span>
           </Link>
 
           <a
@@ -289,7 +289,7 @@ function MsosiSuccess() {
             className="flex w-full items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-6 py-3.5 font-semibold text-[#008542] transition-colors hover:bg-emerald-100"
           >
             <MessageCircle className="h-5 w-5 shrink-0" />
-            <span className="text-sm">Wasiliana na Jikoni</span>
+            <span className="text-sm">Contact the Kitchen</span>
           </a>
         </div>
       </main>
