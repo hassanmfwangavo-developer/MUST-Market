@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
 import { supabase } from "@/integrations/supabase/client";
-import { createOrder } from "@/lib/orders";
+import { createOrder, type OrderItem } from "@/lib/orders";
+import { useCart } from "@/lib/cart";
 import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 
 
