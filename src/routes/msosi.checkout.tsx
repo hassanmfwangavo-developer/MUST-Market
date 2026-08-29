@@ -175,7 +175,7 @@ function MsosiCheckout() {
       </header>
 
       {/* ===================== TWO-COLUMN LAYOUT ===================== */}
-      <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10">
+      <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10 md:pb-12">
         {/* LEFT — ORDER SUMMARY */}
         <section className="md:w-[42%] md:shrink-0">
           <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs md:p-6">
@@ -345,11 +345,24 @@ function MsosiCheckout() {
               className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#008542]"
             />
           </div>
+
+          {/* Desktop inline payment CTA (mobile uses the fixed bottom bar) */}
+          <button
+            type="button"
+            onClick={handlePay}
+            disabled={submitting}
+            className="mt-6 hidden w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60 md:flex"
+          >
+            <Lock className="h-4 w-4 shrink-0" />
+            <span className="whitespace-nowrap text-sm">
+              Lipa Sasa kwa M-Pesa / Tigo Pesa via Snippe
+            </span>
+          </button>
         </section>
       </div>
 
       {/* ===================== STICKY BOTTOM PAYMENT CTA ===================== */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden">
         <button
           type="button"
           onClick={handlePay}
