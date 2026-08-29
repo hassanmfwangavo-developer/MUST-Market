@@ -7,7 +7,7 @@ import {
   Search,
   Home,
   ClipboardList,
-  ShoppingCart,
+  LifeBuoy,
   User,
   Plus,
   Star,
