@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -20,7 +20,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
-import { ADMIN_EMAIL } from "@/lib/admin";
+import { AdminTabs } from "@/components/admin-tabs";
 import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
 
 export const Route = createFileRoute("/admin/")({
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/admin/")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
-  component: AdminPage,
+  component: AdminConsole,
 });
 
 interface AdminProduct {
@@ -172,6 +172,8 @@ function AdminConsole() {
             </p>
           </div>
         </div>
+
+        <AdminTabs />
 
         <ShelfManager />
 
