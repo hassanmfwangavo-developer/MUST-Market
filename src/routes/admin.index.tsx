@@ -23,7 +23,7 @@ import { microUrl } from "@/lib/images";
 import { ADMIN_EMAIL } from "@/lib/admin";
 import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
 
-export const Route = createFileRoute("/admin")({
+export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
       { title: "Admin Panel — MUST Market" },
