@@ -19,6 +19,9 @@ import { fetchMenuItems, formatTsh } from "@/lib/menu";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 import { fetchVendors } from "@/lib/vendors";
+import { matchesCategory } from "@/lib/category-match";
+import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
+import { HelpDrawer } from "@/components/help-drawer";
 
 
 export const Route = createFileRoute("/msosi/")({
@@ -168,13 +171,9 @@ function MsosiFasta() {
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const cat = activeCategory?.toLowerCase() ?? null;
     const vendor = activeVendor?.toLowerCase() ?? null;
     return menu.filter((item) => {
-      const catOk =
-        !cat ||
-        item.category.toLowerCase().includes(cat) ||
-        item.name.toLowerCase().includes(cat);
+      const catOk = !activeCategory || matchesCategory(item, activeCategory);
       const vendorOk =
         !vendor ||
         item.vendor_name.toLowerCase().includes(vendor) ||
