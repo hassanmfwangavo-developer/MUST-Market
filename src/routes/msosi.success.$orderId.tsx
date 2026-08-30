@@ -81,6 +81,8 @@ function MsosiSuccess() {
   const dishName = order?.items?.[0]?.name ?? locationState?.name ?? "Oda yako";
   const vendorName =
     order?.items?.[0]?.vendorName ?? locationState?.vendorName ?? "Msosi Fasta";
+  const customerName =
+    order?.customer_name || locationState?.customerName || "";
 
   const shortId = isUuid ? orderId.slice(0, 8).toUpperCase() : orderId.toUpperCase();
   const orderRef = `MF-${shortId}`;
