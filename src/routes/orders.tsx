@@ -67,6 +67,12 @@ function OrdersPage() {
     enabled: !!user,
   });
 
+  const { data: reviews = {} } = useQuery({
+    queryKey: ["order_reviews", user?.id ?? "anon"],
+    queryFn: () => fetchMyReviews(user!.id),
+    enabled: !!user,
+  });
+
   useEffect(() => {
     if (initialized && !user) {
       openAuthModal("/orders");
@@ -117,7 +123,12 @@ function OrdersPage() {
         ) : orders && orders.length > 0 ? (
           <div>
             {orders.map((o) => (
-              <OrderCard key={o.id} order={o} />
+              <OrderCard
+                key={o.id}
+                order={o}
+                userId={user!.id}
+                review={reviews[o.id]}
+              />
             ))}
           </div>
         ) : (
