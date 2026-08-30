@@ -250,6 +250,7 @@ function MsosiDetail() {
                 price: dish.price,
                 imageUrl: dish.image_url ?? undefined,
                 vendorName: dish.vendor_name,
+                deliveryFee: dish.delivery_fee,
                 quantity,
                 addSoda,
               },
