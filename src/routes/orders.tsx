@@ -164,8 +164,18 @@ function TopBar() {
   );
 }
 
-function OrderCard({ order }: { order: FoodOrder }) {
+function OrderCard({
+  order,
+  userId,
+  review,
+}: {
+  order: FoodOrder;
+  userId: string;
+  review?: OrderReview;
+}) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [reviewOpen, setReviewOpen] = useState(false);
   const items = order.items ?? [];
   const title =
     items.length > 0
@@ -207,13 +217,153 @@ function OrderCard({ order }: { order: FoodOrder }) {
         {formatTsh(order.total_tsh, "TZS")}
       </p>
 
-      <button
-        type="button"
-        onClick={handleReorder}
-        className="w-full rounded-full bg-[#2ECC71] px-6 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-[#27ae60] active:scale-[0.98]"
-      >
-        Reorder
-      </button>
+      {review ? (
+        <div className="flex items-center gap-1.5 rounded-xl bg-amber-50 px-3 py-2">
+          <StarRow value={review.rating} />
+          <span className="truncate text-xs text-slate-600">
+            {review.comment || "Thanks for your rating!"}
+          </span>
+        </div>
+      ) : null}
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={handleReorder}
+          className="w-full rounded-full bg-[#2ECC71] px-6 py-3.5 font-bold text-white shadow-sm transition-all hover:bg-[#27ae60] active:scale-[0.98]"
+        >
+          Reorder
+        </button>
+        <button
+          type="button"
+          onClick={() => setReviewOpen(true)}
+          className="w-full rounded-full border border-slate-200 bg-white px-6 py-3.5 font-bold text-slate-700 transition-colors hover:border-[#008542] hover:text-[#008542]"
+        >
+          {review ? "Edit Review" : "Leave Review / Weka Maoni"}
+        </button>
+      </div>
+
+      {reviewOpen ? (
+        <ReviewModal
+          orderId={order.id}
+          userId={userId}
+          existing={review}
+          onClose={() => setReviewOpen(false)}
+          onSaved={() => {
+            void queryClient.invalidateQueries({ queryKey: ["order_reviews", userId] });
+          }}
+        />
+      ) : null}
     </article>
+  );
+}
+
+function StarRow({ value }: { value: number }) {
+  return (
+    <span className="flex shrink-0 items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((n) => (
+        <Star
+          key={n}
+          className={`h-3.5 w-3.5 ${
+            n <= value ? "fill-amber-400 text-amber-400" : "text-slate-300"
+          }`}
+        />
+      ))}
+    </span>
+  );
+}
+
+function ReviewModal({
+  orderId,
+  userId,
+  existing,
+  onClose,
+  onSaved,
+}: {
+  orderId: string;
+  userId: string;
+  existing?: OrderReview;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [rating, setRating] = useState(existing?.rating ?? 5);
+  const [comment, setComment] = useState(existing?.comment ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await submitReview({ orderId, userId, rating, comment: comment.trim() });
+      toast.success("Thank you! Your review has been sent. 🙌");
+      onSaved();
+      onClose();
+    } catch {
+      toast.error("Could not save your review. Please try again.");
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end justify-center sm:items-center">
+      <button
+        aria-label="Close review"
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"
+      />
+      <div className="relative w-full rounded-t-3xl border border-slate-200 bg-white p-6 shadow-xl sm:max-w-md sm:rounded-3xl">
+        <div className="mb-4 flex items-start justify-between">
+          <div>
+            <h3 className="text-base font-extrabold tracking-tight text-slate-900">
+              Leave a review
+            </h3>
+            <p className="text-[11px] text-slate-500">
+              How was the food and the delivery?
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="grid h-8 w-8 place-items-center rounded-full text-slate-400 hover:bg-slate-100"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="mb-4 flex justify-center gap-2">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <button
+              key={n}
+              type="button"
+              aria-label={`${n} star${n > 1 ? "s" : ""}`}
+              onClick={() => setRating(n)}
+              className="transition-transform hover:scale-110"
+            >
+              <Star
+                className={`h-8 w-8 ${
+                  n <= rating ? "fill-amber-400 text-amber-400" : "text-slate-300"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+
+        <textarea
+          rows={3}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Write a short testimonial (optional)..."
+          className="w-full resize-none rounded-2xl border border-slate-200 bg-[#FAFBF6] p-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#008542] focus:outline-none focus:ring-2 focus:ring-[#008542]/15"
+        />
+
+        <button
+          type="button"
+          onClick={save}
+          disabled={saving}
+          className="mt-4 w-full rounded-full bg-[#008542] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#006e36] disabled:opacity-60"
+        >
+          {saving ? "Sending..." : "Submit Review"}
+        </button>
+      </div>
+    </div>
   );
 }
