@@ -208,6 +208,18 @@ function MsosiSuccess() {
 
           <div className="grid gap-5 px-6 py-6 sm:grid-cols-2 sm:px-8">
             <DetailRow
+              icon={<User className="h-4 w-4 text-[#008542]" />}
+              label="Customer"
+            >
+              <span className="font-semibold text-slate-900">
+                {customerName || "Student"}
+              </span>
+              {phone ? (
+                <span className="mt-0.5 block text-xs text-slate-500">+{phone}</span>
+              ) : null}
+            </DetailRow>
+
+            <DetailRow
               icon={<MapPin className="h-4 w-4 text-[#008542]" />}
               label="Delivery Location"
             >
@@ -217,12 +229,13 @@ function MsosiSuccess() {
 
             <DetailRow
               icon={<Clock className="h-4 w-4 text-[#008542]" />}
-              label="Muda wa Kufikishiwa"
+              label="Estimated Delivery"
             >
               <span className="font-semibold text-slate-900">
-                {(order?.eta_minutes ?? 20) - 5} - {order?.eta_minutes ?? 20} dakika
+                {(order?.eta_minutes ?? 20) - 5} - {order?.eta_minutes ?? 20} min
               </span>
             </DetailRow>
+
 
             <DetailRow
               icon={<MessageCircle className="h-4 w-4 text-[#008542]" />}
