@@ -129,6 +129,7 @@ function MsosiFasta() {
   const [activeVendor, setActiveVendor] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
@@ -523,7 +524,9 @@ function MsosiFasta() {
         </section>
       )}
 
-
+      {/* ============ HOW IT WORKS + REFERRAL ============ */}
+      <HowItWorks />
+      <ReferralCard />
 
       <div className="relative z-10 hidden md:block">
         <Footer />
@@ -535,14 +538,25 @@ function MsosiFasta() {
           const cls = `flex flex-col items-center gap-0.5 px-2 text-[10px] font-semibold transition-colors ${
             tab.active ? "text-[#008542]" : "text-slate-400"
           }`;
+          if (tab.key === "help") {
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                className={cls}
+              >
+                <Icon className="h-5 w-5" />
+                {tab.label}
+              </button>
+            );
+          }
           const to =
             tab.key === "account"
               ? "/profile"
               : tab.key === "orders"
                 ? "/orders"
-                : tab.key === "help"
-                  ? "/feedback"
-                  : "/msosi";
+                : "/msosi";
           return (
             <Link key={tab.key} to={to} className={cls}>
               <Icon className="h-5 w-5" />
@@ -550,8 +564,9 @@ function MsosiFasta() {
             </Link>
           );
         })}
-
       </nav>
+
+      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }
