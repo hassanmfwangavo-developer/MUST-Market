@@ -37,13 +37,13 @@ declare module "@tanstack/react-router" {
 export const Route = createFileRoute("/msosi/success/$orderId")({
   head: () => ({
     meta: [
-      { title: "Malipo Yamefanikiwa — Msosi Fasta | MUST Market" },
+      { title: "Payment Successful — Msosi Fasta | MUST Market" },
       {
         name: "description",
         content:
           "Your order has been received. The kitchen has started preparing your food.",
       },
-      { property: "og:title", content: "Malipo Yamefanikiwa — Msosi Fasta" },
+      { property: "og:title", content: "Payment Successful — Msosi Fasta" },
       {
         property: "og:description",
         content: "Your order has been received. MUST Food Fasta.",
@@ -79,7 +79,7 @@ function MsosiSuccess() {
   const area = order?.delivery_area ?? locationState?.area ?? "—";
   const room = order?.room ?? locationState?.room ?? "—";
   const phone = order?.phone ?? locationState?.phone ?? "";
-  const dishName = order?.items?.[0]?.name ?? locationState?.name ?? "Oda yako";
+  const dishName = order?.items?.[0]?.name ?? locationState?.name ?? "Your order";
   const vendorName =
     order?.items?.[0]?.vendorName ?? locationState?.vendorName ?? "Msosi Fasta";
   const customerName =
@@ -88,7 +88,7 @@ function MsosiSuccess() {
   const shortId = isUuid ? orderId.slice(0, 8).toUpperCase() : orderId.toUpperCase();
   const orderRef = `MF-${shortId}`;
   const whatsappText = encodeURIComponent(
-    `Habari! Nafuatilia oda yangu #${orderRef} (${dishName}) kutoka ${vendorName}. Inaendaje?`,
+    `Hello! I am following up on my order #${orderRef} (${dishName}) from ${vendorName}. How is it going?`,
   );
 
   const lines =
@@ -199,7 +199,7 @@ function MsosiSuccess() {
                 Order Receipt
               </h2>
               <p className="mt-0.5 text-xs text-slate-500">
-                Pakua au share risiti yako yenye maelezo yote.
+                Download or share your full order receipt.
               </p>
             </div>
             <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
