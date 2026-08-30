@@ -178,12 +178,16 @@ function MsosiSuccess() {
         </div>
 
         <h1 className="mb-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-          Malipo Yamefanikiwa! 🎉
+          Payment Successful! 🎉
         </h1>
+        {customerName ? (
+          <p className="mb-1 text-base font-bold text-[#008542] sm:text-lg">
+            Thank you, {customerName}!
+          </p>
+        ) : null}
         <p className="max-w-sm text-sm leading-relaxed text-slate-500 sm:text-base">
-          Oda yako{" "}
-          <span className="font-bold text-slate-700">#{orderRef}</span> imepokelewa
-          and the kitchen has started preparing it.
+          Your order <span className="font-bold text-slate-700">#{orderRef}</span> has
+          been received and is on its way to you.
         </p>
 
         {/* ===================== RECEIPT CARD ===================== */}
