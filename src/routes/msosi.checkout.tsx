@@ -195,6 +195,8 @@ function MsosiCheckout() {
             phone: cleanPhone,
             name: order.name,
             vendorName: order.vendorName,
+            customerName: cleanName,
+
           },
         });
       }, 700);
@@ -359,7 +361,7 @@ function MsosiCheckout() {
               <div className="flex items-center justify-between text-slate-600">
                 <span>Delivery Fee</span>
                 <span className="font-semibold text-slate-900">
-                  {formatTsh(DELIVERY_FEE, "TSh")}
+                  {formatTsh(deliveryFee, "TSh")}
                 </span>
               </div>
               <div className="flex items-center justify-between border-t border-slate-200 pt-3">
