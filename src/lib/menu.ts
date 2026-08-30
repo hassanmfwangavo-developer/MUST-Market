@@ -11,6 +11,7 @@ export interface MenuItem {
   prep_time: string;
   is_popular: boolean;
   description: string;
+  delivery_fee: number;
 }
 
 /** Realistic fallback dataset so the feed renders instantly. */
@@ -28,6 +29,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     is_popular: true,
     description:
       "Golden crispy fries served with spiced grilled chicken and fresh kachumbari salad.",
+    delivery_fee: 1000,
   },
   {
     id: "chicken-biryani",
@@ -42,6 +44,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     is_popular: true,
     description:
       "Chicken biryani cooked with coastal spices, fragrant rice and a side salad.",
+    delivery_fee: 1000,
   },
   {
     id: "wali-nyama-maharage",
@@ -56,6 +59,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     is_popular: false,
     description:
       "Steamed white rice with beef or beans, rich gravy and leafy greens.",
+    delivery_fee: 1000,
   },
   {
     id: "chips-mayai-extra",
@@ -70,10 +74,12 @@ export const FALLBACK_MENU: MenuItem[] = [
     is_popular: false,
     description:
       "Special chips omelette made with three eggs, kachumbari and homemade chilli.",
+    delivery_fee: 1000,
   },
 ];
 
 export const SODA_PRICE = 1000;
+export const DEFAULT_DELIVERY_FEE = 1000;
 
 export function formatTsh(n: number, prefix: "TZS" | "TSh" = "TZS") {
   return `${prefix} ${n.toLocaleString("en-US")}`;
@@ -91,6 +97,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     prep_time: String(row.prep_time ?? "15-20 min"),
     is_popular: Boolean(row.is_popular),
     description: String(row.description ?? ""),
+    delivery_fee: Number(row.delivery_fee ?? DEFAULT_DELIVERY_FEE),
   };
 }
 

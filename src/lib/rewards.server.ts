@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-export const POINTS_PER_1000_TSH = 1;
+/** Flat reward for every completed order. */
+export const POINTS_PER_ORDER = 100;
 export const REFERRAL_INVITER_BONUS = 50;
 export const REFERRAL_INVITEE_BONUS = 10;
 
@@ -49,7 +50,7 @@ export async function applyOrderRewards(
   const order = claimedRows?.[0];
   if (!order) return none; // already awarded or not this user's order
 
-  const pointsEarned = Math.floor(order.total_tsh / 1000) * POINTS_PER_1000_TSH;
+  const pointsEarned = order.total_tsh > 0 ? POINTS_PER_ORDER : 0;
 
   // ---- Streak ----
   const { data: profile } = await admin

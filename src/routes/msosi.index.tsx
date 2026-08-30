@@ -19,6 +19,9 @@ import { fetchMenuItems, formatTsh } from "@/lib/menu";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 import { fetchVendors } from "@/lib/vendors";
+import { matchesCategory } from "@/lib/category-match";
+import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
+import { HelpDrawer } from "@/components/help-drawer";
 
 
 export const Route = createFileRoute("/msosi/")({
@@ -126,6 +129,7 @@ function MsosiFasta() {
   const [activeVendor, setActiveVendor] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
@@ -168,13 +172,9 @@ function MsosiFasta() {
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const cat = activeCategory?.toLowerCase() ?? null;
     const vendor = activeVendor?.toLowerCase() ?? null;
     return menu.filter((item) => {
-      const catOk =
-        !cat ||
-        item.category.toLowerCase().includes(cat) ||
-        item.name.toLowerCase().includes(cat);
+      const catOk = !activeCategory || matchesCategory(item, activeCategory);
       const vendorOk =
         !vendor ||
         item.vendor_name.toLowerCase().includes(vendor) ||
@@ -524,7 +524,9 @@ function MsosiFasta() {
         </section>
       )}
 
-
+      {/* ============ HOW IT WORKS + REFERRAL ============ */}
+      <HowItWorks />
+      <ReferralCard />
 
       <div className="relative z-10 hidden md:block">
         <Footer />
@@ -536,14 +538,25 @@ function MsosiFasta() {
           const cls = `flex flex-col items-center gap-0.5 px-2 text-[10px] font-semibold transition-colors ${
             tab.active ? "text-[#008542]" : "text-slate-400"
           }`;
+          if (tab.key === "help") {
+            return (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                className={cls}
+              >
+                <Icon className="h-5 w-5" />
+                {tab.label}
+              </button>
+            );
+          }
           const to =
             tab.key === "account"
               ? "/profile"
               : tab.key === "orders"
                 ? "/orders"
-                : tab.key === "help"
-                  ? "/feedback"
-                  : "/msosi";
+                : "/msosi";
           return (
             <Link key={tab.key} to={to} className={cls}>
               <Icon className="h-5 w-5" />
@@ -551,8 +564,9 @@ function MsosiFasta() {
             </Link>
           );
         })}
-
       </nav>
+
+      <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

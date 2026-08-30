@@ -8,6 +8,7 @@ export type OrderItem = {
   imageUrl?: string;
   vendorName?: string;
   addSoda?: boolean;
+  deliveryFee?: number;
 };
 
 export type FoodOrder = {
@@ -21,14 +22,16 @@ export type FoodOrder = {
   phone: string;
   eta_minutes: number;
   created_at: string;
+  customer_name?: string;
 };
 
 export const ACTIVE_STATUSES = ["pending", "preparing", "on_the_way"] as const;
 
+/** Customer-facing wording — no live "preparing" / tracking language. */
 export const STATUS_LABEL: Record<string, string> = {
-  pending: "🧾 Order received",
-  preparing: "🍲 Being prepared",
-  on_the_way: "🚴 On the way",
+  pending: "Succeeded",
+  preparing: "Succeeded",
+  on_the_way: "Succeeded",
   delivered: "Delivered",
   cancelled: "Cancelled",
 };
@@ -71,6 +74,7 @@ export async function createOrder(input: {
   area: string;
   room: string;
   phone: string;
+  customerName: string;
 }): Promise<string | null> {
   const { data, error } = await supabase
     .from("food_orders")
@@ -81,7 +85,8 @@ export async function createOrder(input: {
       delivery_area: input.area,
       room: input.room,
       phone: input.phone,
-      status: "preparing",
+      customer_name: input.customerName,
+      status: "delivered",
     })
     .select("id")
     .single();

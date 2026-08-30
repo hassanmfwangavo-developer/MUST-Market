@@ -20,7 +20,7 @@ import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 
 
-const DELIVERY_FEE = 1000;
+import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
 
 const DELIVERY_AREAS = [
   "Hosteli Block A",
@@ -39,6 +39,7 @@ type CheckoutState = {
   vendorName?: string;
   quantity?: number;
   addSoda?: boolean;
+  deliveryFee?: number;
 };
 
 declare module "@tanstack/react-router" {
@@ -80,6 +81,7 @@ function MsosiCheckout() {
       vendorName: locationState?.vendorName ?? "",
       quantity: locationState?.quantity ?? 1,
       addSoda: locationState?.addSoda ?? false,
+      deliveryFee: locationState?.deliveryFee ?? DEFAULT_DELIVERY_FEE,
     }),
     [locationState],
   );
@@ -102,10 +104,17 @@ function MsosiCheckout() {
         0,
       )
     : order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
+  // Delivery fee is set per dish by the admin — a mixed cart pays the highest fee once.
+  const deliveryFee = cartMode
+    ? cartItems.reduce(
+        (max, i) => Math.max(max, i.deliveryFee ?? DEFAULT_DELIVERY_FEE),
+        0,
+      ) || DEFAULT_DELIVERY_FEE
+    : order.deliveryFee;
   const discount = claimed?.discountPercent
     ? Math.round((subtotal * claimed.discountPercent) / 100)
     : 0;
-  const total = subtotal - discount + DELIVERY_FEE;
+  const total = subtotal - discount + deliveryFee;
 
 
   const handlePay = async () => {
@@ -142,12 +151,14 @@ function MsosiCheckout() {
                   imageUrl: order.imageUrl || undefined,
                   vendorName: order.vendorName || undefined,
                   addSoda: order.addSoda,
+                  deliveryFee: order.deliveryFee,
                 },
               ],
           total,
           area,
           room: room.trim(),
           phone: cleanPhone,
+          customerName: cleanName,
         });
       }
       // Award streak + reward points (idempotent server-side; non-fatal).
@@ -184,6 +195,8 @@ function MsosiCheckout() {
             phone: cleanPhone,
             name: order.name,
             vendorName: order.vendorName,
+            customerName: cleanName,
+
           },
         });
       }, 700);
@@ -348,7 +361,7 @@ function MsosiCheckout() {
               <div className="flex items-center justify-between text-slate-600">
                 <span>Delivery Fee</span>
                 <span className="font-semibold text-slate-900">
-                  {formatTsh(DELIVERY_FEE, "TSh")}
+                  {formatTsh(deliveryFee, "TSh")}
                 </span>
               </div>
               <div className="flex items-center justify-between border-t border-slate-200 pt-3">
