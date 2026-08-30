@@ -11,6 +11,7 @@ export interface MenuItem {
   prep_time: string;
   is_popular: boolean;
   description: string;
+  delivery_fee: number;
 }
 
 /** Realistic fallback dataset so the feed renders instantly. */
@@ -91,6 +92,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     prep_time: String(row.prep_time ?? "15-20 min"),
     is_popular: Boolean(row.is_popular),
     description: String(row.description ?? ""),
+    delivery_fee: Number(row.delivery_fee ?? DEFAULT_DELIVERY_FEE),
   };
 }
 
