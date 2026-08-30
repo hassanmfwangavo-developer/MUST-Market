@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, ClipboardList, ShoppingBag, Utensils } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, ClipboardList, ShoppingBag, Star, Utensils, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Footer } from "@/components/footer";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchOrders, type FoodOrder } from "@/lib/orders";
+import { fetchMyReviews, submitReview, type OrderReview } from "@/lib/reviews";
 import { setCartItems } from "@/lib/cart";
 import { formatTsh } from "@/lib/menu";
 
