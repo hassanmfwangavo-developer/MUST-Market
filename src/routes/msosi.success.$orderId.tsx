@@ -11,6 +11,7 @@ import {
   Download,
   Share2,
   Loader2,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { fetchOrderById, type FoodOrder } from "@/lib/orders";
