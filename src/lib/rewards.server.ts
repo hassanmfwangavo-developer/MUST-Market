@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
-export const POINTS_PER_1000_TSH = 1;
+/** Flat reward for every completed order. */
+export const POINTS_PER_ORDER = 100;
 export const REFERRAL_INVITER_BONUS = 50;
 export const REFERRAL_INVITEE_BONUS = 10;
 
