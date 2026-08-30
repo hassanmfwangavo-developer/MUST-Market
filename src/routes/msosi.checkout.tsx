@@ -151,12 +151,14 @@ function MsosiCheckout() {
                   imageUrl: order.imageUrl || undefined,
                   vendorName: order.vendorName || undefined,
                   addSoda: order.addSoda,
+                  deliveryFee: order.deliveryFee,
                 },
               ],
           total,
           area,
           room: room.trim(),
           phone: cleanPhone,
+          customerName: cleanName,
         });
       }
       // Award streak + reward points (idempotent server-side; non-fatal).
