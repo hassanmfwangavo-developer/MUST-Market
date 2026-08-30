@@ -26,6 +26,7 @@ type SuccessState = {
   phone?: string;
   name?: string;
   vendorName?: string;
+  customerName?: string;
 };
 
 declare module "@tanstack/react-router" {
