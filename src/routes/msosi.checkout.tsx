@@ -20,7 +20,7 @@ import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 
 
-const DELIVERY_FEE = 1000;
+import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
 
 const DELIVERY_AREAS = [
   "Hosteli Block A",
@@ -39,6 +39,7 @@ type CheckoutState = {
   vendorName?: string;
   quantity?: number;
   addSoda?: boolean;
+  deliveryFee?: number;
 };
 
 declare module "@tanstack/react-router" {
