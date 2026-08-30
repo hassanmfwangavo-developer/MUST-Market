@@ -42,17 +42,18 @@ function formatOrderDate(iso: string): string {
 
 const STATUS_STYLE: Record<string, string> = {
   delivered: "bg-emerald-100/60 text-emerald-600",
-  pending: "bg-amber-100/70 text-amber-700",
-  preparing: "bg-amber-100/70 text-amber-700",
-  on_the_way: "bg-amber-100/70 text-amber-700",
+  pending: "bg-emerald-100/60 text-emerald-600",
+  preparing: "bg-emerald-100/60 text-emerald-600",
+  on_the_way: "bg-emerald-100/60 text-emerald-600",
   cancelled: "bg-slate-200/70 text-slate-500",
 };
 
+/** Customer-facing labels only — no live tracking wording. */
 const STATUS_TEXT: Record<string, string> = {
-  delivered: "Delivered",
-  pending: "Pending",
-  preparing: "Preparing",
-  on_the_way: "On the way",
+  delivered: "Succeeded",
+  pending: "Succeeded",
+  preparing: "Succeeded",
+  on_the_way: "Succeeded",
   cancelled: "Cancelled",
 };
 
