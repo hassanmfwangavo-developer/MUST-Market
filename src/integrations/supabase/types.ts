@@ -205,6 +205,7 @@ export type Database = {
           addons: Json
           category: string
           created_at: string
+          delivery_fee: number
           description: string
           id: string
           image_url: string | null
@@ -221,6 +222,7 @@ export type Database = {
           addons?: Json
           category?: string
           created_at?: string
+          delivery_fee?: number
           description?: string
           id?: string
           image_url?: string | null
@@ -237,6 +239,7 @@ export type Database = {
           addons?: Json
           category?: string
           created_at?: string
+          delivery_fee?: number
           description?: string
           id?: string
           image_url?: string | null
@@ -255,6 +258,41 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          order_id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          id?: string
+          order_id: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_reviews_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: true
+            referencedRelation: "food_orders"
             referencedColumns: ["id"]
           },
         ]
