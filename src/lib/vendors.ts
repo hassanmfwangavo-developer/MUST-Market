@@ -28,6 +28,7 @@ export interface AdminMenuItem {
   is_available: boolean;
   description: string;
   addons: MenuAddon[];
+  delivery_fee: number;
 }
 
 export interface AdminFoodOrder {
@@ -80,6 +81,7 @@ export async function fetchAdminMenuItems(): Promise<AdminMenuItem[]> {
     is_available: row.is_available,
     description: row.description,
     addons: parseAddons(row.addons),
+    delivery_fee: Number(row.delivery_fee ?? 1000),
   }));
 }
 
