@@ -8,6 +8,7 @@ import {
   Pencil,
   Plus,
   Search,
+  Star,
   Store,
   Trash2,
   UtensilsCrossed,
@@ -20,6 +21,7 @@ import { AdminTabs } from "@/components/admin-tabs";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { formatTsh } from "@/lib/menu";
+import { fetchAllReviews } from "@/lib/reviews";
 import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import { uploadAdminImage } from "@/lib/admin-media";
 import {
@@ -57,6 +59,7 @@ const TABS = [
   { key: "orders", label: "Maagizo & Hali ya Malipo", icon: ClipboardList },
   { key: "food", label: "Vyakula & Menus", icon: UtensilsCrossed },
   { key: "vendors", label: "Migahawa & Logos", icon: Store },
+  { key: "reviews", label: "Testimonials & Reviews", icon: Star },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -100,6 +103,7 @@ function AdminFoodManager() {
           {tab === "orders" && <OrdersTab />}
           {tab === "food" && <FoodTab />}
           {tab === "vendors" && <VendorsTab />}
+          {tab === "reviews" && <ReviewsTab />}
         </div>
       </main>
       <Footer />
@@ -224,6 +228,7 @@ interface FoodDraft {
   imageUrl: string;
   category: string;
   addons: MenuAddon[];
+  deliveryFee: string;
 }
 
 const emptyDraft = (): FoodDraft => ({
@@ -236,6 +241,7 @@ const emptyDraft = (): FoodDraft => ({
   imageUrl: "",
   category: "Zote",
   addons: [],
+  deliveryFee: "1000",
 });
 
 function FoodTab() {
@@ -286,6 +292,7 @@ function FoodTab() {
         image_url: imageUrl,
         category: d.category,
         addons: d.addons.filter((a) => a.title.trim()) as unknown as never,
+        delivery_fee: Math.max(0, Math.round(Number(d.deliveryFee) || 0)),
       };
 
       const { error } = d.id
@@ -332,6 +339,7 @@ function FoodTab() {
       imageUrl: item.image_url ?? "",
       category: item.category,
       addons: item.addons,
+      deliveryFee: String(item.delivery_fee ?? 1000),
     });
   };
 
@@ -542,6 +550,15 @@ function FoodModal({
                   </option>
                 ))}
               </select>
+            </div>
+            <div>
+              <label className={labelClass}>Delivery Fee (TZS)</label>
+              <input
+                inputMode="numeric"
+                value={draft.deliveryFee}
+                onChange={(e) => set("deliveryFee", e.target.value)}
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass}>Rating (0 – 5)</label>
@@ -833,5 +850,86 @@ function VendorsTab() {
         </ul>
       </section>
     </div>
+  );
+}
+
+/* ------------------------------- Tab 4 --------------------------------- */
+
+function ReviewsTab() {
+  const { data: reviews = [], isLoading } = useQuery({
+    queryKey: ["admin-order-reviews"],
+    queryFn: fetchAllReviews,
+  });
+
+  const average = useMemo(
+    () =>
+      reviews.length
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+        : "—",
+    [reviews],
+  );
+
+  return (
+    <section className={cardClass}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold text-foreground">Testimonials &amp; Reviews</h2>
+          <p className="text-sm text-muted-foreground">
+            Live customer ratings and feedback from delivered orders.
+          </p>
+        </div>
+        <div className="rounded-2xl bg-primary/10 px-4 py-2 text-center">
+          <p className="text-lg font-bold text-primary">{average}</p>
+          <p className="text-[11px] font-medium text-muted-foreground">
+            {reviews.length} review{reviews.length === 1 ? "" : "s"}
+          </p>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="mt-6 space-y-3">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-24 animate-pulse rounded-2xl bg-surface-2" />
+          ))}
+        </div>
+      ) : reviews.length === 0 ? (
+        <p className="mt-6 text-sm text-muted-foreground">No reviews yet.</p>
+      ) : (
+        <div className="mt-6 space-y-3">
+          {reviews.map((r) => (
+            <article key={r.id} className="rounded-2xl border border-border bg-surface-2 p-4">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-foreground">
+                    {r.customer_name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Order {orderRef(r.order_id)} · {formatTsh(r.total_tsh, "TSh")} ·{" "}
+                    {new Date(r.created_at).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <div className="flex items-center gap-0.5" aria-label={`${r.rating} out of 5`}>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <Star
+                      key={n}
+                      className={`h-4 w-4 ${
+                        n <= r.rating ? "fill-accent text-accent" : "text-muted-foreground/40"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+              {r.comment.trim() && (
+                <p className="mt-2 text-sm text-foreground/80">{r.comment}</p>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
