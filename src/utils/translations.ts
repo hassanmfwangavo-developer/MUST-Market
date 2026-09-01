@@ -188,7 +188,7 @@ export const translations = {
       post: {
         aria: "Weka tangazo",
         label: "+ Weka",
-        labelShort: "Weka",
+        labelShort: "+ Weka",
       },
       viewAll: "Angalia Bidhaa Zote",
     },
