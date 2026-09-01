@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
-import { Hero } from "@/components/hero";
+import { MarketHome } from "@/components/market-home";
 import { HowItWorks } from "@/components/how-it-works";
-import { ProductShelves } from "@/components/product-shelves";
 import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
 import { Footer } from "@/components/footer";
@@ -10,7 +9,7 @@ import { Footer } from "@/components/footer";
 export const Route = createFileRoute("/market")({
   head: () => ({
     meta: [
-      { title: "Soko la Wanafunzi & Electronics – MUST Market" },
+      { title: "MUST Market — Student Marketplace | Buy & Sell Used Items" },
       {
         name: "description",
         content:
@@ -22,6 +21,8 @@ export const Route = createFileRoute("/market")({
         content: "Buy and sell used student gear at MUST instantly.",
       },
       { property: "og:url", content: "https://must-campus-swap.lovable.app/market" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/market" }],
   }),
@@ -33,9 +34,8 @@ function Market() {
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex-1">
-        <Hero />
+        <MarketHome />
         <HowItWorks />
-        <ProductShelves />
         <Testimonials />
         <FAQ />
       </main>

@@ -20,6 +20,24 @@ export const translations = {
       mustStudents: "MUST STUDENTS",
       avgReply: "AVG. REPLY TIME",
     },
+    marketHome: {
+      banner: {
+        tag: "Campus Deal",
+        title: "Flash sale on used electronics this week",
+        subtitle: "Post your item for free and reach 1,700+ MUST students instantly.",
+        cta: "Browse deals",
+      },
+      search: {
+        aria: "Search listings",
+        placeholder: "Search for rooms, books, electronics...",
+      },
+      post: {
+        aria: "Post a listing",
+        label: "+ Post",
+        labelShort: "+ Post",
+      },
+      viewAll: "View All Products",
+    },
     categories: {
       all: "All Items",
       electronics: "Electronics",
@@ -155,6 +173,24 @@ export const translations = {
       activeListings: "BIDHAA SOKONI",
       mustStudents: "WANAFUNZI MUST",
       avgReply: "MUDA WA KUJIBU",
+    },
+    marketHome: {
+      banner: {
+        tag: "Ofa ya Chuo",
+        title: "Punguzo la wiki hii kwenye electronics used",
+        subtitle: "Weka bidhaa yako bure na uufikie mkusanyiko wa wanafunzi 1,700+ wa MUST.",
+        cta: "Angalia ofa",
+      },
+      search: {
+        aria: "Tafuta bidhaa",
+        placeholder: "Tafuta vyumba, vitabu, electronics...",
+      },
+      post: {
+        aria: "Weka tangazo",
+        label: "+ Weka",
+        labelShort: "+ Weka",
+      },
+      viewAll: "Angalia Bidhaa Zote",
     },
     categories: {
       all: "Vitu Vyote",

@@ -53,7 +53,7 @@
   --radius: 0.875rem;
 
   /* Surfaces */
-  --background: oklch(0.985 0.003 90); /* #FAFAFA warm */
+  --background: #FAFBF6; /* warm cream */
   --surface: oklch(1 0 0);
   --surface-2: oklch(0.975 0.005 90);
   --foreground: oklch(0.205 0.03 250); /* dark slate */
