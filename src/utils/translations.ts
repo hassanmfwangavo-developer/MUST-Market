@@ -34,7 +34,7 @@ export const translations = {
       post: {
         aria: "Post a listing",
         label: "+ Post",
-        labelShort: "Post",
+        labelShort: "+ Post",
       },
       viewAll: "View All Products",
     },
