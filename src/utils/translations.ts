@@ -20,6 +20,24 @@ export const translations = {
       mustStudents: "MUST STUDENTS",
       avgReply: "AVG. REPLY TIME",
     },
+    marketHome: {
+      banner: {
+        tag: "Campus Deal",
+        title: "Flash sale on used electronics this week",
+        subtitle: "Post your item for free and reach 1,700+ MUST students instantly.",
+        cta: "Browse deals",
+      },
+      search: {
+        aria: "Search listings",
+        placeholder: "Search for rooms, books, electronics...",
+      },
+      post: {
+        aria: "Post a listing",
+        label: "+ Post",
+        labelShort: "Post",
+      },
+      viewAll: "View All Products",
+    },
     categories: {
       all: "All Items",
       electronics: "Electronics",
