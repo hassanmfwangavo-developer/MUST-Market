@@ -174,6 +174,24 @@ export const translations = {
       mustStudents: "WANAFUNZI MUST",
       avgReply: "MUDA WA KUJIBU",
     },
+    marketHome: {
+      banner: {
+        tag: "Ofa ya Chuo",
+        title: "Punguzo la wiki hii kwenye electronics used",
+        subtitle: "Weka bidhaa yako bure na uufikie mkusanyiko wa wanafunzi 1,700+ wa MUST.",
+        cta: "Angalia ofa",
+      },
+      search: {
+        aria: "Tafuta bidhaa",
+        placeholder: "Tafuta vyumba, vitabu, electronics...",
+      },
+      post: {
+        aria: "Weka tangazo",
+        label: "+ Weka",
+        labelShort: "Weka",
+      },
+      viewAll: "Angalia Bidhaa Zote",
+    },
     categories: {
       all: "Vitu Vyote",
       electronics: "Elektroniki",
