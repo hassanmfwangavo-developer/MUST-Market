@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Plus, Search, Zap } from "lucide-react";
+import { ArrowRight, Search, Zap } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories, categoryEmoji, categoryLabel } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
