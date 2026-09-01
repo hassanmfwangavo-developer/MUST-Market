@@ -107,7 +107,6 @@ export function MarketHome() {
           aria-label={t.marketHome?.post.aria}
           className="btn-shine inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-4 py-3 text-sm font-bold text-accent-foreground shadow-[var(--shadow-amber)] transition-transform hover:-translate-y-0.5 sm:px-5"
         >
-          <Plus className="h-4 w-4" strokeWidth={2.8} />
           <span className="hidden sm:inline">{t.marketHome?.post.label}</span>
           <span className="sm:hidden">{t.marketHome?.post.labelShort}</span>
         </button>
