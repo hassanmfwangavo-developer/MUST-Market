@@ -171,9 +171,8 @@ function MeetTheFounder() {
             <h2 className="text-lg font-bold text-teal-300 tracking-wide">Kuhusu MUST Market 💙</h2>
             <p className="text-sm text-teal-50/90 leading-relaxed font-normal">
               MUST Market ilizaliwa kutokana na uhitaji halisi wa wanafunzi kupata vifaa vya masomo,
-              malazi, na vifaa vya kielektroniki kwa urahisi na usalama. Kama mwanafunzi mwenza,
-              niliona umuhimu wa kutengeneza jukwaa ambalo litawaunganisha wanafunzi wote wa MUST
-              kufanya biashara moja kwa moja bila madalali.
+              
+              
             </p>
           </div>
 
@@ -199,12 +198,14 @@ function MeetTheFounder() {
         </div>
 
         {/* Kitufe cha Buy Me A Coffee chenye Interactive Smiling Animation */}
-        <button
-          onClick={() => setShowCoffeeThanks(true)}
+        <a
+          href="https://snippe.me/p/5sPlR2bcsm"
+          target="_blank"
+          rel="noopener noreferrer"
           className="w-full bg-[#0b4744]/50 border border-teal-500/30 hover:border-teal-400 py-3.5 rounded-full text-xs font-semibold text-teal-200 hover:text-white transition-all transform active:scale-95 shadow-md flex items-center justify-center gap-2"
         >
           Buy me a coffee ☕
-        </button>
+        </a>
       </div>
 
       <style>{`
