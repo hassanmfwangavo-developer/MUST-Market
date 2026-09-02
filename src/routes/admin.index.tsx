@@ -21,6 +21,7 @@ import { Footer } from "@/components/footer";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { AdminTabs } from "@/components/admin-tabs";
+import { AdminMarketBanners } from "@/components/admin-market-banners";
 import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
 
 export const Route = createFileRoute("/admin/")({
@@ -175,7 +176,10 @@ function AdminConsole() {
 
         <AdminTabs />
 
+        <AdminMarketBanners />
+
         <ShelfManager />
+
 
         <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
           <KpiCard label="Active listings" value={kpis.active} icon={<PackageOpen className="h-4 w-4" />} />

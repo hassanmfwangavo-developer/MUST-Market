@@ -1,13 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Search, Zap } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories, categoryEmoji, categoryLabel } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { fetchMarketBanners, type MarketBanner } from "@/lib/market-banners";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { useLanguage } from "@/context/LanguageContext";
+
 
 function shuffle<T>(arr: T[], seed: number): T[] {
   const copy = [...arr];
@@ -65,28 +67,63 @@ export function MarketHome() {
   return (
     <section id="browse" className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       {/* Promotional banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900 to-emerald-800 p-6 text-white shadow-lift sm:p-8">
-        <div className="relative z-10 max-w-xl">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-50 backdrop-blur">
-            <Zap className="h-3.5 w-3.5 fill-current" />
-            {t.marketHome?.banner.tag}
-          </span>
-          <h2 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-            {t.marketHome?.banner.title}
-          </h2>
-          <p className="mt-2 text-sm text-emerald-100/80">{t.marketHome?.banner.subtitle}</p>
-          <Link
-            to="/browse"
-            search={{ category: undefined }}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-emerald-900 shadow-soft transition-transform hover:-translate-y-0.5"
-          >
-            {t.marketHome?.banner.cta}
-            <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </Link>
+      {marketBanners.length > 0 ? (
+        <div className="relative overflow-hidden rounded-2xl shadow-lift">
+          <div className="relative aspect-[16/7] w-full sm:aspect-[21/6]">
+            {marketBanners.map((b, i) => (
+              <img
+                key={b.id}
+                src={b.image_url}
+                alt="Marketplace promotion"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                  i === slide ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
+          </div>
+          {marketBanners.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+              {marketBanners.map((b, i) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => setSlide(i)}
+                  aria-label={`Show banner ${i + 1}`}
+                  className={`h-2 rounded-full transition-all ${
+                    i === slide ? "w-6 bg-white" : "w-2 bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-emerald-700/30 blur-2xl sm:h-56 sm:w-56" />
-        <div className="pointer-events-none absolute bottom-0 right-12 h-24 w-24 rounded-full bg-amber-400/20 blur-xl" />
-      </div>
+      ) : (
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900 to-emerald-800 p-6 text-white shadow-lift sm:p-8">
+          <div className="relative z-10 max-w-xl">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-50 backdrop-blur">
+              <Zap className="h-3.5 w-3.5 fill-current" />
+              {t.marketHome?.banner.tag}
+            </span>
+            <h2 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
+              {t.marketHome?.banner.title}
+            </h2>
+            <p className="mt-2 text-sm text-emerald-100/80">{t.marketHome?.banner.subtitle}</p>
+            <Link
+              to="/browse"
+              search={{ category: undefined }}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-emerald-900 shadow-soft transition-transform hover:-translate-y-0.5"
+            >
+              {t.marketHome?.banner.cta}
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
+            </Link>
+          </div>
+          <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-emerald-700/30 blur-2xl sm:h-56 sm:w-56" />
+          <div className="pointer-events-none absolute bottom-0 right-12 h-24 w-24 rounded-full bg-amber-400/20 blur-xl" />
+        </div>
+      )}
+
 
       {/* Search + Post */}
       <div className="mt-4 flex items-center gap-2 sm:gap-3">
