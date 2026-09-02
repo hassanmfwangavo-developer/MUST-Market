@@ -44,6 +44,27 @@ export function MarketHome() {
     staleTime: 30_000,
   });
 
+  const { data: bannerRows = [] } = useQuery<MarketBanner[]>({
+    queryKey: ["market-banners"],
+    queryFn: fetchMarketBanners,
+    staleTime: 60_000,
+  });
+  const marketBanners = useMemo(
+    () => bannerRows.filter((b) => b.is_active).slice(0, 3),
+    [bannerRows],
+  );
+
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    if (marketBanners.length < 2) return;
+    const id = setInterval(() => setSlide((s) => (s + 1) % marketBanners.length), 4500);
+    return () => clearInterval(id);
+  }, [marketBanners.length]);
+  useEffect(() => {
+    if (slide >= marketBanners.length) setSlide(0);
+  }, [marketBanners.length, slide]);
+
+
   const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);
 
   const filtered = useMemo(() => {
