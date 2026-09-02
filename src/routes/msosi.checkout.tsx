@@ -117,7 +117,7 @@ function MsosiCheckout() {
   const total = subtotal - discount + deliveryFee;
 
 
-  const handlePay = async () => {
+  const handleSonicPesaPayment = async () => {
     const cleanName = fullName.trim();
     const cleanPhone = sanitizeTzPhone(phone);
     if (!cleanName) {
@@ -134,10 +134,28 @@ function MsosiCheckout() {
     }
     setSubmitting(true);
     try {
+      // 1. Trigger the Sonic Pesa mobile money PIN push.
+      const payment = await initiateSonicPesaPayment({
+        amount: total,
+        phoneNumber: cleanPhone,
+        customerName: cleanName,
+        description: "Msosi Fasta Food Order",
+      });
+      if (!payment.ok) {
+        toast.error(payment.message ?? "Payment request failed.");
+        setSubmitting(false);
+        return;
+      }
+      toast.success(
+        "Ombi la malipo limetumwa! Ingiza PIN kwenye simu yako kuthibitisha.",
+      );
+
+      // 2. Save the order once the push was accepted.
       const { data } = await supabase.auth.getUser();
       const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
       let orderId: string | null = null;
       if (uid) {
+
         orderId = await createOrder({
           userId: uid,
           items: cartMode
