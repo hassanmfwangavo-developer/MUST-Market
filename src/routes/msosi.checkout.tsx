@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   HelpCircle,
   Lock,
+  Loader2,
   MapPin,
   ChevronDown,
   ShoppingBag,
@@ -196,8 +197,6 @@ function MsosiCheckout() {
       }
       clearClaimedOffer();
       if (cartMode) cart.clear();
-      // Payment integration (Snippe STK push) will be wired here.
-
       toast.success(
         `Order received! ${formatTsh(total, "TSh")} — a PIN push has been sent to +${cleanPhone}.`,
       );
@@ -493,9 +492,15 @@ function MsosiCheckout() {
             disabled={submitting}
             className="mt-6 hidden w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60 md:flex"
           >
-            <Lock className="h-4 w-4 shrink-0" />
+            {submitting ? (
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+            ) : (
+              <Lock className="h-4 w-4 shrink-0" />
+            )}
             <span className="whitespace-nowrap text-sm">
-              Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)
+              {submitting
+                ? "Inaprosesi malipo ya Sonic Pesa..."
+                : "Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)"}
             </span>
           </button>
         </section>
@@ -509,9 +514,15 @@ function MsosiCheckout() {
           disabled={submitting}
           className="flex w-full max-w-2xl items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60"
         >
-          <Lock className="h-4 w-4 shrink-0" />
+          {submitting ? (
+            <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
+          ) : (
+            <Lock className="h-4 w-4 shrink-0" />
+          )}
           <span className="whitespace-nowrap text-xs sm:text-sm">
-             Pay Now via Mobile Money
+            {submitting
+              ? "Inaprosesi malipo ya Sonic Pesa..."
+              : "Pay Now via Mobile Money"}
           </span>
         </button>
       </div>
