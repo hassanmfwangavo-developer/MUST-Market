@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { fetchOrderById, type FoodOrder } from "@/lib/orders";
 import { formatTsh } from "@/lib/menu";
 import { buildReceiptPng, downloadBlob, shareBlob } from "@/lib/receipt";
-
+import { pollOrderPayment, startPendingPayment } from "@/lib/payment.functions";
 
 type SuccessState = {
   orderId?: string;
@@ -28,6 +28,7 @@ type SuccessState = {
   name?: string;
   vendorName?: string;
   customerName?: string;
+  paymentStatus?: string;
 };
 
 declare module "@tanstack/react-router" {
@@ -40,8 +41,7 @@ export const Route = createFileRoute("/msosi/success/$orderId")({
       { title: "Payment Successful — Msosi Fasta | MUST Market" },
       {
         name: "description",
-        content:
-          "Your order has been received. The kitchen has started preparing your food.",
+        content: "Your order has been received. The kitchen has started preparing your food.",
       },
       { property: "og:title", content: "Payment Successful — Msosi Fasta" },
       {
@@ -61,18 +61,22 @@ function MsosiSuccess() {
   const locationState = useRouterState({
     select: (s) => s.location.state as SuccessState | undefined,
   });
-  const [busy, setBusy] = useState<"download" | "share" | null>(null);
+  const [busy, setBusy] = useState<"download" | "share" | "retry" | null>(null);
 
   // Try to fetch the persisted order when we have a real uuid.
-  const isUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      orderId,
-    );
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId);
 
-  const { data: order } = useQuery<FoodOrder | null>({
+  const { data: order, refetch } = useQuery<FoodOrder | null>({
     queryKey: ["food_order", orderId],
-    queryFn: () => fetchOrderById(orderId),
+    queryFn: async () => {
+      await pollOrderPayment({ data: { orderId } });
+      return fetchOrderById(orderId);
+    },
     enabled: isUuid,
+    refetchInterval: (query) => {
+      const status = query.state.data?.payment_status;
+      return status === "success" || status === "failed" ? false : 5000;
+    },
   });
 
   const total = order?.total_tsh ?? locationState?.total ?? 0;
@@ -80,10 +84,10 @@ function MsosiSuccess() {
   const room = order?.room ?? locationState?.room ?? "—";
   const phone = order?.phone ?? locationState?.phone ?? "";
   const dishName = order?.items?.[0]?.name ?? locationState?.name ?? "Your order";
-  const vendorName =
-    order?.items?.[0]?.vendorName ?? locationState?.vendorName ?? "Msosi Fasta";
-  const customerName =
-    order?.customer_name || locationState?.customerName || "";
+  const vendorName = order?.items?.[0]?.vendorName ?? locationState?.vendorName ?? "Msosi Fasta";
+  const customerName = order?.customer_name || locationState?.customerName || "";
+  const paymentStatus = order?.payment_status ?? "pending";
+  const paymentSucceeded = Boolean(order && paymentStatus === "success");
 
   const shortId = isUuid ? orderId.slice(0, 8).toUpperCase() : orderId.toUpperCase();
   const orderRef = `MF-${shortId}`;
@@ -96,7 +100,7 @@ function MsosiSuccess() {
       ? order.items.map((it) => ({
           label: it.addSoda ? `${it.name} + Soda` : it.name,
           qty: it.quantity ?? 1,
-          amount: (it.price ?? 0) * (it.quantity ?? 1),
+          amount: (it.price ?? 0) * (it.quantity ?? 1) + (it.addSoda ? (it.addonPrice ?? 0) : 0),
         }))
       : [{ label: dishName, qty: 1, amount: total }];
 
@@ -152,6 +156,25 @@ function MsosiSuccess() {
     }
   };
 
+  const handleRetry = async () => {
+    try {
+      setBusy("retry");
+      const result = await startPendingPayment({ data: { orderId } });
+      if (result.state === "pending") {
+        toast.success("Angalia simu yako na ingiza PIN kuthibitisha malipo.");
+      } else if (result.state === "not_configured") {
+        toast.message("Payment setup is pending. Please try again later.");
+      } else if (result.state === "failed") {
+        toast.error("Payment request failed. Please try again later.");
+      }
+      await refetch();
+    } catch {
+      toast.error("Could not retry the payment. Please try again later.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6]">
       <div
@@ -179,7 +202,7 @@ function MsosiSuccess() {
         </div>
 
         <h1 className="mb-2 text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
-          Payment Successful! 🎉
+          {paymentSucceeded ? "Payment Successful! 🎉" : "Payment Pending"}
         </h1>
         {customerName ? (
           <p className="mb-1 text-base font-bold text-[#008542] sm:text-lg">
@@ -187,9 +210,20 @@ function MsosiSuccess() {
           </p>
         ) : null}
         <p className="max-w-sm text-sm leading-relaxed text-slate-500 sm:text-base">
-          Your order <span className="font-bold text-slate-700">#{orderRef}</span> has
-          been received and is on its way to you.
+          Your order <span className="font-bold text-slate-700">#{orderRef}</span> has been
+          received.{" "}
+          {paymentSucceeded ? "It is on its way to you." : "Complete payment to start preparation."}
         </p>
+        {paymentStatus === "failed" ? (
+          <button
+            type="button"
+            onClick={handleRetry}
+            disabled={busy !== null}
+            className="mt-4 rounded-full bg-[#008542] px-5 py-2.5 text-sm font-bold text-white shadow-md disabled:opacity-60"
+          >
+            {busy === "retry" ? "Inatuma ombi la malipo..." : "Retry Payment"}
+          </button>
+        ) : null}
 
         {/* ===================== RECEIPT CARD ===================== */}
         <section className="mt-5 w-full overflow-hidden rounded-3xl border border-slate-200/80 bg-white text-left shadow-[0_10px_30px_-18px_rgba(15,23,42,0.35)]">
@@ -208,16 +242,9 @@ function MsosiSuccess() {
           </div>
 
           <div className="grid gap-5 px-6 py-6 sm:grid-cols-2 sm:px-8">
-            <DetailRow
-              icon={<User className="h-4 w-4 text-[#008542]" />}
-              label="Customer"
-            >
-              <span className="font-semibold text-slate-900">
-                {customerName || "Student"}
-              </span>
-              {phone ? (
-                <span className="mt-0.5 block text-xs text-slate-500">+{phone}</span>
-              ) : null}
+            <DetailRow icon={<User className="h-4 w-4 text-[#008542]" />} label="Customer">
+              <span className="font-semibold text-slate-900">{customerName || "Student"}</span>
+              {phone ? <span className="mt-0.5 block text-xs text-slate-500">+{phone}</span> : null}
             </DetailRow>
 
             <DetailRow
@@ -237,7 +264,6 @@ function MsosiSuccess() {
               </span>
             </DetailRow>
 
-
             <DetailRow
               icon={<MessageCircle className="h-4 w-4 text-[#008542]" />}
               label="Restaurant"
@@ -247,7 +273,7 @@ function MsosiSuccess() {
 
             <DetailRow
               icon={<Wallet className="h-4 w-4 text-[#008542]" />}
-              label="Total Paid"
+              label={paymentSucceeded ? "Total Paid" : "Total Due"}
             >
               <span className="text-lg font-extrabold text-[#008542]">
                 {formatTsh(total, "TSh")}
@@ -289,7 +315,9 @@ function MsosiSuccess() {
         <div className="mt-5 flex w-full items-center gap-3 rounded-2xl border border-amber-300/60 bg-amber-500/10 p-4">
           <span className="text-2xl">🔥</span>
           <p className="text-left text-sm font-semibold text-amber-900">
-            Day Streak Unlocked! Unazidi kuwa Chuo Foodie wa MUST!
+            {paymentSucceeded
+              ? "Day Streak Unlocked! Unazidi kuwa Chuo Foodie wa MUST!"
+              : "Your streak and reward points will be applied after payment is confirmed."}
           </p>
         </div>
 
@@ -316,7 +344,6 @@ function MsosiSuccess() {
       </main>
     </div>
   );
-
 }
 
 /* ----------------------------- Sub-components ----------------------------- */

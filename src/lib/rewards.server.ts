@@ -39,18 +39,38 @@ export async function applyOrderRewards(
     referralBonusAwarded: false,
   };
 
+  const { data: order } = await admin
+    .from("food_orders")
+    .select("total_tsh, payment_status")
+    .eq("id", orderId)
+    .eq("user_id", userId)
+    .eq("reward_points_awarded", false)
+    .maybeSingle();
+  if (!order || order.payment_status !== "success") return none;
+
+  const { data: confirmedPayment } = await admin
+    .from("payments")
+    .select("id")
+    .eq("food_order_id", orderId)
+    .eq("status", "success")
+    .eq("amount_tsh", order.total_tsh)
+    .not("confirmed_at", "is", null)
+    .maybeSingle();
+  if (!confirmedPayment) return none;
+
   // Atomically claim the right to award this order.
   const { data: claimedRows } = await admin
     .from("food_orders")
     .update({ reward_points_awarded: true })
     .eq("id", orderId)
     .eq("user_id", userId)
+    .eq("payment_status", "success")
     .eq("reward_points_awarded", false)
     .select("total_tsh");
-  const order = claimedRows?.[0];
-  if (!order) return none; // already awarded or not this user's order
+  const claimedOrder = claimedRows?.[0];
+  if (!claimedOrder) return none;
 
-  const pointsEarned = order.total_tsh > 0 ? POINTS_PER_ORDER : 0;
+  const pointsEarned = claimedOrder.total_tsh > 0 ? POINTS_PER_ORDER : 0;
 
   // ---- Streak ----
   const { data: profile } = await admin

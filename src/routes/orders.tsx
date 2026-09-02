@@ -51,10 +51,10 @@ const STATUS_STYLE: Record<string, string> = {
 
 /** Customer-facing labels only — no live tracking wording. */
 const STATUS_TEXT: Record<string, string> = {
-  delivered: "Succeeded",
-  pending: "Succeeded",
-  preparing: "Succeeded",
-  on_the_way: "Succeeded",
+  delivered: "Delivered",
+  pending: "Pending preparation",
+  preparing: "Preparing",
+  on_the_way: "On the way",
   cancelled: "Cancelled",
 };
 
@@ -196,8 +196,12 @@ function OrderCard({
           )
           .join(" + ")
       : "Order";
-  const statusClass = STATUS_STYLE[order.status] ?? "bg-slate-200/70 text-slate-500";
-  const statusText = STATUS_TEXT[order.status] ?? order.status;
+  const statusClass = order.payment_status !== "success"
+    ? "bg-amber-100/70 text-amber-700"
+    : STATUS_STYLE[order.status] ?? "bg-slate-200/70 text-slate-500";
+  const statusText = order.payment_status !== "success"
+    ? `Payment ${order.payment_status}`
+    : STATUS_TEXT[order.status] ?? order.status;
 
   const handleReorder = () => {
     if (items.length === 0) {

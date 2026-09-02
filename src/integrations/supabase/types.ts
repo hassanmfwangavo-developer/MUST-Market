@@ -115,6 +115,7 @@ export type Database = {
       }
       food_orders: {
         Row: {
+          checkout_request_id: string | null
           created_at: string
           customer_name: string
           delivery_area: string
@@ -131,6 +132,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          checkout_request_id?: string | null
           created_at?: string
           customer_name?: string
           delivery_area?: string
@@ -147,6 +149,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          checkout_request_id?: string | null
           created_at?: string
           customer_name?: string
           delivery_area?: string
@@ -258,6 +261,65 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_tsh: number
+          confirmed_at: string | null
+          created_at: string
+          currency: string
+          food_order_id: string
+          id: string
+          provider: string
+          provider_order_id: string | null
+          provider_reference: string | null
+          raw_provider_metadata: Json
+          status: string
+          transaction_id: string | null
+          updated_at: string
+          webhook_event_id: string | null
+        }
+        Insert: {
+          amount_tsh: number
+          confirmed_at?: string | null
+          created_at?: string
+          currency?: string
+          food_order_id: string
+          id?: string
+          provider: string
+          provider_order_id?: string | null
+          provider_reference?: string | null
+          raw_provider_metadata?: Json
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+          webhook_event_id?: string | null
+        }
+        Update: {
+          amount_tsh?: number
+          confirmed_at?: string | null
+          created_at?: string
+          currency?: string
+          food_order_id?: string
+          id?: string
+          provider?: string
+          provider_order_id?: string | null
+          provider_reference?: string | null
+          raw_provider_metadata?: Json
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+          webhook_event_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_food_order_id_fkey"
+            columns: ["food_order_id"]
+            isOneToOne: false
+            referencedRelation: "food_orders"
             referencedColumns: ["id"]
           },
         ]

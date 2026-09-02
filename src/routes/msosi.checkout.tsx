@@ -14,10 +14,10 @@ import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhone } from "@/lib/phone";
 import { supabase } from "@/integrations/supabase/client";
-import { createOrder, type OrderItem } from "@/lib/orders";
+import type { OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
 import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
-import { completeOrderRewards } from "@/lib/rewards.functions";
+import { createPendingOrder } from "@/lib/order.functions";
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
@@ -91,6 +91,7 @@ function MsosiCheckout() {
   const [area, setArea] = useState(DELIVERY_AREAS[0]);
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [checkoutRequestId] = useState(() => crypto.randomUUID());
 
   const [claimed] = useState(() => getClaimedOffer());
 
@@ -100,7 +101,7 @@ function MsosiCheckout() {
 
   const subtotal = cartMode
     ? cartItems.reduce(
-        (sum, i) => sum + i.price * i.quantity + (i.addSoda ? SODA_PRICE : 0),
+        (sum, i) => sum + i.price * i.quantity + (i.addSoda ? i.addonPrice ?? SODA_PRICE : 0),
         0,
       )
     : order.price * order.quantity + (order.addSoda ? SODA_PRICE : 0);
@@ -136,66 +137,49 @@ function MsosiCheckout() {
     try {
       const { data } = await supabase.auth.getUser();
       const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
-      let orderId: string | null = null;
-      if (uid) {
-        orderId = await createOrder({
-          userId: uid,
+      if (!uid) throw new Error("Please sign in before ordering food.");
+      const result = await createPendingOrder({
+        data: {
+          checkoutRequestId,
           items: cartMode
-            ? cartItems
-            : [
-                {
-                  itemId: order.itemId,
-                  name: order.name,
-                  price: order.price,
-                  quantity: order.quantity,
-                  imageUrl: order.imageUrl || undefined,
-                  vendorName: order.vendorName || undefined,
-                  addSoda: order.addSoda,
-                  deliveryFee: order.deliveryFee,
-                },
-              ],
-          total,
-          area,
-          room: room.trim(),
-          phone: cleanPhone,
+            ? cartItems.map((item) => ({
+                itemId: item.itemId,
+                quantity: item.quantity,
+                addSoda: item.addSoda,
+              }))
+            : [{ itemId: order.itemId, quantity: order.quantity, addSoda: order.addSoda }],
+          bannerId: claimed?.bannerId,
           customerName: cleanName,
-        });
-      }
-      // Award streak + reward points (idempotent server-side; non-fatal).
-      if (orderId) {
-        try {
-          const rewards = await completeOrderRewards({ data: { orderId } });
-          if (rewards.streakIncreased && rewards.streak > 1) {
-            toast.success(`🔥 ${rewards.streak}-day streak! Keep it going!`);
-          }
-          if (rewards.pointsEarned > 0) {
-            toast.success(`+${rewards.pointsEarned} reward points earned! 🎉`);
-          }
-        } catch {
-          /* rewards are best-effort */
-        }
-      }
+          phone: cleanPhone,
+          deliveryArea: area,
+          room: room.trim(),
+        },
+      });
       clearClaimedOffer();
       if (cartMode) cart.clear();
-      // Payment integration (Snippe STK push) will be wired here.
 
-      toast.success(
-        `Order received! ${formatTsh(total, "TSh")} — a PIN push has been sent to +${cleanPhone}.`,
-      );
+      if (result.paymentState === "pending") {
+        toast.success("Angalia simu yako na ingiza PIN kuthibitisha malipo.");
+      } else if (result.paymentState === "failed") {
+        toast.error("Payment request failed. You can safely retry from the order page.");
+      } else {
+        toast.message("Payment setup is pending. Please try again later.");
+      }
       // Short delay so the success toast is visible before navigating.
       setTimeout(() => {
         navigate({
           to: "/msosi/success/$orderId",
-          params: { orderId: orderId ?? "guest" },
+          params: { orderId: result.orderId },
           state: {
-            orderId: orderId ?? undefined,
-            total,
+            orderId: result.orderId,
+            total: result.total,
             area,
             room: room.trim(),
             phone: cleanPhone,
             name: order.name,
             vendorName: order.vendorName,
             customerName: cleanName,
+            paymentStatus: result.paymentState === "failed" ? "failed" : "pending",
 
           },
         });
@@ -283,7 +267,8 @@ function MsosiCheckout() {
                     </div>
                     <span className="shrink-0 text-sm font-bold text-slate-900">
                       {formatTsh(
-                        item.price * item.quantity + (item.addSoda ? SODA_PRICE : 0),
+                        item.price * item.quantity +
+                          (item.addSoda ? item.addonPrice ?? SODA_PRICE : 0),
                         "TSh",
                       )}
                     </span>
@@ -476,7 +461,9 @@ function MsosiCheckout() {
           >
             <Lock className="h-4 w-4 shrink-0" />
             <span className="whitespace-nowrap text-sm">
-              Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)
+              {submitting
+                ? "Inatuma ombi la malipo..."
+                : "Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)"}
             </span>
           </button>
         </section>
@@ -492,7 +479,7 @@ function MsosiCheckout() {
         >
           <Lock className="h-4 w-4 shrink-0" />
           <span className="whitespace-nowrap text-xs sm:text-sm">
-             Pay Now via Mobile Money
+            {submitting ? "Inatuma ombi la malipo..." : "Pay Now via Mobile Money"}
           </span>
         </button>
       </div>

@@ -8,6 +8,7 @@ export type OrderItem = {
   imageUrl?: string;
   vendorName?: string;
   addSoda?: boolean;
+  addonPrice?: number;
   deliveryFee?: number;
 };
 
@@ -17,6 +18,7 @@ export type FoodOrder = {
   items: OrderItem[];
   total_tsh: number;
   status: string;
+  payment_status: string;
   delivery_area: string;
   room: string;
   phone: string;
@@ -65,33 +67,6 @@ export async function fetchLocations(userId: string): Promise<SavedLocation[]> {
     .order("created_at", { ascending: true });
   if (error) throw error;
   return (data ?? []) as SavedLocation[];
-}
-
-export async function createOrder(input: {
-  userId: string;
-  items: OrderItem[];
-  total: number;
-  area: string;
-  room: string;
-  phone: string;
-  customerName: string;
-}): Promise<string | null> {
-  const { data, error } = await supabase
-    .from("food_orders")
-    .insert({
-      user_id: input.userId,
-      items: input.items as unknown as never,
-      total_tsh: input.total,
-      delivery_area: input.area,
-      room: input.room,
-      phone: input.phone,
-      customer_name: input.customerName,
-      status: "delivered",
-    })
-    .select("id")
-    .single();
-  if (error) throw error;
-  return data?.id ?? null;
 }
 
 export async function fetchOrderById(
