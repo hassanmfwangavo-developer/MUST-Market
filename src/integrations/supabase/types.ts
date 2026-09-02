@@ -200,6 +200,33 @@ export type Database = {
         }
         Relationships: []
       }
+      market_banners: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          image_path: string | null
+          image_url: string
+          is_active: boolean
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_path?: string | null
+          image_url: string
+          is_active?: boolean
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_path?: string | null
+          image_url?: string
+          is_active?: boolean
+        }
+        Relationships: []
+      }
       menu_items: {
         Row: {
           addons: Json
