@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { createOrder, type OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
 import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
+import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 
 
@@ -488,7 +489,7 @@ function MsosiCheckout() {
           {/* Desktop inline payment CTA (mobile uses the fixed bottom bar) */}
           <button
             type="button"
-            onClick={handlePay}
+            onClick={handleSonicPesaPayment}
             disabled={submitting}
             className="mt-6 hidden w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60 md:flex"
           >
@@ -504,7 +505,7 @@ function MsosiCheckout() {
       <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center border-t border-slate-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md md:hidden">
         <button
           type="button"
-          onClick={handlePay}
+          onClick={handleSonicPesaPayment}
           disabled={submitting}
           className="flex w-full max-w-2xl items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-all hover:bg-[#006e36] active:scale-[0.98] disabled:opacity-60"
         >
