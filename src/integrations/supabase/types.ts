@@ -121,6 +121,7 @@ export type Database = {
           eta_minutes: number
           id: string
           items: Json
+          payment_reference: string | null
           payment_status: string
           phone: string
           reward_points_awarded: boolean
@@ -137,6 +138,7 @@ export type Database = {
           eta_minutes?: number
           id?: string
           items?: Json
+          payment_reference?: string | null
           payment_status?: string
           phone?: string
           reward_points_awarded?: boolean
@@ -153,6 +155,7 @@ export type Database = {
           eta_minutes?: number
           id?: string
           items?: Json
+          payment_reference?: string | null
           payment_status?: string
           phone?: string
           reward_points_awarded?: boolean
