@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Uses Sonic Pesa's simplified endpoint which long-polls (waits up to 45s)
-// for the user to enter their PIN before returning the final payment status.
-const SIMPLIFIED_SONIC_PESA_URL =
-  "https://api.sonicpesa.com/api/v1/payment/create_order_simple";
+// Allow Vercel serverless function up to 30 seconds execution time
+export const maxDuration = 30;
+
+const CREATE_ORDER_URL =
+  "https://api.sonicpesa.com/api/v1/payment/create_order";
+const ORDER_STATUS_URL =
+  "https://api.sonicpesa.com/api/v1/payment/order_status";
 
 type SonicPesaPayload = {
   amount?: number;
@@ -20,6 +23,9 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
+// Helper function to sleep/wait between status checks
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
   server: {
     handlers: {
@@ -28,10 +34,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const payload = (await request.json()) as SonicPesaPayload;
 
           const amount = Math.round(Number(payload.amount));
-          let phoneNumber = String(payload.phoneNumber ?? "").replace(
-            /\D/g,
-            "",
-          );
+          let phoneNumber = String(payload.phoneNumber ?? "").replace(/\D/g, "");
           if (phoneNumber.startsWith("0")) {
             phoneNumber = "255" + phoneNumber.substring(1);
           }
@@ -43,7 +46,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           if (!amount || amount <= 0 || !phoneNumber || !customerName) {
             return jsonResponse(
               { error: "Taarifa za malipo hazijakamilika." },
-              400,
+              400
             );
           }
 
@@ -51,12 +54,12 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           if (!apiKey) {
             return jsonResponse(
               { error: "Sonic Pesa API key missing on server." },
-              500,
+              500
             );
           }
 
-          // Long-polling call (waits up to 45 seconds for PIN entry)
-          const res = await fetch(SIMPLIFIED_SONIC_PESA_URL, {
+          // 1. Create the Payment Order & Trigger USSD Push
+          const createRes = await fetch(CREATE_ORDER_URL, {
             method: "POST",
             headers: {
               "X-API-KEY": apiKey,
@@ -72,39 +75,84 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             }),
           });
 
-          const data = await res.json().catch(() => null);
+          const createData = await createRes.json().catch(() => null);
 
-          // Extract exact payment_status returned after waiting
-          const paymentStatus =
-            data?.data?.payment_status || data?.payment_status;
-
-          // Only proceed to Success page if payment_status is explicitly "SUCCESS"
-          if (
-            !res.ok ||
-            data?.status !== "success" ||
-            paymentStatus !== "SUCCESS"
-          ) {
+          if (!createRes.ok || createData?.status !== "success") {
             return jsonResponse(
               {
                 error:
-                  paymentStatus === "USERCANCELLED" ||
-                  paymentStatus === "CANCELLED"
-                    ? "Umeghairi au umekataa ombi la malipo kwenye simu."
-                    : data?.message ??
-                      "Malipo hayajakamilika. Tafadhali ingiza PIN kwenye simu yako na ujaribu tena.",
+                  createData?.message ??
+                  "Imeshindwa kutuma ombi la malipo kwenye simu.",
               },
-              400,
+              400
             );
           }
 
+          const orderId =
+            createData?.data?.order_id || createData?.data?.reference;
+
+          if (!orderId) {
+            return jsonResponse(
+              { error: "Order ID haikupatikana kutoka Sonic Pesa." },
+              400
+            );
+          }
+
+          // 2. Poll Order Status every 2.5 seconds (up to 8 times = ~20 seconds max)
+          const maxRetries = 8;
+          for (let i = 0; i < maxRetries; i++) {
+            await sleep(2500); // Wait 2.5 seconds before checking
+
+            const statusRes = await fetch(ORDER_STATUS_URL, {
+              method: "POST",
+              headers: {
+                "X-API-KEY": apiKey,
+                "Content-Type": "application/json",
+                Accept: "application/json",
+              },
+              body: JSON.stringify({ order_id: orderId }),
+            });
+
+            const statusData = await statusRes.json().catch(() => null);
+            const currentStatus =
+              statusData?.data?.payment_status ||
+              statusData?.transaction?.status;
+
+            // If user successfully entered PIN
+            if (currentStatus === "SUCCESS") {
+              return jsonResponse(
+                {
+                  ok: true,
+                  reference: orderId,
+                  message: "Malipo yamekamilika kikamilifu!",
+                  data: statusData?.data,
+                },
+                200
+              );
+            }
+
+            // If user explicitly cancelled or transaction failed
+            if (
+              currentStatus === "USERCANCELLED" ||
+              currentStatus === "CANCELLED" ||
+              currentStatus === "REJECTED"
+            ) {
+              return jsonResponse(
+                {
+                  error: "Umeghairi au umekataa ombi la malipo kwenye simu.",
+                },
+                400
+              );
+            }
+          }
+
+          // If timeout reached without confirmation
           return jsonResponse(
             {
-              ok: true,
-              reference: data?.data?.order_id || data?.data?.reference,
-              message: "Malipo yamekamilika kikamilifu!",
-              data: data?.data,
+              error:
+                "Muda wa kuingiza PIN umeisha au malipo yanachukua muda. Kama umeshalipa, kagua oda yako baadaye.",
             },
-            200,
+            400
           );
         } catch (err) {
           return jsonResponse(
@@ -112,9 +160,9 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
               error:
                 err instanceof Error
                   ? err.message
-                  : "Mawasiliano na Sonic Pesa yamekatika.",
+                  : "Mawasiliano ya malipo yamekatika.",
             },
-            502,
+            502
           );
         }
       },
