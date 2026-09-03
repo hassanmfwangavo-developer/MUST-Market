@@ -1,14 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Server-side proxy for the Sonic Pesa payment gateway.
-// Keeps SONIC_PESA_API_KEY on the server and eliminates browser CORS issues.
-
-const DEFAULT_SONIC_PESA_URL = "https://api.sonicpesa.com/api/v1/payments";
+// Uses Sonic Pesa's simplified endpoint which long-polls (waits up to 45s)
+// for the user to enter their PIN before returning the final payment status.
+const SIMPLIFIED_SONIC_PESA_URL =
+  "https://api.sonicpesa.com/api/v1/payment/create_order_simple";
 
 type SonicPesaPayload = {
   amount?: number;
   phoneNumber?: string;
   customerName?: string;
+  buyerEmail?: string;
   description?: string;
 };
 
@@ -27,20 +28,21 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const payload = (await request.json()) as SonicPesaPayload;
 
           const amount = Math.round(Number(payload.amount));
-          const phoneNumber = String(payload.phoneNumber ?? "").replace(
+          let phoneNumber = String(payload.phoneNumber ?? "").replace(
             /\D/g,
             "",
           );
+          if (phoneNumber.startsWith("0")) {
+            phoneNumber = "255" + phoneNumber.substring(1);
+          }
+
           const customerName = String(payload.customerName ?? "").trim();
-          const description =
-            payload.description?.trim() || "Msosi Fasta Food Order";
+          const buyerEmail =
+            payload.buyerEmail?.trim() || "customer@msosifasta.co.tz";
 
           if (!amount || amount <= 0 || !phoneNumber || !customerName) {
             return jsonResponse(
-              {
-                error:
-                  "Missing or invalid amount, phoneNumber, or customerName.",
-              },
+              { error: "Taarifa za malipo hazijakamilika." },
               400,
             );
           }
@@ -48,55 +50,69 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const apiKey = process.env["SONIC_PESA_API_KEY"];
           if (!apiKey) {
             return jsonResponse(
-              {
-                error:
-                  "Sonic Pesa API key is not configured on the server.",
-              },
+              { error: "Sonic Pesa API key missing on server." },
               500,
             );
           }
 
-          const sonicPesaUrl =
-            process.env["SONIC_PESA_API_URL"] ?? DEFAULT_SONIC_PESA_URL;
-
-          const res = await fetch(sonicPesaUrl, {
+          // Long-polling call (waits up to 45 seconds for PIN entry)
+          const res = await fetch(SIMPLIFIED_SONIC_PESA_URL, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${apiKey}`,
+              "X-API-KEY": apiKey,
               "Content-Type": "application/json",
               Accept: "application/json",
             },
             body: JSON.stringify({
+              buyer_email: buyerEmail,
+              buyer_name: customerName,
+              buyer_phone: phoneNumber,
               amount,
-              phone_number: phoneNumber,
-              customer_name: customerName,
               currency: "TZS",
-              description,
             }),
           });
 
           const data = await res.json().catch(() => null);
 
-          if (!res.ok) {
+          // Extract exact payment_status returned after waiting
+          const paymentStatus =
+            data?.data?.payment_status || data?.payment_status;
+
+          // Only proceed to Success page if payment_status is explicitly "SUCCESS"
+          if (
+            !res.ok ||
+            data?.status !== "success" ||
+            paymentStatus !== "SUCCESS"
+          ) {
             return jsonResponse(
               {
                 error:
-                  data?.message ??
-                  data?.error ??
-                  `Payment failed (${res.status}).`,
+                  paymentStatus === "USERCANCELLED" ||
+                  paymentStatus === "CANCELLED"
+                    ? "Umeghairi au umekataa ombi la malipo kwenye simu."
+                    : data?.message ??
+                      "Malipo hayajakamilika. Tafadhali ingiza PIN kwenye simu yako na ujaribu tena.",
               },
-              res.status,
+              400,
             );
           }
 
-          return jsonResponse(data, 200);
+          return jsonResponse(
+            {
+              ok: true,
+              reference: data?.data?.order_id || data?.data?.reference,
+              message: "Malipo yamekamilika kikamilifu!",
+              data: data?.data,
+            },
+            200,
+          );
         } catch (err) {
           return jsonResponse(
             {
               error:
                 err instanceof Error
                   ? err.message
-                  : "Network error reaching Sonic Pesa.",
+                  : "Mawasiliano na Sonic Pesa yamekatika.",
             },
             502,
           );
