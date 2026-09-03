@@ -1,11 +1,9 @@
 // Sonic Pesa mobile money payment gateway helper.
-// Docs endpoint is configurable so we can point at a sandbox during testing.
+// Calls our same-origin server route (/api/public/sonic-pesa-pay), which
+// proxies to Sonic Pesa with the secret API key — no browser CORS issues,
+// and the key never ships to the client.
 
 import { sanitizeTzPhoneStrict } from "./formatters";
-
-export const SONIC_PESA_ENDPOINT =
-  (import.meta.env['VITE_SONIC_PESA_API_URL'] as string | undefined) ??
-  "https://api.sonicpesa.com/v1/payments";
 
 export type SonicPesaRequest = {
   amount: number;
@@ -31,18 +29,6 @@ type SonicPesaPayload = {
 export async function initiateSonicPesaPayment(
   input: SonicPesaRequest,
 ): Promise<SonicPesaResult> {
-  const apiKey = import.meta.env['VITE_SONIC_PESA_API_KEY'] as
-    | string
-    | undefined;
-
-  if (!apiKey) {
-    return {
-      ok: false,
-      message:
-        "Sonic Pesa is not configured yet. Please add the payment API key.",
-    };
-  }
-
   const phone = sanitizeTzPhoneStrict(input.phoneNumber);
   if (!phone) {
     return {
@@ -52,18 +38,16 @@ export async function initiateSonicPesaPayment(
   }
 
   try {
-    const res = await fetch(SONIC_PESA_ENDPOINT, {
+    const res = await fetch("/api/public/sonic-pesa-pay", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
         Accept: "application/json",
       },
       body: JSON.stringify({
         amount: Math.round(Number(input.amount)),
-        phone_number: phone,
-        customer_name: input.customerName.trim(),
-        currency: "TZS",
+        phoneNumber: phone,
+        customerName: input.customerName.trim(),
         description: input.description ?? "Msosi Fasta Food Order",
       }),
     });

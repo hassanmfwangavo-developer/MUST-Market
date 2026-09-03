@@ -33,6 +33,7 @@ import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as MsosiSuccessOrderIdRouteImport } from './routes/msosi.success.$orderId'
+import { Route as ApiPublicSonicPesaPayRouteImport } from './routes/api/public/sonic-pesa-pay'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -154,6 +155,11 @@ const MsosiSuccessOrderIdRoute = MsosiSuccessOrderIdRouteImport.update({
   path: '/success/$orderId',
   getParentRoute: () => MsosiRoute,
 } as any)
+const ApiPublicSonicPesaPayRoute = ApiPublicSonicPesaPayRouteImport.update({
+  id: '/api/public/sonic-pesa-pay',
+  path: '/api/public/sonic-pesa-pay',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -179,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/report/$id': typeof ReportIdRoute
   '/admin/': typeof AdminIndexRoute
   '/msosi/': typeof MsosiIndexRoute
+  '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRoutesByTo {
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/report/$id': typeof ReportIdRoute
   '/admin': typeof AdminIndexRoute
   '/msosi': typeof MsosiIndexRoute
+  '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRoutesById {
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/report/$id': typeof ReportIdRoute
   '/admin/': typeof AdminIndexRoute
   '/msosi/': typeof MsosiIndexRoute
+  '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
 }
 export interface FileRouteTypes {
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/report/$id'
     | '/admin/'
     | '/msosi/'
+    | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -282,6 +292,7 @@ export interface FileRouteTypes {
     | '/report/$id'
     | '/admin'
     | '/msosi'
+    | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
   id:
     | '__root__'
@@ -308,6 +319,7 @@ export interface FileRouteTypes {
     | '/report/$id'
     | '/admin/'
     | '/msosi/'
+    | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
   fileRoutesById: FileRoutesById
 }
@@ -328,6 +340,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ProductIdRoute: typeof ProductIdRoute
   ReportIdRoute: typeof ReportIdRoute
+  ApiPublicSonicPesaPayRoute: typeof ApiPublicSonicPesaPayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -500,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiSuccessOrderIdRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/api/public/sonic-pesa-pay': {
+      id: '/api/public/sonic-pesa-pay'
+      path: '/api/public/sonic-pesa-pay'
+      fullPath: '/api/public/sonic-pesa-pay'
+      preLoaderRoute: typeof ApiPublicSonicPesaPayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -552,6 +572,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ProductIdRoute: ProductIdRoute,
   ReportIdRoute: ReportIdRoute,
+  ApiPublicSonicPesaPayRoute: ApiPublicSonicPesaPayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
