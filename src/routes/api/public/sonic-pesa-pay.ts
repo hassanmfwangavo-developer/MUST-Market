@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 // Server-side proxy for the Sonic Pesa payment gateway.
 // Keeps SONIC_PESA_API_KEY on the server and eliminates browser CORS issues.
 
-const SONIC_PESA_URL = "https://api.sonicpesa.com/api/v1/payments";
+const DEFAULT_SONIC_PESA_URL = "https://api.sonicpesa.com/api/v1/payments";
 
 type SonicPesaPayload = {
   amount?: number;
@@ -56,7 +56,10 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             );
           }
 
-          const res = await fetch(SONIC_PESA_URL, {
+          const sonicPesaUrl =
+            process.env["SONIC_PESA_API_URL"] ?? DEFAULT_SONIC_PESA_URL;
+
+          const res = await fetch(sonicPesaUrl, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${apiKey}`,
