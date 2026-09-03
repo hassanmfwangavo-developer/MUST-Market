@@ -121,13 +121,15 @@ function MsosiCheckout() {
 
   const handleSonicPesaPayment = async () => {
     const cleanName = fullName.trim();
-    const cleanPhone = sanitizeTzPhone(phone);
     if (!cleanName) {
       toast.error("Please enter your full name.");
       return;
     }
-    if (cleanPhone.length < 12) {
-      toast.error("Please enter a valid phone number (e.g. 0674 044 676).");
+    const cleanPhone = sanitizeTzPhoneStrict(phone);
+    if (!cleanPhone) {
+      toast.warning(
+        "Tafadhali weka namba sahihi ya simu (mfano: 07XXXXXXXX).",
+      );
       return;
     }
     if (!room.trim()) {
