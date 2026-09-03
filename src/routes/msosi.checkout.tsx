@@ -181,6 +181,7 @@ function MsosiCheckout() {
           room: room.trim(),
           phone: cleanPhone,
           customerName: cleanName,
+          paymentReference: payment.reference,
         });
       }
       // Award streak + reward points (idempotent server-side; non-fatal).
