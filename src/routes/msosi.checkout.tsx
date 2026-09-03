@@ -501,7 +501,7 @@ function MsosiCheckout() {
             )}
             <span className="whitespace-nowrap text-sm">
               {submitting
-                ? "Inaprosesi malipo ya Sonic Pesa..."
+                ? "Inatuma ombi kwenye simu yako..."
                 : "Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)"}
             </span>
           </button>
@@ -523,7 +523,7 @@ function MsosiCheckout() {
           )}
           <span className="whitespace-nowrap text-xs sm:text-sm">
             {submitting
-              ? "Inaprosesi malipo ya Sonic Pesa..."
+              ? "Inatuma ombi kwenye simu yako..."
               : "Pay Now via Mobile Money"}
           </span>
         </button>
