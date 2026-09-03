@@ -75,6 +75,7 @@ export async function createOrder(input: {
   room: string;
   phone: string;
   customerName: string;
+  paymentReference?: string;
 }): Promise<string | null> {
   const { data, error } = await supabase
     .from("food_orders")
@@ -86,6 +87,8 @@ export async function createOrder(input: {
       room: input.room,
       phone: input.phone,
       customer_name: input.customerName,
+      payment_status: "pending",
+      payment_reference: input.paymentReference ?? null,
       status: "delivered",
     })
     .select("id")

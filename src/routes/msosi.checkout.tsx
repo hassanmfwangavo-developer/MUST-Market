@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
-import { sanitizeTzPhone } from "@/lib/phone";
+import { sanitizeTzPhoneStrict } from "@/lib/formatters";
 import { supabase } from "@/integrations/supabase/client";
 import { createOrder, type OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
@@ -121,13 +121,15 @@ function MsosiCheckout() {
 
   const handleSonicPesaPayment = async () => {
     const cleanName = fullName.trim();
-    const cleanPhone = sanitizeTzPhone(phone);
     if (!cleanName) {
       toast.error("Please enter your full name.");
       return;
     }
-    if (cleanPhone.length < 12) {
-      toast.error("Please enter a valid phone number (e.g. 0674 044 676).");
+    const cleanPhone = sanitizeTzPhoneStrict(phone);
+    if (!cleanPhone) {
+      toast.warning(
+        "Tafadhali weka namba sahihi ya simu (mfano: 07XXXXXXXX).",
+      );
       return;
     }
     if (!room.trim()) {
@@ -149,7 +151,7 @@ function MsosiCheckout() {
         return;
       }
       toast.success(
-        "Ombi la malipo limetumwa! Ingiza PIN kwenye simu yako kuthibitisha.",
+        "Ombi la malipo limetumwa! Angalia simu yako na uweke PIN kuthibitisha.",
       );
 
       // 2. Save the order once the push was accepted.
@@ -179,6 +181,7 @@ function MsosiCheckout() {
           room: room.trim(),
           phone: cleanPhone,
           customerName: cleanName,
+          paymentReference: payment.reference,
         });
       }
       // Award streak + reward points (idempotent server-side; non-fatal).
@@ -499,7 +502,7 @@ function MsosiCheckout() {
             )}
             <span className="whitespace-nowrap text-sm">
               {submitting
-                ? "Inaprosesi malipo ya Sonic Pesa..."
+                ? "Inatuma ombi kwenye simu yako..."
                 : "Pay Now via Mobile Money (M-Pesa, Mixx, Airtel, Halopesa)"}
             </span>
           </button>
@@ -521,7 +524,7 @@ function MsosiCheckout() {
           )}
           <span className="whitespace-nowrap text-xs sm:text-sm">
             {submitting
-              ? "Inaprosesi malipo ya Sonic Pesa..."
+              ? "Inatuma ombi kwenye simu yako..."
               : "Pay Now via Mobile Money"}
           </span>
         </button>
