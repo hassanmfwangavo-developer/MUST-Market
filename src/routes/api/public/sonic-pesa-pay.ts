@@ -3,12 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 // Server-side proxy for the Sonic Pesa payment gateway.
 // Keeps SONIC_PESA_API_KEY on the server and eliminates browser CORS issues.
 
-const DEFAULT_SONIC_PESA_URL = "https://api.sonicpesa.com/api/v1/payments";
+const DEFAULT_SONIC_PESA_URL =
+  "https://api.sonicpesa.com/api/v1/payment/create_order";
 
 type SonicPesaPayload = {
   amount?: number;
   phoneNumber?: string;
   customerName?: string;
+  buyerEmail?: string;
   description?: string;
 };
 
@@ -27,13 +29,17 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const payload = (await request.json()) as SonicPesaPayload;
 
           const amount = Math.round(Number(payload.amount));
-          const phoneNumber = String(payload.phoneNumber ?? "").replace(
+          let phoneNumber = String(payload.phoneNumber ?? "").replace(
             /\D/g,
             "",
           );
+          if (phoneNumber.startsWith("0")) {
+            phoneNumber = "255" + phoneNumber.substring(1);
+          }
+
           const customerName = String(payload.customerName ?? "").trim();
-          const description =
-            payload.description?.trim() || "Msosi Fasta Food Order";
+          const buyerEmail =
+            payload.buyerEmail?.trim() || "customer@msosifasta.co.tz";
 
           if (!amount || amount <= 0 || !phoneNumber || !customerName) {
             return jsonResponse(
@@ -62,22 +68,22 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const res = await fetch(sonicPesaUrl, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${apiKey}`,
+              "X-API-KEY": apiKey,
               "Content-Type": "application/json",
               Accept: "application/json",
             },
             body: JSON.stringify({
+              buyer_email: buyerEmail,
+              buyer_name: customerName,
+              buyer_phone: phoneNumber,
               amount,
-              phone_number: phoneNumber,
-              customer_name: customerName,
               currency: "TZS",
-              description,
             }),
           });
 
           const data = await res.json().catch(() => null);
 
-          if (!res.ok) {
+          if (!res.ok || data?.status !== "success") {
             return jsonResponse(
               {
                 error:
@@ -85,11 +91,19 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
                   data?.error ??
                   `Payment failed (${res.status}).`,
               },
-              res.status,
+              res.status === 200 ? 400 : res.status,
             );
           }
 
-          return jsonResponse(data, 200);
+          return jsonResponse(
+            {
+              ok: true,
+              reference: data?.data?.order_id || data?.data?.reference,
+              message: data?.message,
+              data: data?.data,
+            },
+            200,
+          );
         } catch (err) {
           return jsonResponse(
             {
