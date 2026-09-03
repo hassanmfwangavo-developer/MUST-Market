@@ -151,7 +151,7 @@ function MsosiCheckout() {
         return;
       }
       toast.success(
-        "Ombi la malipo limetumwa! Ingiza PIN kwenye simu yako kuthibitisha.",
+        "Ombi la malipo limetumwa! Angalia simu yako na uweke PIN kuthibitisha.",
       );
 
       // 2. Save the order once the push was accepted.
