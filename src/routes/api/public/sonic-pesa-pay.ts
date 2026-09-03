@@ -56,7 +56,10 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             );
           }
 
-          const res = await fetch(SONIC_PESA_URL, {
+          const sonicPesaUrl =
+            process.env["SONIC_PESA_API_URL"] ?? DEFAULT_SONIC_PESA_URL;
+
+          const res = await fetch(sonicPesaUrl, {
             method: "POST",
             headers: {
               Authorization: `Bearer ${apiKey}`,
