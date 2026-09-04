@@ -203,7 +203,7 @@ function MsosiDetail() {
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="E.g., No salt, extra pepper on the side..."
+            placeholder="E.g.,Usiweke Chill sauce, Nichukulie na matunda..."
             className="h-24 w-full rounded-xl border border-slate-200 bg-white p-4 placeholder:text-slate-400 outline-none focus:border-[#008542]"
           />
         </section>
