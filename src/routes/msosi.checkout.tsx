@@ -160,8 +160,7 @@ function MsosiCheckout() {
       );
 
       // 2. Save the order once the push was accepted.
-      const { data } = await supabase.auth.getUser();
-      const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
+      const uid = authUser?.id ?? null;
       let orderId: string | null = null;
       if (uid) {
 
