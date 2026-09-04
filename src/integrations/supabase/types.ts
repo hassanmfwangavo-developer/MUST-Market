@@ -235,6 +235,7 @@ export type Database = {
           addons: Json
           category: string
           created_at: string
+          day_badge: string | null
           delivery_fee: number
           description: string
           id: string
@@ -252,6 +253,7 @@ export type Database = {
           addons?: Json
           category?: string
           created_at?: string
+          day_badge?: string | null
           delivery_fee?: number
           description?: string
           id?: string
@@ -269,6 +271,7 @@ export type Database = {
           addons?: Json
           category?: string
           created_at?: string
+          day_badge?: string | null
           delivery_fee?: number
           description?: string
           id?: string
@@ -288,6 +291,53 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      msosi_pre_orders: {
+        Row: {
+          created_at: string
+          customer_name: string
+          delivery_location: string
+          id: string
+          item_id: string | null
+          item_name: string
+          message: string
+          phone_number: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string
+          delivery_location?: string
+          id?: string
+          item_id?: string | null
+          item_name?: string
+          message: string
+          phone_number?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          delivery_location?: string
+          id?: string
+          item_id?: string | null
+          item_name?: string
+          message?: string
+          phone_number?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "msosi_pre_orders_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
             referencedColumns: ["id"]
           },
         ]
