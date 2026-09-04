@@ -25,12 +25,14 @@ import { completeOrderRewards } from "@/lib/rewards.functions";
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
 
 const DELIVERY_AREAS = [
-  "Hosteli Block A",
-  "Hosteli Block B",
-  "Hosteli Block C",
+  "Hosteli Block 6A",
+  "Hosteli Block 6B",
+  "New Hostels",
   "Iyunga",
-  "Block T",
-  "Off-Campus Gheto",
+  "Inyara",
+  "Lupeta",
+  "Hosteli Block 8C",
+  "Hosteli Block 8D",
 ];
 
 type CheckoutState = {
