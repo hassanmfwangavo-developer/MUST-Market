@@ -25,12 +25,13 @@ import { completeOrderRewards } from "@/lib/rewards.functions";
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
 
 const DELIVERY_AREAS = [
-  "Hosteli Block A",
-  "Hosteli Block B",
-  "Hosteli Block C",
+  "Hosteli Block 6A",
+  "Hosteli Block 6B",
+  "New Hostels",
   "Iyunga",
-  "Block T",
-  "Off-Campus Gheto",
+  "Ikuti",
+  "Inyara",
+  "Lupeta",
 ];
 
 type CheckoutState = {
@@ -434,18 +435,18 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Phone Number (for M-Pesa / Tigo Pesa PIN push)
+              Phone Number (for Payment Push)
             </label>
             <div className="relative mt-1.5">
               <Phone className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <span className="pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-500">
-                +255
+                
               </span>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="674 044 676"
+                placeholder="0674 044 676"
                 maxLength={14}
                 autoComplete="tel-national"
                 inputMode="tel"
@@ -480,13 +481,13 @@ function MsosiCheckout() {
             </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Gheto Name / Room Number
+              Street Name/Room Number
             </label>
             <input
               type="text"
               value={room}
               onChange={(e) => setRoom(e.target.value)}
-              placeholder="e.g. Room 42, Block A"
+              placeholder="e.g. 6a, Ikuti sokoni"
               maxLength={80}
               className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#008542]"
             />
