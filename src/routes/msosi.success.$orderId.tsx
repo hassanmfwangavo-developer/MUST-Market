@@ -103,6 +103,7 @@ function MsosiSuccess() {
   const makeReceipt = () =>
     buildReceiptPng({
       orderRef,
+      customerName,
       placedAt: new Date(order?.created_at ?? Date.now()).toLocaleString("en-GB", {
         day: "2-digit",
         month: "short",
