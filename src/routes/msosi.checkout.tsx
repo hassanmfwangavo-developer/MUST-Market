@@ -138,11 +138,16 @@ function MsosiCheckout() {
     }
     setSubmitting(true);
     try {
+      // Resolve the signed-in user first so we can pass their email to Sonic Pesa.
+      const { data } = await supabase.auth.getUser();
+      const authUser = data.user && !data.user.is_anonymous ? data.user : null;
+
       // 1. Trigger the Sonic Pesa mobile money PIN push.
       const payment = await initiateSonicPesaPayment({
         amount: total,
         phoneNumber: cleanPhone,
         customerName: cleanName,
+        buyerEmail: authUser?.email ?? undefined,
         description: "Msosi Fasta Food Order",
       });
       if (!payment.ok) {

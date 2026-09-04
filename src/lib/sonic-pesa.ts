@@ -9,6 +9,7 @@ export type SonicPesaRequest = {
   amount: number;
   phoneNumber: string; // raw user input; sanitized here
   customerName: string;
+  buyerEmail?: string; // user email; server falls back to a default
   description?: string;
 };
 
@@ -48,6 +49,7 @@ export async function initiateSonicPesaPayment(
         amount: Math.round(Number(input.amount)),
         phoneNumber: phone,
         customerName: input.customerName.trim(),
+        buyerEmail: input.buyerEmail?.trim() || undefined,
         description: input.description ?? "Msosi Fasta Food Order",
       }),
     });
