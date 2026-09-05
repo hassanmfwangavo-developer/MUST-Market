@@ -29,6 +29,7 @@ export interface AdminMenuItem {
   description: string;
   addons: MenuAddon[];
   delivery_fee: number;
+  day_badge: string | null;
 }
 
 export interface AdminFoodOrder {
@@ -82,6 +83,7 @@ export async function fetchAdminMenuItems(): Promise<AdminMenuItem[]> {
     description: row.description,
     addons: parseAddons(row.addons),
     delivery_fee: Number(row.delivery_fee ?? 1000),
+    day_badge: (row as { day_badge?: string | null }).day_badge ?? null,
   }));
 }
 
