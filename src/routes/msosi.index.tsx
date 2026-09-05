@@ -15,7 +15,7 @@ import {
   Utensils,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { fetchMenuItems, formatTsh } from "@/lib/menu";
+import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
 import { BookingModal } from "@/components/booking-modal";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
@@ -131,6 +131,7 @@ function MsosiFasta() {
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [booking, setBooking] = useState<MenuItem | null>(null);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
@@ -586,6 +587,15 @@ function MsosiFasta() {
       </nav>
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} />
+
+      {booking && (
+        <BookingModal
+          itemId={booking.id}
+          itemName={booking.name}
+          dayBadge={booking.day_badge}
+          onClose={() => setBooking(null)}
+        />
+      )}
     </div>
   );
 }
