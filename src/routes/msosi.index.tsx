@@ -261,6 +261,18 @@ function MsosiFasta() {
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {slide && (
         <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
+          {slide.banner_type === "advertising" && slide.image_url ? (
+            /* Clean advertising banner: raw image, no overlay, text, badges or countdown */
+            <div className="relative overflow-hidden rounded-3xl shadow-sm">
+              <img
+                src={slide.image_url}
+                alt={slide.title || "Advertisement"}
+                loading="lazy"
+                decoding="async"
+                className="w-full object-cover"
+              />
+            </div>
+          ) : (
           <div className="relative overflow-hidden rounded-3xl bg-slate-900 shadow-sm sm:min-h-[160px]">
             {slide.image_url ? (
               <img
@@ -321,6 +333,7 @@ function MsosiFasta() {
               ) : null}
             </div>
           </div>
+          )}
 
           {banners.length > 1 && (
             <div className="mt-2.5 flex justify-center gap-1.5">

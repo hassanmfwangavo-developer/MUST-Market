@@ -54,7 +54,9 @@ export interface Banner {
 }
 
 export const BANNER_TYPES = [
-  { value: "flash_sale", label: "⚡ Flash Sale" },
+  { value: "advertising", label: "📢 Advertising / Tangazo (Clean Image – No Overlay)" },
+  { value: "discount", label: "🏷️ Discount Offer" },
+  { value: "flash_sale", label: "⚡ Flash Sale (with Countdown)" },
   { value: "first_order", label: "🎁 First Order Discount" },
   { value: "ijumaa_booking", label: "🕌 Ijumaa Booking" },
   { value: "jpili_booking", label: "🍛 Jumapili Booking" },
