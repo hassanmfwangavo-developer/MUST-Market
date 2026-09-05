@@ -13,6 +13,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { fetchMenuItem, formatTsh, SODA_PRICE } from "@/lib/menu";
+import { BookingModal } from "@/components/booking-modal";
 
 export const Route = createFileRoute("/msosi/$id")({
   head: () => ({
@@ -51,6 +52,7 @@ function MsosiDetail() {
   const [addSoda, setAddSoda] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [notes, setNotes] = useState("");
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   const { data: dish, isLoading } = useQuery({
     queryKey: ["menu_item", id],
@@ -143,6 +145,11 @@ function MsosiDetail() {
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
             {dish.rating} (85+ ratings)
           </span>
+          {dish.day_badge && (
+            <span className="inline-flex items-center rounded-full bg-amber-400 px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-slate-900 shadow-xs">
+              {dish.day_badge}
+            </span>
+          )}
           {dish.is_popular && (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-[#008542] ring-1 ring-emerald-100">
               <Flame className="h-3 w-3" />
@@ -215,6 +222,17 @@ function MsosiDetail() {
       </main>
 
       {/* ===================== FIXED BOTTOM ACTION BAR ===================== */}
+      {dish.day_badge ? (
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 p-4 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">
+          <button
+            type="button"
+            onClick={() => setBookingOpen(true)}
+            className="flex h-[48px] w-full items-center justify-center rounded-full bg-amber-400 text-sm font-extrabold text-slate-900 shadow-md transition-colors hover:bg-amber-500"
+          >
+            Book Now · {dish.day_badge}
+          </button>
+        </div>
+      ) : (
       <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center gap-3 border-t border-slate-200 bg-white/95 p-4 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">
         <div className="flex h-[48px] w-[100px] shrink-0 items-center justify-between rounded-full bg-slate-100 px-2">
           <button
@@ -266,6 +284,16 @@ function MsosiDetail() {
           </span>
         </button>
       </div>
+      )}
+
+      {bookingOpen && (
+        <BookingModal
+          itemId={dish.id}
+          itemName={dish.name}
+          dayBadge={dish.day_badge}
+          onClose={() => setBookingOpen(false)}
+        />
+      )}
     </div>
   );
 }

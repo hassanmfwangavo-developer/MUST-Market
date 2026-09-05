@@ -12,6 +12,7 @@ export interface MenuItem {
   is_popular: boolean;
   description: string;
   delivery_fee: number;
+  day_badge?: string | null;
 }
 
 /** Realistic fallback dataset so the feed renders instantly. */
@@ -98,6 +99,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     is_popular: Boolean(row.is_popular),
     description: String(row.description ?? ""),
     delivery_fee: Number(row.delivery_fee ?? DEFAULT_DELIVERY_FEE),
+    day_badge: (row.day_badge as string) ?? null,
   };
 }
 

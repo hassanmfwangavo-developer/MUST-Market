@@ -15,7 +15,8 @@ import {
   Utensils,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { fetchMenuItems, formatTsh } from "@/lib/menu";
+import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
+import { BookingModal } from "@/components/booking-modal";
 import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 import { fetchVendors } from "@/lib/vendors";
@@ -130,6 +131,7 @@ function MsosiFasta() {
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [booking, setBooking] = useState<MenuItem | null>(null);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
@@ -436,6 +438,11 @@ function MsosiFasta() {
                     <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
                     {food.rating}
                   </span>
+                  {food.day_badge && (
+                    <span className="absolute right-2 top-2 inline-flex items-center rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-slate-900 shadow-xs">
+                      {food.day_badge}
+                    </span>
+                  )}
                 </div>
 
                 <div className="flex flex-1 flex-col gap-1 p-2.5">
@@ -449,17 +456,30 @@ function MsosiFasta() {
                     <span className="text-xs font-extrabold text-[#008542] sm:text-sm">
                       {formatTsh(food.price)}
                     </span>
-                    <button
-                      type="button"
-                      aria-label={`Add ${food.name}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openDish(food.id);
-                      }}
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#008542] text-white shadow-xs transition-colors hover:bg-[#006e36]"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </button>
+                    {food.day_badge ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setBooking(food);
+                        }}
+                        className="inline-flex h-8 shrink-0 items-center justify-center rounded-full bg-amber-400 px-3 text-[11px] font-extrabold text-slate-900 shadow-xs transition-colors hover:bg-amber-500"
+                      >
+                        Book Now
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        aria-label={`Add ${food.name}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openDish(food.id);
+                        }}
+                        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#008542] text-white shadow-xs transition-colors hover:bg-[#006e36]"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </article>
@@ -567,6 +587,15 @@ function MsosiFasta() {
       </nav>
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} />
+
+      {booking && (
+        <BookingModal
+          itemId={booking.id}
+          itemName={booking.name}
+          dayBadge={booking.day_badge}
+          onClose={() => setBooking(null)}
+        />
+      )}
     </div>
   );
 }
