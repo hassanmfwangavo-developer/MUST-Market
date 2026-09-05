@@ -12,6 +12,7 @@ import {
   Store,
   Trash2,
   UtensilsCrossed,
+  CalendarClock,
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +23,7 @@ import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { formatTsh } from "@/lib/menu";
 import { fetchAllReviews } from "@/lib/reviews";
+import { fetchPreOrders } from "@/lib/pre-orders";
 import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import { uploadAdminImage } from "@/lib/admin-media";
 import {
@@ -55,11 +57,23 @@ const inputClass =
 const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground";
 const cardClass = "rounded-3xl border border-border bg-surface p-5 shadow-soft";
 
+const DAY_BADGES = [
+  "Monday Only",
+  "Tuesday Only",
+  "Wednesday Only",
+  "Thursday Only",
+  "Friday Only",
+  "Saturday Only",
+  "Sunday Only",
+  "Weekend Only",
+];
+
 const TABS = [
   { key: "orders", label: "Maagizo & Hali ya Malipo", icon: ClipboardList },
   { key: "food", label: "Vyakula & Menus", icon: UtensilsCrossed },
   { key: "vendors", label: "Migahawa & Logos", icon: Store },
   { key: "reviews", label: "Testimonials & Reviews", icon: Star },
+  { key: "preorders", label: "Msosi Pre-Orders", icon: CalendarClock },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -104,6 +118,7 @@ function AdminFoodManager() {
           {tab === "food" && <FoodTab />}
           {tab === "vendors" && <VendorsTab />}
           {tab === "reviews" && <ReviewsTab />}
+          {tab === "preorders" && <PreOrdersTab />}
         </div>
       </main>
       <Footer />
@@ -229,6 +244,7 @@ interface FoodDraft {
   category: string;
   addons: MenuAddon[];
   deliveryFee: string;
+  dayBadge: string;
 }
 
 const emptyDraft = (): FoodDraft => ({
@@ -242,6 +258,7 @@ const emptyDraft = (): FoodDraft => ({
   category: "Zote",
   addons: [],
   deliveryFee: "1000",
+  dayBadge: "",
 });
 
 function FoodTab() {
@@ -293,6 +310,7 @@ function FoodTab() {
         category: d.category,
         addons: d.addons.filter((a) => a.title.trim()) as unknown as never,
         delivery_fee: Math.max(0, Math.round(Number(d.deliveryFee) || 0)),
+        day_badge: d.dayBadge.trim() || null,
       };
 
       const { error } = d.id
@@ -340,6 +358,7 @@ function FoodTab() {
       category: item.category,
       addons: item.addons,
       deliveryFee: String(item.delivery_fee ?? 1000),
+      dayBadge: item.day_badge ?? "",
     });
   };
 
@@ -568,6 +587,21 @@ function FoodModal({
                 onChange={(e) => set("rating", e.target.value)}
                 className={inputClass}
               />
+            </div>
+            <div>
+              <label className={labelClass}>Day Badge (booking)</label>
+              <input
+                list="day-badge-options"
+                value={draft.dayBadge}
+                onChange={(e) => set("dayBadge", e.target.value)}
+                placeholder="e.g. Friday Only"
+                className={inputClass}
+              />
+              <datalist id="day-badge-options">
+                {DAY_BADGES.map((d) => (
+                  <option key={d} value={d} />
+                ))}
+              </datalist>
             </div>
           </div>
 
@@ -928,6 +962,73 @@ function ReviewsTab() {
               )}
             </article>
           ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ------------------------------- Tab 5 --------------------------------- */
+
+function PreOrdersTab() {
+  const { data: bookings = [], isLoading } = useQuery({
+    queryKey: ["msosi-pre-orders"],
+    queryFn: fetchPreOrders,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="grid place-items-center py-16">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <section className={cardClass}>
+      <h2 className="text-lg font-semibold text-foreground">Msosi Pre-Orders</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Day-specific booking requests submitted from Msosi Fasta dishes.
+      </p>
+
+      {bookings.length === 0 ? (
+        <p className="mt-6 rounded-2xl border border-border bg-surface-2 p-6 text-center text-sm text-muted-foreground">
+          No booking requests yet.
+        </p>
+      ) : (
+        <div className="mt-5 overflow-x-auto">
+          <table className="w-full min-w-[900px] border-collapse text-sm">
+            <thead>
+              <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                <th className="py-2 pr-3">Date</th>
+                <th className="py-2 pr-3">Dish</th>
+                <th className="py-2 pr-3">Customer</th>
+                <th className="py-2 pr-3">Phone</th>
+                <th className="py-2 pr-3">Location</th>
+                <th className="py-2 pr-3">Message</th>
+                <th className="py-2 pr-3">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookings.map((b) => (
+                <tr key={b.id} className="border-t border-border align-top">
+                  <td className="py-3 pr-3 text-muted-foreground">
+                    {new Date(b.created_at).toLocaleString()}
+                  </td>
+                  <td className="py-3 pr-3 font-semibold text-foreground">{b.item_name}</td>
+                  <td className="py-3 pr-3 text-foreground">{b.customer_name}</td>
+                  <td className="py-3 pr-3 text-foreground">{b.phone_number}</td>
+                  <td className="py-3 pr-3 text-muted-foreground">{b.delivery_location}</td>
+                  <td className="max-w-[240px] py-3 pr-3 text-muted-foreground">{b.message}</td>
+                  <td className="py-3 pr-3">
+                    <span className="inline-flex rounded-full bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent-foreground">
+                      {b.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </section>
