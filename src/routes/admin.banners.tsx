@@ -76,16 +76,19 @@ function AdminBannersPage() {
     setPreview("");
   };
 
+  const isAdvertising = bannerType === "advertising";
+
   const create = useMutation({
     mutationFn: async () => {
       const uploaded = file ? await uploadAdminImage(file, "banners") : null;
       const { error } = await supabase.from("banners").insert({
-        title: title.trim(),
-        subtitle: subtitle.trim(),
-        promo_code: promoCode.trim() || null,
-        discount_percent: discount ? Number(discount) : null,
+        title: title.trim() || (isAdvertising ? "Tangazo" : ""),
+        subtitle: isAdvertising ? "" : subtitle.trim(),
+        promo_code: isAdvertising ? null : promoCode.trim() || null,
+        discount_percent: !isAdvertising && discount ? Number(discount) : null,
         banner_type: bannerType,
-        countdown_ends_at: endsAt ? new Date(endsAt).toISOString() : null,
+        countdown_ends_at:
+          !isAdvertising && endsAt ? new Date(endsAt).toISOString() : null,
         image_url: uploaded?.url ?? null,
       });
       if (error) {
@@ -132,7 +135,9 @@ function AdminBannersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const canSubmit = title.trim().length > 2 && !create.isPending;
+  const canSubmit =
+    !create.isPending &&
+    (isAdvertising ? file !== null : title.trim().length > 2);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -189,17 +194,20 @@ function AdminBannersPage() {
 
             <div className="mt-4">
               <label className={labelClass} htmlFor="banner-title">
-                Title
+                Title {isAdvertising && <span className="normal-case">(optional, internal label)</span>}
               </label>
               <input
                 id="banner-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Flash Sale — 30% off lunch"
+                placeholder={
+                  isAdvertising ? "e.g. September Tangazo" : "Flash Sale — 30% off lunch"
+                }
                 className={inputClass}
               />
             </div>
 
+            {!isAdvertising && (
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-subtitle">
                 Subtitle
@@ -212,7 +220,9 @@ function AdminBannersPage() {
                 className={inputClass}
               />
             </div>
+            )}
 
+            {!isAdvertising && (
             <div className="mt-3 grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass} htmlFor="banner-promo">
@@ -242,6 +252,7 @@ function AdminBannersPage() {
                 />
               </div>
             </div>
+            )}
 
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-type">
@@ -261,6 +272,7 @@ function AdminBannersPage() {
               </select>
             </div>
 
+            {!isAdvertising && (
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-ends">
                 Expiry / countdown ends
@@ -273,6 +285,7 @@ function AdminBannersPage() {
                 className={inputClass}
               />
             </div>
+            )}
 
             <button
               type="submit"
