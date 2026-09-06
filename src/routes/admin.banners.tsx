@@ -84,10 +84,11 @@ function AdminBannersPage() {
       const { error } = await supabase.from("banners").insert({
         title: title.trim() || (isAdvertising ? "Tangazo" : ""),
         subtitle: isAdvertising ? "" : subtitle.trim(),
-        promo_code: promoCode.trim() || null,
-        discount_percent: discount ? Number(discount) : null,
+        promo_code: isAdvertising ? null : promoCode.trim() || null,
+        discount_percent: !isAdvertising && discount ? Number(discount) : null,
         banner_type: bannerType,
-        countdown_ends_at: endsAt ? new Date(endsAt).toISOString() : null,
+        countdown_ends_at:
+          !isAdvertising && endsAt ? new Date(endsAt).toISOString() : null,
         image_url: uploaded?.url ?? null,
       });
       if (error) {
@@ -134,7 +135,9 @@ function AdminBannersPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const canSubmit = title.trim().length > 2 && !create.isPending;
+  const canSubmit =
+    !create.isPending &&
+    (isAdvertising ? file !== null : title.trim().length > 2);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
