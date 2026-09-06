@@ -272,6 +272,7 @@ function AdminBannersPage() {
               </select>
             </div>
 
+            {!isAdvertising && (
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-ends">
                 Expiry / countdown ends
@@ -284,6 +285,7 @@ function AdminBannersPage() {
                 className={inputClass}
               />
             </div>
+            )}
 
             <button
               type="submit"
