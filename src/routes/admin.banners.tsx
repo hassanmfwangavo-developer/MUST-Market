@@ -76,12 +76,14 @@ function AdminBannersPage() {
     setPreview("");
   };
 
+  const isAdvertising = bannerType === "advertising";
+
   const create = useMutation({
     mutationFn: async () => {
       const uploaded = file ? await uploadAdminImage(file, "banners") : null;
       const { error } = await supabase.from("banners").insert({
-        title: title.trim(),
-        subtitle: subtitle.trim(),
+        title: title.trim() || (isAdvertising ? "Tangazo" : ""),
+        subtitle: isAdvertising ? "" : subtitle.trim(),
         promo_code: promoCode.trim() || null,
         discount_percent: discount ? Number(discount) : null,
         banner_type: bannerType,
