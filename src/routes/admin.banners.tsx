@@ -252,6 +252,7 @@ function AdminBannersPage() {
                 />
               </div>
             </div>
+            )}
 
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-type">
