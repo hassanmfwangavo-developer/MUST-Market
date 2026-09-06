@@ -194,17 +194,20 @@ function AdminBannersPage() {
 
             <div className="mt-4">
               <label className={labelClass} htmlFor="banner-title">
-                Title
+                Title {isAdvertising && <span className="normal-case">(optional, internal label)</span>}
               </label>
               <input
                 id="banner-title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Flash Sale — 30% off lunch"
+                placeholder={
+                  isAdvertising ? "e.g. September Tangazo" : "Flash Sale — 30% off lunch"
+                }
                 className={inputClass}
               />
             </div>
 
+            {!isAdvertising && (
             <div className="mt-3">
               <label className={labelClass} htmlFor="banner-subtitle">
                 Subtitle
@@ -217,7 +220,9 @@ function AdminBannersPage() {
                 className={inputClass}
               />
             </div>
+            )}
 
+            {!isAdvertising && (
             <div className="mt-3 grid grid-cols-2 gap-3">
               <div>
                 <label className={labelClass} htmlFor="banner-promo">
