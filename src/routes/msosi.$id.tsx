@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { fetchMenuItem, formatTsh, SODA_PRICE } from "@/lib/menu";
 import { BookingModal } from "@/components/booking-modal";
+import { getPendingOffer } from "@/lib/offers";
 
 export const Route = createFileRoute("/msosi/$id")({
   head: () => ({
@@ -75,7 +76,14 @@ function MsosiDetail() {
     );
   }
 
-  const total = dish.price * quantity + (addSoda ? SODA_PRICE : 0);
+  // A discount applies only when the customer just clicked the banner tied to this dish.
+  const offer = getPendingOffer(dish.id);
+  const discountPercent = offer?.discountPercent ?? 0;
+  const unitPrice =
+    discountPercent > 0
+      ? Math.round(dish.price * (1 - discountPercent / 100))
+      : dish.price;
+  const total = unitPrice * quantity + (addSoda ? SODA_PRICE : 0);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FAFBF6]">
@@ -135,7 +143,12 @@ function MsosiDetail() {
             </p>
           </div>
           <span className="shrink-0 rounded-xl bg-amber-400 px-3 py-1.5 text-sm font-bold text-amber-950 shadow-xs">
-            {formatTsh(dish.price, "TSh")}
+            {discountPercent > 0 && (
+              <span className="mr-1.5 font-medium line-through opacity-60">
+                {formatTsh(dish.price, "TSh")}
+              </span>
+            )}
+            {formatTsh(unitPrice, "TSh")}
           </span>
         </div>
 
@@ -216,8 +229,10 @@ function MsosiDetail() {
         </section>
 
         <div className="mt-5 flex items-center justify-between rounded-xl bg-white px-4 py-3 text-sm shadow-xs ring-1 ring-slate-200">
-          <span className="font-medium text-slate-500">Unit price</span>
-          <span className="font-bold text-slate-900">{formatTsh(dish.price, "TSh")}</span>
+          <span className="font-medium text-slate-500">
+            Unit price{discountPercent > 0 ? ` (−${discountPercent}% offer)` : ""}
+          </span>
+          <span className="font-bold text-slate-900">{formatTsh(unitPrice, "TSh")}</span>
         </div>
       </main>
 
@@ -265,7 +280,9 @@ function MsosiDetail() {
               state: {
                 itemId: dish.id,
                 name: dish.name,
-                price: dish.price,
+                price: unitPrice,
+                discountPercent,
+                promoCode: offer?.promoCode ?? undefined,
                 imageUrl: dish.image_url ?? undefined,
                 vendorName: dish.vendor_name,
                 deliveryFee: dish.delivery_fee,
