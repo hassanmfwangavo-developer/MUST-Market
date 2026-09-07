@@ -17,7 +17,7 @@ import { sanitizeTzPhoneStrict } from "@/lib/formatters";
 import { supabase } from "@/integrations/supabase/client";
 import { createOrder, type OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
-import { getClaimedOffer, clearClaimedOffer } from "@/lib/offers";
+import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 
@@ -44,6 +44,9 @@ type CheckoutState = {
   quantity?: number;
   addSoda?: boolean;
   deliveryFee?: number;
+  /** Only set when the customer arrived by clicking a discount banner. */
+  discountPercent?: number;
+  promoCode?: string;
 };
 
 declare module "@tanstack/react-router" {
@@ -96,7 +99,9 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const [claimed] = useState(() => getClaimedOffer());
+  // Discounts are never persisted — they only exist for this navigation.
+  const claimedPercent = !locationState?.name ? 0 : (locationState?.discountPercent ?? 0);
+  const claimedCode = locationState?.promoCode ?? null;
 
   const cart = useCart();
   const cartMode = !locationState?.name && cart.items.length > 0;
@@ -115,9 +120,10 @@ function MsosiCheckout() {
         0,
       ) || DEFAULT_DELIVERY_FEE
     : order.deliveryFee;
-  const discount = claimed?.discountPercent
-    ? Math.round((subtotal * claimed.discountPercent) / 100)
-    : 0;
+  const discount =
+    !cartMode && claimedPercent > 0
+      ? Math.round((order.price * order.quantity * claimedPercent) / 100)
+      : 0;
   const total = subtotal - discount + deliveryFee;
 
 
@@ -204,7 +210,7 @@ function MsosiCheckout() {
           /* rewards are best-effort */
         }
       }
-      clearClaimedOffer();
+      clearPendingOffer();
       if (cartMode) cart.clear();
       toast.success(
         `Order received! ${formatTsh(total, "TSh")} — a PIN push has been sent to +${cleanPhone}.`,
@@ -378,8 +384,7 @@ function MsosiCheckout() {
               {discount > 0 && (
                 <div className="flex items-center justify-between text-[#008542]">
                   <span className="font-semibold">
-                    Discount {claimed?.promoCode ? `(${claimed.promoCode})` : ""} −
-                    {claimed?.discountPercent}%
+                    Discount {claimedCode ? `(${claimedCode})` : ""} −{claimedPercent}%
                   </span>
                   <span className="font-bold">− {formatTsh(discount, "TSh")}</span>
                 </div>
