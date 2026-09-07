@@ -191,14 +191,19 @@ function MsosiFasta() {
 
   const openDish = (id: string) => navigate({ to: "/msosi/$id", params: { id } });
 
-  const handleClaim = async () => {
+  const handleClaim = () => {
     if (!slide) return;
-    await claimOffer(slide);
-    toast.success(
-      slide.promo_code
-        ? `Offer saved! Code ${slide.promo_code} will be applied at checkout.`
-        : "Offer saved! It will be applied at checkout.",
-    );
+    // The offer is held in memory only, and strictly for the dish it is tied to.
+    const offer = claimOffer(slide);
+    if (offer) {
+      toast.success(`${offer.discountPercent}% off applied to this dish — order now!`);
+      openDish(offer.menuItemId);
+      return;
+    }
+    if (slide.menu_item_id) {
+      openDish(slide.menu_item_id);
+      return;
+    }
     const first = menu[0];
     if (first) openDish(first.id);
   };

@@ -18,6 +18,7 @@ import {
   uploadAdminImage,
   type Banner,
 } from "@/lib/admin-media";
+import { fetchMenuItems } from "@/lib/menu";
 
 export const Route = createFileRoute("/admin/banners")({
   head: () => ({
@@ -50,8 +51,14 @@ function AdminBannersPage() {
   const [discount, setDiscount] = useState("");
   const [bannerType, setBannerType] = useState<string>(BANNER_TYPES[0].value);
   const [endsAt, setEndsAt] = useState("");
+  const [menuItemId, setMenuItemId] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string>("");
+
+  const { data: menuItems = [] } = useQuery({
+    queryKey: ["admin-menu-items-for-banners"],
+    queryFn: fetchMenuItems,
+  });
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
 
@@ -72,6 +79,7 @@ function AdminBannersPage() {
     setDiscount("");
     setBannerType(BANNER_TYPES[0].value);
     setEndsAt("");
+    setMenuItemId("");
     setFile(null);
     setPreview("");
   };
@@ -89,6 +97,7 @@ function AdminBannersPage() {
         banner_type: bannerType,
         countdown_ends_at:
           !isAdvertising && endsAt ? new Date(endsAt).toISOString() : null,
+        menu_item_id: isAdvertising ? null : menuItemId || null,
         image_url: uploaded?.url ?? null,
       });
       if (error) {
@@ -251,6 +260,30 @@ function AdminBannersPage() {
                   className={inputClass}
                 />
               </div>
+            </div>
+            )}
+
+            {!isAdvertising && (
+            <div className="mt-3">
+              <label className={labelClass} htmlFor="banner-item">
+                Dish this offer applies to
+              </label>
+              <select
+                id="banner-item"
+                value={menuItemId}
+                onChange={(e) => setMenuItemId(e.target.value)}
+                className={inputClass}
+              >
+                <option value="">No dish (no discount will be applied)</option>
+                {menuItems.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.name} — {m.vendor_name}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1 text-xs text-muted-foreground">
+                The discount only applies to this dish, and only when a customer taps this banner.
+              </p>
             </div>
             )}
 

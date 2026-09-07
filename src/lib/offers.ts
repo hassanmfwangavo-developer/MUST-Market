@@ -6,7 +6,7 @@ export async function fetchActiveBanners(): Promise<Banner[]> {
   const { data, error } = await supabase
     .from("banners")
     .select(
-      "id,title,subtitle,promo_code,discount_percent,image_url,banner_type,countdown_ends_at,is_active,created_at",
+      "id,title,subtitle,promo_code,discount_percent,image_url,banner_type,countdown_ends_at,is_active,created_at,menu_item_id",
     )
     .eq("is_active", true)
     .order("created_at", { ascending: false });
@@ -14,60 +14,49 @@ export async function fetchActiveBanners(): Promise<Banner[]> {
   return (data ?? []) as Banner[];
 }
 
-export interface ClaimedOffer {
+export interface PendingOffer {
   bannerId: string;
+  menuItemId: string;
   promoCode: string | null;
   discountPercent: number;
   title: string;
 }
 
-const STORAGE_KEY = "msosi.claimed_offer";
+/**
+ * The claimed offer lives ONLY in memory for the current page session.
+ * It is never written to localStorage, sessionStorage, cookies or the user's
+ * profile — a refresh or a normal (non-banner) visit always pays full price.
+ */
+let pendingOffer: PendingOffer | null = null;
 
-/** Locally persisted claimed offer (cart state) used to discount the checkout total. */
-export function getClaimedOffer(): ClaimedOffer | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as ClaimedOffer) : null;
-  } catch {
+export function setPendingOffer(offer: PendingOffer) {
+  pendingOffer = offer;
+}
+
+export function clearPendingOffer() {
+  pendingOffer = null;
+}
+
+/** Returns the offer only when it was claimed for this exact dish. */
+export function getPendingOffer(menuItemId: string): PendingOffer | null {
+  if (!pendingOffer) return null;
+  return pendingOffer.menuItemId === menuItemId ? pendingOffer : null;
+}
+
+/** Claims a banner offer in memory. Returns null when the banner has no dish/discount. */
+export function claimOffer(banner: Banner): PendingOffer | null {
+  const percent = banner.discount_percent ?? 0;
+  if (!banner.menu_item_id || percent <= 0) {
+    clearPendingOffer();
     return null;
   }
-}
-
-export function clearClaimedOffer() {
-  if (typeof window !== "undefined") window.localStorage.removeItem(STORAGE_KEY);
-}
-
-/**
- * Saves the claimed promotion to local cart state and, for signed-in users,
- * to `user_claimed_offers` so the discount follows the account.
- */
-export async function claimOffer(banner: Banner): Promise<ClaimedOffer> {
-  const claimed: ClaimedOffer = {
+  const offer: PendingOffer = {
     bannerId: banner.id,
+    menuItemId: banner.menu_item_id,
     promoCode: banner.promo_code,
-    discountPercent: banner.discount_percent ?? 0,
+    discountPercent: percent,
     title: banner.title,
   };
-
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(claimed));
-  }
-
-  try {
-    const { data } = await supabase.auth.getUser();
-    const user = data.user;
-    if (user && !user.is_anonymous) {
-      await supabase.from("user_claimed_offers").insert({
-        user_id: user.id,
-        banner_id: banner.id,
-        promo_code: banner.promo_code,
-        discount_percent: banner.discount_percent ?? 0,
-      });
-    }
-  } catch {
-    // Offer still applies locally even if the write fails.
-  }
-
-  return claimed;
+  setPendingOffer(offer);
+  return offer;
 }

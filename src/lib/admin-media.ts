@@ -51,6 +51,8 @@ export interface Banner {
   countdown_ends_at: string | null;
   is_active: boolean;
   created_at: string;
+  /** Dish this promo is tied to; the discount applies only to this item. */
+  menu_item_id?: string | null;
 }
 
 export const BANNER_TYPES = [
@@ -69,7 +71,7 @@ export async function fetchBanners(): Promise<Banner[]> {
   const { data, error } = await supabase
     .from("banners")
     .select(
-      "id,title,subtitle,promo_code,discount_percent,image_url,banner_type,countdown_ends_at,is_active,created_at",
+      "id,title,subtitle,promo_code,discount_percent,image_url,banner_type,countdown_ends_at,is_active,created_at,menu_item_id",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
