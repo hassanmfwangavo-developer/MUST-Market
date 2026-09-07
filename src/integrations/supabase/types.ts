@@ -23,6 +23,7 @@ export type Database = {
           id: string
           image_url: string | null
           is_active: boolean
+          menu_item_id: string | null
           promo_code: string | null
           subtitle: string
           title: string
@@ -36,6 +37,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          menu_item_id?: string | null
           promo_code?: string | null
           subtitle?: string
           title: string
@@ -49,12 +51,21 @@ export type Database = {
           id?: string
           image_url?: string | null
           is_active?: boolean
+          menu_item_id?: string | null
           promo_code?: string | null
           subtitle?: string
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "banners_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       categories: {
         Row: {
