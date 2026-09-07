@@ -51,6 +51,8 @@ export interface Banner {
   countdown_ends_at: string | null;
   is_active: boolean;
   created_at: string;
+  /** Dish this promo is tied to; the discount applies only to this item. */
+  menu_item_id?: string | null;
 }
 
 export const BANNER_TYPES = [
