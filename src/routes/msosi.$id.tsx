@@ -280,7 +280,7 @@ function MsosiDetail() {
               state: {
                 itemId: dish.id,
                 name: dish.name,
-                price: unitPrice,
+                price: dish.price,
                 discountPercent,
                 promoCode: offer?.promoCode ?? undefined,
                 imageUrl: dish.image_url ?? undefined,
