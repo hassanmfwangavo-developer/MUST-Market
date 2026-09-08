@@ -133,7 +133,7 @@ export function MarketHome() {
             <p className="mt-2 text-sm text-emerald-100/80">{t.marketHome?.banner.subtitle}</p>
             <Link
               to="/browse"
-              search={{ category: undefined }}
+              search={{ category: undefined, shelf: undefined }}
               className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-emerald-900 shadow-soft transition-transform hover:-translate-y-0.5"
             >
               {t.marketHome?.banner.cta}
@@ -216,7 +216,7 @@ export function MarketHome() {
             <div className="mt-10 flex flex-col items-center gap-2">
               <Link
                 to="/browse"
-                search={{ category: active === "All" ? undefined : active }}
+                search={{ category: active === "All" ? undefined : active, shelf: undefined }}
                 className="btn-shine inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lift transition-transform hover:-translate-y-0.5"
               >
                 {t.marketHome?.viewAll}
