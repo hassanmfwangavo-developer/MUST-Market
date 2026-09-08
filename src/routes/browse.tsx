@@ -12,6 +12,7 @@ import { useSearchQuery } from "@/lib/search-store";
 export const Route = createFileRoute("/browse")({
   validateSearch: (search: Record<string, unknown>) => ({
     category: typeof search.category === "string" ? search.category : undefined,
+    shelf: typeof search.shelf === "string" ? search.shelf : undefined,
   }),
   head: () => ({
     meta: [
