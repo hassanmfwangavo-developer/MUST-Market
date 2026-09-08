@@ -62,7 +62,7 @@ function BrowsePage() {
         p.description.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q),
     );
-  }, [active, products, query]);
+  }, [active, products, query, search.shelf]);
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
