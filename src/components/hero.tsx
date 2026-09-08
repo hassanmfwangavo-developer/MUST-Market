@@ -121,7 +121,7 @@ export function Hero() {
             <Link
               key={dbName}
               to="/browse"
-              search={{ category: dbName }}
+              search={{ category: dbName, shelf: undefined }}
               className="group inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-sm font-medium text-foreground shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-card"
             >
               <span className="text-base transition-transform group-hover:scale-110">

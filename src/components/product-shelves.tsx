@@ -51,7 +51,7 @@ function ShelfRow({ shelf }: { shelf: Shelf }) {
         </div>
         <Link
           to="/browse"
-          search={{ category: shelf.category }}
+          search={{ category: shelf.category, shelf: shelf.key }}
           className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border bg-surface px-3.5 py-2 text-xs font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary"
         >
           View All
@@ -212,7 +212,7 @@ export function ProductShelves() {
       <div className="mt-12 flex justify-center px-4">
         <Link
           to="/browse"
-          search={{ category: undefined }}
+          search={{ category: undefined, shelf: undefined }}
           className="btn-shine inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lift transition-transform hover:-translate-y-0.5"
         >
           View All Products

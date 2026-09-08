@@ -89,6 +89,8 @@ function MsosiCheckout() {
       quantity: locationState?.quantity ?? 1,
       addSoda: locationState?.addSoda ?? false,
       deliveryFee: locationState?.deliveryFee ?? DEFAULT_DELIVERY_FEE,
+      discountPercent: locationState?.discountPercent ?? 0,
+      promoCode: locationState?.promoCode ?? "",
     }),
     [locationState],
   );

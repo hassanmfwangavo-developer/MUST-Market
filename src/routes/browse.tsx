@@ -12,6 +12,7 @@ import { useSearchQuery } from "@/lib/search-store";
 export const Route = createFileRoute("/browse")({
   validateSearch: (search: Record<string, unknown>) => ({
     category: typeof search.category === "string" ? search.category : undefined,
+    shelf: typeof search.shelf === "string" ? search.shelf : undefined,
   }),
   head: () => ({
     meta: [
@@ -48,7 +49,11 @@ function BrowsePage() {
   });
 
   const filtered = useMemo(() => {
-    const byCat = active === "All" ? products : products.filter((p) => p.category === active);
+    // A shelf link ("View All" on a homepage shelf) narrows to the pinned items
+    // when the admin has pinned any; otherwise it falls back to the category.
+    const pinned = search.shelf ? products.filter((p) => p.featuredShelf === search.shelf) : [];
+    const base = pinned.length > 0 ? pinned : products;
+    const byCat = active === "All" ? base : base.filter((p) => p.category === active);
     const q = query.trim().toLowerCase();
     if (!q) return byCat;
     return byCat.filter(
@@ -57,7 +62,7 @@ function BrowsePage() {
         p.description.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q),
     );
-  }, [active, products, query]);
+  }, [active, products, query, search.shelf]);
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
