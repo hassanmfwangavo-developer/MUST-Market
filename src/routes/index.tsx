@@ -4,11 +4,11 @@ import { Portal } from "@/components/portal";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MUST Market | Entrance Portal" },
+      { title: "MUST Market | Mbeya University Super Campus App" },
       {
         name: "description",
         content:
-          "MUST Market — soko la kuaminika la wanafunzi wa MUST. Nunua na uze vitu used sokoni, au agiza msosi kwa haraka. Chagua huduma uipendayo kuanza.",
+          "MUST Market is the student marketplace and campus food service for Mbeya University of Science and Technology. Buy and sell used items, find rooms and study supplies, or order Msosi Fasta.",
       },
       { property: "og:title", content: "MUST Market — Marketplace & Msosi Fasta" },
       {

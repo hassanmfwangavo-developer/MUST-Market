@@ -16,6 +16,7 @@ export const Route = createFileRoute("/browse")({
   }),
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Browse All Products — MUST Market" },
       {
         name: "description",

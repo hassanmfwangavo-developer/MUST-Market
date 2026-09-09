@@ -37,6 +37,7 @@ declare module "@tanstack/react-router" {
 export const Route = createFileRoute("/msosi/success/$orderId")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Payment Successful — Msosi Fasta | MUST Market" },
       {
         name: "description",

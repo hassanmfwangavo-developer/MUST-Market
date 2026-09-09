@@ -20,6 +20,7 @@ import { sanitizeTzPhone } from "@/lib/phone";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "My Account – MUST Market" },
       {
         name: "description",
