@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 
-Sitemap: https://mustmarket.store/sitemap.xml
+Sitemap: https://www.mustmarket.store/sitemap.xml

@@ -16,10 +16,10 @@ export const Route = createFileRoute("/meet-the-founder")({
         property: "og:description",
         content: "Why a MUST student built a marketplace for campus.",
       },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/meet-the-founder" },
+      { property: "og:url", content: "https://www.mustmarket.store/meet-the-founder" },
     ],
     links: [
-      { rel: "canonical", href: "https://must-campus-swap.lovable.app/meet-the-founder" },
+      { rel: "canonical", href: "https://www.mustmarket.store/meet-the-founder" },
     ],
   }),
   component: MeetTheFounder,

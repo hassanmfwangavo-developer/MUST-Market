@@ -16,9 +16,9 @@ export const Route = createFileRoute("/terms")({
         property: "og:description",
         content: "The rules that keep MUST Market safe, honest, and student-first.",
       },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/terms" },
+      { property: "og:url", content: "https://www.mustmarket.store/terms" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/terms" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/terms" }],
   }),
   component: TermsPage,
 });

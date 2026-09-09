@@ -27,7 +27,7 @@ export const Route = createFileRoute("/orders")({
       },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/orders" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/orders" }],
   }),
   component: OrdersPage,
 });

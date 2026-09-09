@@ -60,7 +60,7 @@ export function HowItWorks() {
 
 export function ReferralCard() {
   const { user } = useAuthUser();
-  const link = `https://mustmarket.store/msosi?ref=${user?.id ?? ""}`;
+  const link = `https://www.mustmarket.store/msosi?ref=${user?.id ?? ""}`;
 
   const copy = async () => {
     if (!user) {

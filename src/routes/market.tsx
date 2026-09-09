@@ -21,11 +21,11 @@ export const Route = createFileRoute("/market")({
         property: "og:description",
         content: "Buy and sell used student gear at MUST instantly.",
       },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/market" },
+      { property: "og:url", content: "https://www.mustmarket.store/market" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/market" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/market" }],
   }),
   component: Market,
 });

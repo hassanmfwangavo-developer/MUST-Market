@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "MUST Market" },
-      { property: "og:image", content: "https://must-campus-swap.lovable.app/og-image.png" },
+      { property: "og:image", content: "https://www.mustmarket.store/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "MUST Market – Campus Super-App | Sokoni & Msosi Fasta" },
       {
@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Agiza msosi kutoka cafeterias za chuo au nunua/uza vitu used kwa wanafunzi wa MUST.",
       },
-      { name: "twitter:image", content: "https://must-campus-swap.lovable.app/og-image.png" },
+      { name: "twitter:image", content: "https://www.mustmarket.store/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
