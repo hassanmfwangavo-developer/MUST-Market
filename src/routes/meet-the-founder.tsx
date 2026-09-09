@@ -86,7 +86,7 @@ function MeetTheFounder() {
         <div className="absolute bottom-0 inset-x-0 text-center px-4 pb-4 flex flex-col items-center space-y-2">
           <div className="flex items-center gap-1.5 justify-center">
             <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
-              Hassani Mfwangavo
+              Hassani Mfwangavo<span className="sr-only"> — Founder of MUST Market</span>
             </h1>
             {/* Nembo ya Verified ya Bluu kama ya Benji */}
             <svg className="h-5 w-5 text-blue-500 fill-current drop-shadow-md" viewBox="0 0 20 20">
