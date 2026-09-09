@@ -1,25 +1,47 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import { canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/meet-the-founder")({
   head: () => ({
     meta: [
-      { title: "Meet the Founder — MUST Market" },
+      { title: "Meet Hassani Mfwangavo, Founder of MUST Market" },
       {
         name: "description",
         content:
-          "The story behind MUST Market, the student-built marketplace for Mbeya University of Science and Technology.",
+          "The story behind MUST Market, the student-built marketplace and campus food service for Mbeya University of Science and Technology.",
       },
-      { property: "og:title", content: "Meet the Founder — MUST Market" },
+      { property: "og:title", content: "Meet Hassani Mfwangavo, Founder of MUST Market" },
       {
         property: "og:description",
         content: "Why a MUST student built a marketplace for campus.",
       },
-      { property: "og:url", content: "https://www.mustmarket.store/meet-the-founder" },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: canonical("/meet-the-founder") },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [
-      { rel: "canonical", href: "https://www.mustmarket.store/meet-the-founder" },
+    links: [{ rel: "canonical", href: canonical("/meet-the-founder") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Hassani Mfwangavo",
+          jobTitle: "Founder",
+          url: canonical("/meet-the-founder"),
+          worksFor: {
+            "@type": "Organization",
+            name: "MUST Market",
+            url: canonical("/"),
+          },
+          affiliation: {
+            "@type": "CollegeOrUniversity",
+            name: "Mbeya University of Science and Technology",
+          },
+        }),
+      },
     ],
   }),
   component: MeetTheFounder,
