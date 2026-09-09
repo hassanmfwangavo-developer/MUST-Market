@@ -6,31 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const MARKETPLACE_LINKS = [
-  { label: "Soko la Vitu Used", to: "/browse" as const },
-  { label: "Nyumba & Gheto", to: "/browse" as const, search: { category: "Rooms / Gheto" } },
-  { label: "Vifaa vya Masomo", to: "/browse" as const, search: { category: "Books/Stationery" } },
-  { label: "Post Ad", to: "/sell" as const },
+  { label: "Used Electronics", to: "/market/electronics" as const },
+  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
+  { label: "Books & Study Supplies", to: "/market/books-stationery" as const },
+  { label: "Used Items", to: "/market/used-items" as const },
+  { label: "Post an Ad", to: "/sell" as const },
 ];
 
 const MSOSI_LINKS = [
-  { label: "Menus za Cafeterias", to: "/msosi" as const },
-  { label: "Agiza Msosi", to: "/msosi" as const },
-  { label: "Discount Offers", to: "/msosi" as const },
-  { label: "Orders Status", to: "/orders" as const },
+  { label: "Cafeteria Menus", to: "/msosi" as const },
+  { label: "Order Food", to: "/msosi" as const },
+  { label: "My Orders", to: "/orders" as const },
 ];
 
 const COMPANY_LINKS = [
+  { label: "Marketplace Home", to: "/market" as const },
   { label: "Meet the Founder", to: "/meet-the-founder" as const },
-  { label: "Careers", to: "/feedback" as const },
-  { label: "Affiliates & Ambassadors", to: "/feedback" as const },
-  { label: "Contact Us", to: "/feedback" as const },
-];
-
-const BLOG_LINKS = [
-  { label: "Campus Life & Tips", to: "/market" as const },
-  { label: "Tech & Coding", to: "/browse" as const, search: { category: "Electronics" } },
-  { label: "Must Foodie Reviews", to: "/msosi" as const },
-  { label: "News & Updates", to: "/feedback" as const },
+  { label: "Contact & Feedback", to: "/feedback" as const },
+  { label: "Privacy Policy", to: "/privacy" as const },
+  { label: "Terms of Service", to: "/terms" as const },
 ];
 
 const SOCIAL_LINKS = [
