@@ -16,9 +16,9 @@ export const Route = createFileRoute("/privacy")({
         property: "og:description",
         content: "How MUST Market collects, uses, and protects your information.",
       },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/privacy" },
+      { property: "og:url", content: "https://www.mustmarket.store/privacy" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/privacy" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/privacy" }],
   }),
   component: PrivacyPage,
 });

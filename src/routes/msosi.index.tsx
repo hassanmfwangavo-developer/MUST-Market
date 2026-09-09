@@ -28,7 +28,7 @@ import { HelpDrawer } from "@/components/help-drawer";
 export const Route = createFileRoute("/msosi/")({
   head: () => ({
     meta: [
-      { title: "MUST Food Fasta – Order Cafeteria Food on Campus" },
+      { title: "Msosi Fasta | Campus Food Delivery at Mbeya University" },
       {
         name: "description",
         content:
@@ -41,9 +41,9 @@ export const Route = createFileRoute("/msosi/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/msosi" },
+      { property: "og:url", content: "https://www.mustmarket.store/msosi" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/msosi" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/msosi" }],
   }),
   component: MsosiFasta,
 });
@@ -240,9 +240,10 @@ function MsosiFasta() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="min-w-0 flex-1">
-              <h1 className="truncate text-base font-extrabold leading-tight tracking-tight text-slate-900 sm:text-lg">
+              <h1 className="sr-only">Order Food from MUST Campus Cafeterias</h1>
+              <p className="truncate text-base font-extrabold leading-tight tracking-tight text-slate-900 sm:text-lg">
                 MUST Food <span className="text-[#008542]">Fasta</span>
-              </h1>
+              </p>
               <p className="truncate text-[11px] font-medium text-slate-500">
                 Order fast food delivered to your doorstep
               </p>

@@ -6,31 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const MARKETPLACE_LINKS = [
-  { label: "Soko la Vitu Used", to: "/browse" as const },
-  { label: "Nyumba & Gheto", to: "/browse" as const, search: { category: "Rooms / Gheto" } },
-  { label: "Vifaa vya Masomo", to: "/browse" as const, search: { category: "Books/Stationery" } },
-  { label: "Post Ad", to: "/sell" as const },
+  { label: "Used Electronics", to: "/market/electronics" as const },
+  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
+  { label: "Books & Study Supplies", to: "/market/books-stationery" as const },
+  { label: "Used Items", to: "/market/used-items" as const },
+  { label: "Post an Ad", to: "/sell" as const },
 ];
 
 const MSOSI_LINKS = [
-  { label: "Menus za Cafeterias", to: "/msosi" as const },
-  { label: "Agiza Msosi", to: "/msosi" as const },
-  { label: "Discount Offers", to: "/msosi" as const },
-  { label: "Orders Status", to: "/orders" as const },
+  { label: "Cafeteria Menus", to: "/msosi" as const },
+  { label: "Order Food", to: "/msosi" as const },
+  { label: "My Orders", to: "/orders" as const },
 ];
 
 const COMPANY_LINKS = [
+  { label: "Marketplace Home", to: "/market" as const },
   { label: "Meet the Founder", to: "/meet-the-founder" as const },
-  { label: "Careers", to: "/feedback" as const },
-  { label: "Affiliates & Ambassadors", to: "/feedback" as const },
-  { label: "Contact Us", to: "/feedback" as const },
-];
-
-const BLOG_LINKS = [
-  { label: "Campus Life & Tips", to: "/market" as const },
-  { label: "Tech & Coding", to: "/browse" as const, search: { category: "Electronics" } },
-  { label: "Must Foodie Reviews", to: "/msosi" as const },
-  { label: "News & Updates", to: "/feedback" as const },
+  { label: "Contact & Feedback", to: "/feedback" as const },
+  { label: "Privacy Policy", to: "/privacy" as const },
+  { label: "Terms of Service", to: "/terms" as const },
 ];
 
 const SOCIAL_LINKS = [
@@ -58,7 +52,20 @@ const SOCIAL_LINKS = [
 
 type FooterLink = {
   label: string;
-  to: "/browse" | "/sell" | "/msosi" | "/orders" | "/meet-the-founder" | "/feedback" | "/market";
+  to:
+    | "/browse"
+    | "/sell"
+    | "/msosi"
+    | "/orders"
+    | "/meet-the-founder"
+    | "/feedback"
+    | "/market"
+    | "/market/electronics"
+    | "/market/rooms-gheto"
+    | "/market/books-stationery"
+    | "/market/used-items"
+    | "/privacy"
+    | "/terms";
   search?: { category: string };
 };
 
@@ -151,11 +158,10 @@ export function Footer() {
           </div>
 
           {/* Link columns */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
             <FooterLinkColumn title="Marketplace" links={MARKETPLACE_LINKS} />
             <FooterLinkColumn title="Msosi Fasta" links={MSOSI_LINKS} />
             <FooterLinkColumn title="Company" links={COMPANY_LINKS} />
-            <FooterLinkColumn title="Blogs" links={BLOG_LINKS} />
           </div>
         </div>
       </div>

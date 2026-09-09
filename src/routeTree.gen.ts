@@ -24,11 +24,16 @@ import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MsosiIndexRouteImport } from './routes/msosi.index'
+import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
 import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
+import { Route as MarketUsedItemsRouteImport } from './routes/market.used-items'
+import { Route as MarketRoomsGhetoRouteImport } from './routes/market.rooms-gheto'
+import { Route as MarketElectronicsRouteImport } from './routes/market.electronics'
+import { Route as MarketBooksStationeryRouteImport } from './routes/market.books-stationery'
 import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
@@ -110,6 +115,11 @@ const MsosiIndexRoute = MsosiIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MsosiRoute,
 } as any)
+const MarketIndexRoute = MarketIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MarketRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -134,6 +144,26 @@ const MsosiIdRoute = MsosiIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => MsosiRoute,
+} as any)
+const MarketUsedItemsRoute = MarketUsedItemsRouteImport.update({
+  id: '/used-items',
+  path: '/used-items',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketRoomsGhetoRoute = MarketRoomsGhetoRouteImport.update({
+  id: '/rooms-gheto',
+  path: '/rooms-gheto',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketElectronicsRoute = MarketElectronicsRouteImport.update({
+  id: '/electronics',
+  path: '/electronics',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketBooksStationeryRoute = MarketBooksStationeryRouteImport.update({
+  id: '/books-stationery',
+  path: '/books-stationery',
+  getParentRoute: () => MarketRoute,
 } as any)
 const AdminFoodRoute = AdminFoodRouteImport.update({
   id: '/food',
@@ -167,7 +197,7 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
-  '/market': typeof MarketRoute
+  '/market': typeof MarketRouteWithChildren
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/orders': typeof OrdersRoute
@@ -179,11 +209,16 @@ export interface FileRoutesByFullPath {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/market/books-stationery': typeof MarketBooksStationeryRoute
+  '/market/electronics': typeof MarketElectronicsRoute
+  '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
+  '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/market/': typeof MarketIndexRoute
   '/msosi/': typeof MsosiIndexRoute
   '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
@@ -193,7 +228,6 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
-  '/market': typeof MarketRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/orders': typeof OrdersRoute
   '/privacy': typeof PrivacyRoute
@@ -204,11 +238,16 @@ export interface FileRoutesByTo {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/market/books-stationery': typeof MarketBooksStationeryRoute
+  '/market/electronics': typeof MarketElectronicsRoute
+  '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
+  '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/admin': typeof AdminIndexRoute
+  '/market': typeof MarketIndexRoute
   '/msosi': typeof MsosiIndexRoute
   '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
@@ -220,7 +259,7 @@ export interface FileRoutesById {
   '/browse': typeof BrowseRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
-  '/market': typeof MarketRoute
+  '/market': typeof MarketRouteWithChildren
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/orders': typeof OrdersRoute
@@ -232,11 +271,16 @@ export interface FileRoutesById {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/market/books-stationery': typeof MarketBooksStationeryRoute
+  '/market/electronics': typeof MarketElectronicsRoute
+  '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
+  '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/market/': typeof MarketIndexRoute
   '/msosi/': typeof MsosiIndexRoute
   '/api/public/sonic-pesa-pay': typeof ApiPublicSonicPesaPayRoute
   '/msosi/success/$orderId': typeof MsosiSuccessOrderIdRoute
@@ -261,11 +305,16 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/market/books-stationery'
+    | '/market/electronics'
+    | '/market/rooms-gheto'
+    | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
     | '/admin/'
+    | '/market/'
     | '/msosi/'
     | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
@@ -275,7 +324,6 @@ export interface FileRouteTypes {
     | '/browse'
     | '/dashboard'
     | '/feedback'
-    | '/market'
     | '/meet-the-founder'
     | '/orders'
     | '/privacy'
@@ -286,11 +334,16 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/market/books-stationery'
+    | '/market/electronics'
+    | '/market/rooms-gheto'
+    | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
     | '/admin'
+    | '/market'
     | '/msosi'
     | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
@@ -313,11 +366,16 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/market/books-stationery'
+    | '/market/electronics'
+    | '/market/rooms-gheto'
+    | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
     | '/admin/'
+    | '/market/'
     | '/msosi/'
     | '/api/public/sonic-pesa-pay'
     | '/msosi/success/$orderId'
@@ -329,7 +387,7 @@ export interface RootRouteChildren {
   BrowseRoute: typeof BrowseRoute
   DashboardRoute: typeof DashboardRoute
   FeedbackRoute: typeof FeedbackRoute
-  MarketRoute: typeof MarketRoute
+  MarketRoute: typeof MarketRouteWithChildren
   MeetTheFounderRoute: typeof MeetTheFounderRoute
   MsosiRoute: typeof MsosiRouteWithChildren
   OrdersRoute: typeof OrdersRoute
@@ -450,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiIndexRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/market/': {
+      id: '/market/'
+      path: '/'
+      fullPath: '/market/'
+      preLoaderRoute: typeof MarketIndexRouteImport
+      parentRoute: typeof MarketRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -484,6 +549,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/msosi/$id'
       preLoaderRoute: typeof MsosiIdRouteImport
       parentRoute: typeof MsosiRoute
+    }
+    '/market/used-items': {
+      id: '/market/used-items'
+      path: '/used-items'
+      fullPath: '/market/used-items'
+      preLoaderRoute: typeof MarketUsedItemsRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/rooms-gheto': {
+      id: '/market/rooms-gheto'
+      path: '/rooms-gheto'
+      fullPath: '/market/rooms-gheto'
+      preLoaderRoute: typeof MarketRoomsGhetoRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/electronics': {
+      id: '/market/electronics'
+      path: '/electronics'
+      fullPath: '/market/electronics'
+      preLoaderRoute: typeof MarketElectronicsRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/books-stationery': {
+      id: '/market/books-stationery'
+      path: '/books-stationery'
+      fullPath: '/market/books-stationery'
+      preLoaderRoute: typeof MarketBooksStationeryRouteImport
+      parentRoute: typeof MarketRoute
     }
     '/admin/food': {
       id: '/admin/food'
@@ -539,6 +632,25 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface MarketRouteChildren {
+  MarketBooksStationeryRoute: typeof MarketBooksStationeryRoute
+  MarketElectronicsRoute: typeof MarketElectronicsRoute
+  MarketRoomsGhetoRoute: typeof MarketRoomsGhetoRoute
+  MarketUsedItemsRoute: typeof MarketUsedItemsRoute
+  MarketIndexRoute: typeof MarketIndexRoute
+}
+
+const MarketRouteChildren: MarketRouteChildren = {
+  MarketBooksStationeryRoute: MarketBooksStationeryRoute,
+  MarketElectronicsRoute: MarketElectronicsRoute,
+  MarketRoomsGhetoRoute: MarketRoomsGhetoRoute,
+  MarketUsedItemsRoute: MarketUsedItemsRoute,
+  MarketIndexRoute: MarketIndexRoute,
+}
+
+const MarketRouteWithChildren =
+  MarketRoute._addFileChildren(MarketRouteChildren)
+
 interface MsosiRouteChildren {
   MsosiIdRoute: typeof MsosiIdRoute
   MsosiCheckoutRoute: typeof MsosiCheckoutRoute
@@ -561,7 +673,7 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseRoute: BrowseRoute,
   DashboardRoute: DashboardRoute,
   FeedbackRoute: FeedbackRoute,
-  MarketRoute: MarketRoute,
+  MarketRoute: MarketRouteWithChildren,
   MeetTheFounderRoute: MeetTheFounderRoute,
   MsosiRoute: MsosiRouteWithChildren,
   OrdersRoute: OrdersRoute,

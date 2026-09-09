@@ -1,25 +1,47 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import { canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/meet-the-founder")({
   head: () => ({
     meta: [
-      { title: "Meet the Founder — MUST Market" },
+      { title: "Meet Hassani Mfwangavo, Founder of MUST Market" },
       {
         name: "description",
         content:
-          "The story behind MUST Market, the student-built marketplace for Mbeya University of Science and Technology.",
+          "The story behind MUST Market, the student-built marketplace and campus food service for Mbeya University of Science and Technology.",
       },
-      { property: "og:title", content: "Meet the Founder — MUST Market" },
+      { property: "og:title", content: "Meet Hassani Mfwangavo, Founder of MUST Market" },
       {
         property: "og:description",
         content: "Why a MUST student built a marketplace for campus.",
       },
-      { property: "og:url", content: "https://must-campus-swap.lovable.app/meet-the-founder" },
+      { property: "og:type", content: "profile" },
+      { property: "og:url", content: canonical("/meet-the-founder") },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [
-      { rel: "canonical", href: "https://must-campus-swap.lovable.app/meet-the-founder" },
+    links: [{ rel: "canonical", href: canonical("/meet-the-founder") }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: "Hassani Mfwangavo",
+          jobTitle: "Founder",
+          url: canonical("/meet-the-founder"),
+          worksFor: {
+            "@type": "Organization",
+            name: "MUST Market",
+            url: canonical("/"),
+          },
+          affiliation: {
+            "@type": "CollegeOrUniversity",
+            name: "Mbeya University of Science and Technology",
+          },
+        }),
+      },
     ],
   }),
   component: MeetTheFounder,
@@ -64,7 +86,7 @@ function MeetTheFounder() {
         <div className="absolute bottom-0 inset-x-0 text-center px-4 pb-4 flex flex-col items-center space-y-2">
           <div className="flex items-center gap-1.5 justify-center">
             <h1 className="text-2xl font-bold tracking-tight text-white drop-shadow-md">
-              Hassani Mfwangavo
+              Hassani Mfwangavo<span className="sr-only"> — Founder of MUST Market</span>
             </h1>
             {/* Nembo ya Verified ya Bluu kama ya Benji */}
             <svg className="h-5 w-5 text-blue-500 fill-current drop-shadow-md" viewBox="0 0 20 20">

@@ -10,6 +10,15 @@ import { isCurrentUserAdmin } from "@/lib/admin";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
+const NAV_LINKS = [
+  { label: "Marketplace", to: "/market" as const },
+  { label: "Electronics", to: "/market/electronics" as const },
+  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
+  { label: "Books", to: "/market/books-stationery" as const },
+  { label: "Msosi Fasta", to: "/msosi" as const },
+  { label: "Founder", to: "/meet-the-founder" as const },
+];
+
 export function Navbar() {
   const query = useSearchQuery();
   const { user } = useAuthUser();
@@ -90,14 +99,14 @@ export function Navbar() {
         </div>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {categories.slice(0, 3).map((c) => (
-            <a
-              key={c.slug}
-              href={`/#browse`}
+          {NAV_LINKS.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
               className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
             >
-              {categoryLabel(c.dbName).replace("\n", " ")}
-            </a>
+              {l.label}
+            </Link>
           ))}
         </nav>
 

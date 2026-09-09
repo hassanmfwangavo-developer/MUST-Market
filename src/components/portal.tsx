@@ -58,7 +58,7 @@ export function Portal() {
             Soko la kuaminika la wanafunzi wa MUST
           </span>
           <h1 className="mb-2 text-2xl font-extrabold leading-snug tracking-tight text-slate-900 sm:text-3xl">
-            Karibu <span style={{ color: "#1B5E3A" }}>MUST Market</span>
+            <span style={{ color: "#1B5E3A" }}>MUST Market</span> for Mbeya University Students
           </h1>
           <p className="mb-4 text-sm font-medium text-slate-600">
             Chagua huduma uipendayo kuanza

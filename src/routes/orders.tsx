@@ -14,6 +14,7 @@ import { formatTsh } from "@/lib/menu";
 export const Route = createFileRoute("/orders")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, follow" },
       { title: "Recent Orders – MUST Food Fasta" },
       {
         name: "description",
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/orders")({
       },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://must-campus-swap.lovable.app/orders" }],
+    links: [{ rel: "canonical", href: "https://www.mustmarket.store/orders" }],
   }),
   component: OrdersPage,
 });
