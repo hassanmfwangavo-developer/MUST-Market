@@ -52,7 +52,20 @@ const SOCIAL_LINKS = [
 
 type FooterLink = {
   label: string;
-  to: "/browse" | "/sell" | "/msosi" | "/orders" | "/meet-the-founder" | "/feedback" | "/market";
+  to:
+    | "/browse"
+    | "/sell"
+    | "/msosi"
+    | "/orders"
+    | "/meet-the-founder"
+    | "/feedback"
+    | "/market"
+    | "/market/electronics"
+    | "/market/rooms-gheto"
+    | "/market/books-stationery"
+    | "/market/used-items"
+    | "/privacy"
+    | "/terms";
   search?: { category: string };
 };
 
@@ -145,11 +158,10 @@ export function Footer() {
           </div>
 
           {/* Link columns */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
             <FooterLinkColumn title="Marketplace" links={MARKETPLACE_LINKS} />
             <FooterLinkColumn title="Msosi Fasta" links={MSOSI_LINKS} />
             <FooterLinkColumn title="Company" links={COMPANY_LINKS} />
-            <FooterLinkColumn title="Blogs" links={BLOG_LINKS} />
           </div>
         </div>
       </div>
