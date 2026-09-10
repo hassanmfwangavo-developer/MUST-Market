@@ -245,6 +245,7 @@ export type Database = {
         Row: {
           addons: Json
           category: string
+          cook_phone: string | null
           created_at: string
           day_badge: string | null
           delivery_fee: number
@@ -263,6 +264,7 @@ export type Database = {
         Insert: {
           addons?: Json
           category?: string
+          cook_phone?: string | null
           created_at?: string
           day_badge?: string | null
           delivery_fee?: number
@@ -281,6 +283,7 @@ export type Database = {
         Update: {
           addons?: Json
           category?: string
+          cook_phone?: string | null
           created_at?: string
           day_badge?: string | null
           delivery_fee?: number
