@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Allow Vercel serverless function up to 30 seconds execution time
-export const maxDuration = 30;
+// Allow Vercel serverless function up to 90 seconds execution time
+export const maxDuration = 90;
 
 const CREATE_ORDER_URL =
   "https://api.sonicpesa.com/api/v1/payment/create_order";
@@ -98,10 +98,10 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             );
           }
 
-          // 2. Poll Order Status every 2.5 seconds (up to 8 times = ~20 seconds max)
-          const maxRetries = 8;
+          // 2. Poll Order Status every 3 seconds (30 retries x 3s = 90 seconds total)
+          const maxRetries = 30;
           for (let i = 0; i < maxRetries; i++) {
-            await sleep(2500); // Wait 2.5 seconds before checking
+            await sleep(3000); // Wait 3 seconds before checking
 
             const statusRes = await fetch(ORDER_STATUS_URL, {
               method: "POST",
@@ -146,11 +146,11 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             }
           }
 
-          // If timeout reached without confirmation
+          // If 90 seconds timeout reached without confirmation
           return jsonResponse(
             {
               error:
-                "Muda wa kuingiza PIN umeisha au malipo yanachukua muda. Kama umeshalipa, kagua oda yako baadaye.",
+                "Muda wa kuingiza PIN umeisha au malipo yanachukua muda. Kama umeshalipa,nitaarifu sasa.",
             },
             400
           );
