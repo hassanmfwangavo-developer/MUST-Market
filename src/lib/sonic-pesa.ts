@@ -63,6 +63,7 @@ export async function initiateSonicPesaPayment(
         customerName: input.customerName.trim(),
         buyerEmail: input.buyerEmail?.trim() || undefined,
         description: input.description ?? "Msosi Fasta Food Order",
+        orderDetails: input.orderDetails,
       }),
     });
 
