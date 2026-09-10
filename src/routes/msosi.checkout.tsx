@@ -102,6 +102,7 @@ function MsosiCheckout() {
   const [area, setArea] = useState(DELIVERY_AREAS[0]);
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   // Discounts are never persisted — they only exist for this navigation.
   const claimedPercent = !locationState?.name ? 0 : (locationState?.discountPercent ?? 0);
@@ -271,11 +272,14 @@ function MsosiCheckout() {
         <button
           type="button"
           aria-label="Help"
+          onClick={() => setHelpOpen(true)}
           className="grid h-10 w-10 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100"
         >
           <HelpCircle className="h-5 w-5" />
         </button>
       </header>
+
+      <CheckoutHelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
 
       {/* ===================== TWO-COLUMN LAYOUT ===================== */}
       <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10 md:pb-12">
