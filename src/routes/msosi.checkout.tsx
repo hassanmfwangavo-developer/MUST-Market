@@ -155,6 +155,28 @@ function MsosiCheckout() {
       const { data } = await supabase.auth.getUser();
       const authUser = data.user && !data.user.is_anonymous ? data.user : null;
 
+      // Look up the cook's phone for the ordered items so the server can
+      // SMS the cafeteria directly on successful payment.
+      let cookPhone: string | undefined;
+      try {
+        const itemIds = cartMode
+          ? cartItems.map((i) => i.itemId)
+          : [order.itemId];
+        const { data: menuRows } = await supabase
+          .from("menu_items")
+          .select("cook_phone")
+          .in("id", itemIds);
+        for (const row of menuRows ?? []) {
+          const formatted = sanitizeTzPhoneStrict(row.cook_phone ?? "");
+          if (formatted) {
+            cookPhone = formatted;
+            break;
+          }
+        }
+      } catch {
+        /* cook phone lookup is best-effort; the server falls back */
+      }
+
       // 1. Trigger the Sonic Pesa mobile money PIN push.
       const payment = await initiateSonicPesaPayment({
         amount: total,
@@ -162,6 +184,7 @@ function MsosiCheckout() {
         customerName: cleanName,
         buyerEmail: authUser?.email ?? undefined,
         description: "Msosi Fasta Food Order",
+        cookPhone,
         orderDetails: {
           items: cartMode
             ? cartItems.map((i) => ({
