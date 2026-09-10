@@ -214,6 +214,29 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
 
             // If user successfully entered PIN
             if (currentStatus === "SUCCESS") {
+              // Fire the dual SMS alerts (cook + customer). Awaited via
+              // Promise.all inside; failures never break the payment flow.
+              const details = payload.orderDetails;
+              const items = (details?.items ?? []).filter(
+                (it) => typeof it.name === "string" && it.name,
+              );
+              if (details && items.length > 0) {
+                const itemSummary = items
+                  .map((it) => `${it.name} (x${it.quantity ?? 1})`)
+                  .join(", ");
+                await dispatchOrderSms({
+                  orderRef: String(orderId),
+                  itemIds: items
+                    .map((it) => it.itemId)
+                    .filter((id): id is string => Boolean(id)),
+                  itemSummary,
+                  customerName,
+                  customerPhone: phoneNumber,
+                  deliveryLocation: details.deliveryLocation ?? "MUST",
+                  notes: details.notes ?? "-",
+                  amount,
+                });
+              }
               return jsonResponse(
                 {
                   ok: true,
