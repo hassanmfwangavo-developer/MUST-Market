@@ -17,6 +17,8 @@ export type SonicPesaRequest = {
   customerName: string;
   buyerEmail?: string; // user email; server falls back to a default
   description?: string;
+  /** Cook/cafeteria phone for SMS alerts (fetched client-side from menu data). */
+  cookPhone?: string;
   /** Order details used by the server to dispatch SMS alerts on success. */
   orderDetails?: {
     items: SonicPesaOrderItem[];
@@ -63,6 +65,7 @@ export async function initiateSonicPesaPayment(
         customerName: input.customerName.trim(),
         buyerEmail: input.buyerEmail?.trim() || undefined,
         description: input.description ?? "Msosi Fasta Food Order",
+        cookPhone: input.cookPhone?.trim() || undefined,
         orderDetails: input.orderDetails,
       }),
     });
