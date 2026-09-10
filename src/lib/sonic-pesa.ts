@@ -5,12 +5,24 @@
 
 import { sanitizeTzPhoneStrict } from "./formatters";
 
+export type SonicPesaOrderItem = {
+  itemId: string;
+  name: string;
+  quantity: number;
+};
+
 export type SonicPesaRequest = {
   amount: number;
   phoneNumber: string; // raw user input; sanitized here
   customerName: string;
   buyerEmail?: string; // user email; server falls back to a default
   description?: string;
+  /** Order details used by the server to dispatch SMS alerts on success. */
+  orderDetails?: {
+    items: SonicPesaOrderItem[];
+    deliveryLocation: string;
+    notes?: string;
+  };
 };
 
 export type SonicPesaResult = {
@@ -51,6 +63,7 @@ export async function initiateSonicPesaPayment(
         customerName: input.customerName.trim(),
         buyerEmail: input.buyerEmail?.trim() || undefined,
         description: input.description ?? "Msosi Fasta Food Order",
+        orderDetails: input.orderDetails,
       }),
     });
 

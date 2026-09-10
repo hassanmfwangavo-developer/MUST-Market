@@ -14,7 +14,101 @@ type SonicPesaPayload = {
   customerName?: string;
   buyerEmail?: string;
   description?: string;
+  orderDetails?: {
+    items?: { itemId?: string; name?: string; quantity?: number }[];
+    deliveryLocation?: string;
+    notes?: string;
+  };
 };
+
+// Normalize any Tanzanian phone input to 255XXXXXXXXX.
+function formatTzPhone(input: string): string | null {
+  const digits = (input ?? "").replace(/\D/g, "");
+  if (!digits) return null;
+  let normalized = digits;
+  if (normalized.startsWith("0")) normalized = "255" + normalized.slice(1);
+  else if (!normalized.startsWith("255") && normalized.length === 9) {
+    normalized = "255" + normalized;
+  }
+  if (normalized.length !== 12 || !normalized.startsWith("255")) return null;
+  return normalized;
+}
+
+// Dispatch a single SMS via the Messaging Service API V2.
+async function sendSms(to: string, text: string): Promise<void> {
+  const token = process.env["SMS_API_TOKEN"];
+  if (!token) {
+    console.warn("[SMS] SMS_API_TOKEN missing — skipping SMS dispatch.");
+    return;
+  }
+  const senderId = process.env["SMS_SENDER_ID"] || "ORDER";
+  const res = await fetch(
+    "https://messaging-service.co.tz/api/sms/v2/text/single",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({ from: senderId, to, text }),
+    },
+  );
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    console.error(`[SMS] Dispatch to ${to} failed (${res.status}): ${body}`);
+  }
+}
+
+// Look up the cook phone for the ordered items and fire both SMS alerts.
+async function dispatchOrderSms(opts: {
+  orderRef: string;
+  itemIds: string[];
+  itemSummary: string;
+  customerName: string;
+  customerPhone: string;
+  deliveryLocation: string;
+  notes: string;
+  amount: number;
+}): Promise<void> {
+  try {
+    const { supabaseAdmin } = await import(
+      "@/integrations/supabase/client.server"
+    );
+    let cookPhone: string | null = null;
+    if (opts.itemIds.length > 0) {
+      const { data } = await supabaseAdmin
+        .from("menu_items")
+        .select("cook_phone")
+        .in("id", opts.itemIds);
+      for (const row of data ?? []) {
+        const formatted = formatTzPhone(row.cook_phone ?? "");
+        if (formatted) {
+          cookPhone = formatted;
+          break;
+        }
+      }
+    }
+
+    const cookMessage =
+      `[MUST MARKET] ODA MPYA! #${opts.orderRef}: ${opts.itemSummary}. ` +
+      `Mteja: ${opts.customerName} (${opts.customerPhone}). ` +
+      `Mahali: ${opts.deliveryLocation}. Maelekezo: ${opts.notes}. ` +
+      `Jumla: TSh ${opts.amount} (IMELIPWA).`;
+
+    const customerMessage =
+      `Asante kwa kutumia MUST Market! Oda yako #${opts.orderRef} ` +
+      `(${opts.itemSummary}) imepokelewa. Namba ya Mpishi: ${cookPhone ?? "0674044676"}. ` +
+      `Msaada: 0674044676.`;
+
+    const dispatches: Promise<void>[] = [sendSms(opts.customerPhone, customerMessage)];
+    if (cookPhone) dispatches.push(sendSms(cookPhone, cookMessage));
+    await Promise.all(dispatches);
+  } catch (err) {
+    // SMS failures must never break the payment response.
+    console.error("[SMS] Order SMS dispatch failed:", err);
+  }
+}
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -120,6 +214,29 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
 
             // If user successfully entered PIN
             if (currentStatus === "SUCCESS") {
+              // Fire the dual SMS alerts (cook + customer). Awaited via
+              // Promise.all inside; failures never break the payment flow.
+              const details = payload.orderDetails;
+              const items = (details?.items ?? []).filter(
+                (it) => typeof it.name === "string" && it.name,
+              );
+              if (details && items.length > 0) {
+                const itemSummary = items
+                  .map((it) => `${it.name} (x${it.quantity ?? 1})`)
+                  .join(", ");
+                await dispatchOrderSms({
+                  orderRef: String(orderId),
+                  itemIds: items
+                    .map((it) => it.itemId)
+                    .filter((id): id is string => Boolean(id)),
+                  itemSummary,
+                  customerName,
+                  customerPhone: phoneNumber,
+                  deliveryLocation: details.deliveryLocation ?? "MUST",
+                  notes: details.notes ?? "-",
+                  amount,
+                });
+              }
               return jsonResponse(
                 {
                   ok: true,

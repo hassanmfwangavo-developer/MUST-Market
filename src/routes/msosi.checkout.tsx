@@ -162,6 +162,22 @@ function MsosiCheckout() {
         customerName: cleanName,
         buyerEmail: authUser?.email ?? undefined,
         description: "Msosi Fasta Food Order",
+        orderDetails: {
+          items: cartMode
+            ? cartItems.map((i) => ({
+                itemId: i.itemId,
+                name: i.name,
+                quantity: i.quantity,
+              }))
+            : [
+                {
+                  itemId: order.itemId,
+                  name: order.name,
+                  quantity: order.quantity,
+                },
+              ],
+          deliveryLocation: `${area}, ${room.trim()}`,
+        },
       });
       if (!payment.ok) {
         toast.error(payment.message ?? "Payment request failed.");
