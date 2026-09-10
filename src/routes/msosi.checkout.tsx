@@ -20,6 +20,7 @@ import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
+import { CheckoutHelpModal } from "@/components/checkout-help-modal";
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
