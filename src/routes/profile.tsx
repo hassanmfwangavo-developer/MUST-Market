@@ -70,7 +70,6 @@ function ProfilePage() {
 
   useEffect(() => {
     setOrigin(window.location.origin);
-    setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const load = useCallback(async (userId: string) => {
