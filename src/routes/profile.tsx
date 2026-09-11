@@ -182,14 +182,7 @@ function ProfilePage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <h1 className="text-base font-bold text-slate-900 md:text-lg">My Account</h1>
-        <button
-          type="button"
-          onClick={toggleDark}
-          aria-label="Toggle theme"
-          className="grid h-10 w-10 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100"
-        >
-          {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </button>
+        <div className="w-10" aria-hidden="true" />
       </header>
 
       <main className="relative mx-auto max-w-2xl px-4 py-6 pb-24">
