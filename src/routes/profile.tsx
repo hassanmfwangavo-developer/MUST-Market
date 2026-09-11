@@ -5,10 +5,8 @@ import {
   Copy,
   Flame,
   LogOut,
-  Moon,
   Pencil,
   Sparkles,
-  Sun,
   User,
   X,
 } from "lucide-react";
@@ -72,7 +70,6 @@ function ProfilePage() {
 
   useEffect(() => {
     setOrigin(window.location.origin);
-    setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const load = useCallback(async (userId: string) => {
@@ -113,12 +110,6 @@ function ProfilePage() {
     await supabase.auth.signOut();
     toast.success("Logged out. See you again! 👋");
     void navigate({ to: "/", replace: true });
-  };
-
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
   };
 
   const referralLink = profile?.referral_code
@@ -191,14 +182,7 @@ function ProfilePage() {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <h1 className="text-base font-bold text-slate-900 md:text-lg">My Account</h1>
-        <button
-          type="button"
-          onClick={toggleDark}
-          aria-label="Toggle theme"
-          className="grid h-10 w-10 place-items-center rounded-full text-slate-500 transition-colors hover:bg-slate-100"
-        >
-          {dark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-        </button>
+        <div className="w-10" aria-hidden="true" />
       </header>
 
       <main className="relative mx-auto max-w-2xl px-4 py-6 pb-24">
