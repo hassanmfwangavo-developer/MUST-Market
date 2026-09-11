@@ -5,10 +5,8 @@ import {
   Copy,
   Flame,
   LogOut,
-  Moon,
   Pencil,
   Sparkles,
-  Sun,
   User,
   X,
 } from "lucide-react";
