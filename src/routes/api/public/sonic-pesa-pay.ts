@@ -14,6 +14,7 @@ type SonicPesaPayload = {
   customerName?: string;
   buyerEmail?: string;
   description?: string;
+  cookPhone?: string;
   orderDetails?: {
     items?: { itemId?: string; name?: string; quantity?: number }[];
     deliveryLocation?: string;
@@ -35,7 +36,7 @@ function formatTzPhone(input: string): string | null {
 }
 
 // Dispatch a single SMS via the Messaging Service API V2.
-async function sendSms(to: string, text: string): Promise<void> {
+async function sendSms(to: string, text: string, orderId: string): Promise<void> {
   const token = process.env["SMS_API_TOKEN"];
   if (!token) {
     console.warn("[SMS] SMS_API_TOKEN missing — skipping SMS dispatch.");
@@ -51,19 +52,27 @@ async function sendSms(to: string, text: string): Promise<void> {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ from: senderId, to, text }),
+      body: JSON.stringify({
+        from: senderId,
+        to,
+        text,
+        flash: 0,
+        reference: String(orderId),
+      }),
     },
   );
+  const apiResponse = await res.json().catch(() => null);
+  console.log("SMS Response:", JSON.stringify(apiResponse));
   if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    console.error(`[SMS] Dispatch to ${to} failed (${res.status}): ${body}`);
+    console.error(`[SMS] Dispatch to ${to} failed (${res.status})`);
   }
 }
 
-// Look up the cook phone for the ordered items and fire both SMS alerts.
+// Fire both SMS alerts (cook + customer) using the cook phone supplied by
+// the checkout payload. No database calls — fully self-contained.
 async function dispatchOrderSms(opts: {
   orderRef: string;
-  itemIds: string[];
+  cookPhone: string;
   itemSummary: string;
   customerName: string;
   customerPhone: string;
@@ -72,23 +81,8 @@ async function dispatchOrderSms(opts: {
   amount: number;
 }): Promise<void> {
   try {
-    const { supabaseAdmin } = await import(
-      "@/integrations/supabase/client.server"
-    );
-    let cookPhone: string | null = null;
-    if (opts.itemIds.length > 0) {
-      const { data } = await supabaseAdmin
-        .from("menu_items")
-        .select("cook_phone")
-        .in("id", opts.itemIds);
-      for (const row of data ?? []) {
-        const formatted = formatTzPhone(row.cook_phone ?? "");
-        if (formatted) {
-          cookPhone = formatted;
-          break;
-        }
-      }
-    }
+    const cookPhone =
+      formatTzPhone(opts.cookPhone) ?? "255674044676";
 
     const cookMessage =
       `[MUST MARKET] ODA MPYA! #${opts.orderRef}: ${opts.itemSummary}. ` +
@@ -98,12 +92,13 @@ async function dispatchOrderSms(opts: {
 
     const customerMessage =
       `Asante kwa kutumia MUST Market! Oda yako #${opts.orderRef} ` +
-      `(${opts.itemSummary}) imepokelewa. Namba ya Mpishi: ${cookPhone ?? "0674044676"}. ` +
+      `(${opts.itemSummary}) imepokelewa. Namba ya Mpishi: ${cookPhone}. ` +
       `Msaada: 0674044676.`;
 
-    const dispatches: Promise<void>[] = [sendSms(opts.customerPhone, customerMessage)];
-    if (cookPhone) dispatches.push(sendSms(cookPhone, cookMessage));
-    await Promise.all(dispatches);
+    await Promise.all([
+      sendSms(cookPhone, cookMessage, opts.orderRef),
+      sendSms(opts.customerPhone, customerMessage, opts.orderRef),
+    ]);
   } catch (err) {
     // SMS failures must never break the payment response.
     console.error("[SMS] Order SMS dispatch failed:", err);
