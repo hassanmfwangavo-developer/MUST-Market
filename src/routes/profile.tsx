@@ -45,6 +45,8 @@ type ProfileRow = {
   hostel: string | null;
   current_streak: number;
   reward_points: number;
+  referral_code: string | null;
+  referral_count: number;
 };
 
 const HOSTELS = [
@@ -79,7 +81,7 @@ function ProfilePage() {
       const [{ data: p }, { data: refs }] = await Promise.all([
         supabase
           .from("profiles")
-          .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points")
+          .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points, referral_code, referral_count")
           .eq("id", userId)
           .maybeSingle(),
         supabase.from("referrals").select("order_counted").eq("inviter_id", userId),
@@ -87,8 +89,8 @@ function ProfilePage() {
       setProfile((p as ProfileRow | null) ?? null);
       const rows = refs ?? [];
       setRefStats({
-        friends: rows.length,
-        pointsEarned: rows.filter((r) => r.order_counted).length * 50,
+        friends: (p as ProfileRow | null)?.referral_count ?? rows.length,
+        pointsEarned: ((p as ProfileRow | null)?.referral_count ?? rows.length) * 50,
       });
     } catch {
       toast.error("Could not load your details. Please try again.");
@@ -119,7 +121,11 @@ function ProfilePage() {
     document.documentElement.classList.toggle("dark", next);
   };
 
-  const referralLink = user ? `${origin}/msosi?ref=${user.id}` : `${origin}/msosi`;
+  const referralLink = profile?.referral_code
+    ? `${origin}/?ref=${profile.referral_code}`
+    : user
+      ? `${origin}/?ref=${user.id}`
+      : origin;
 
   const copyReferral = async () => {
     try {
@@ -270,7 +276,7 @@ function ProfilePage() {
               </h3>
               <p className="mt-1 text-sm text-slate-500">
                 You earn <span className="font-bold text-slate-700">50 points</span> when a friend
-                places their first order.
+                signs up with your link.
               </p>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl bg-slate-50 p-3 text-center ring-1 ring-slate-200">

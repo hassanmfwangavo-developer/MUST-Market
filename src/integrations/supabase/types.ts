@@ -469,7 +469,10 @@ export type Database = {
           hostel: string | null
           id: string
           is_verified_student: boolean
+          last_login_date: string | null
           last_order_date: string | null
+          referral_code: string | null
+          referral_count: number
           referred_by: string | null
           reward_points: number
           updated_at: string
@@ -484,7 +487,10 @@ export type Database = {
           hostel?: string | null
           id: string
           is_verified_student?: boolean
+          last_login_date?: string | null
           last_order_date?: string | null
+          referral_code?: string | null
+          referral_count?: number
           referred_by?: string | null
           reward_points?: number
           updated_at?: string
@@ -499,7 +505,10 @@ export type Database = {
           hostel?: string | null
           id?: string
           is_verified_student?: boolean
+          last_login_date?: string | null
           last_order_date?: string | null
+          referral_code?: string | null
+          referral_count?: number
           referred_by?: string | null
           reward_points?: number
           updated_at?: string
@@ -655,6 +664,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_referral_code: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

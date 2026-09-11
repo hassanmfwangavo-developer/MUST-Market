@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { claimReferral } from "@/lib/rewards.functions";
+import { claimReferral, touchLoginStreak } from "@/lib/rewards.functions";
 import { captureReferralFromUrl, clearStoredReferral, getStoredReferral } from "@/lib/referral";
 
 let open = false;
@@ -69,6 +69,16 @@ function tryClaimReferral() {
     });
 }
 
+/** Daily login streak — safe to call on every session load (same-day = no-op). */
+let streakTouched = false;
+function tryTouchStreak() {
+  if (streakTouched) return;
+  streakTouched = true;
+  void touchLoginStreak({ data: undefined }).catch(() => {
+    streakTouched = false;
+  });
+}
+
 if (typeof window !== "undefined") {
   captureReferralFromUrl();
   supabase.auth.getUser().then(({ data }) => {
@@ -77,7 +87,10 @@ if (typeof window !== "undefined") {
     initialized = true;
     emitUser();
     // Already-signed-in visitor arriving via a referral link.
-    if (user) tryClaimReferral();
+    if (user) {
+      tryClaimReferral();
+      tryTouchStreak();
+    }
   });
   supabase.auth.onAuthStateChange((event, session) => {
     const u = session?.user;
@@ -87,6 +100,7 @@ if (typeof window !== "undefined") {
     if (event === "SIGNED_IN" && user) {
       void upsertProfile(user);
       tryClaimReferral();
+      tryTouchStreak();
     }
   });
 }
