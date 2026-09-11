@@ -112,12 +112,6 @@ function ProfilePage() {
     void navigate({ to: "/", replace: true });
   };
 
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-  };
-
   const referralLink = profile?.referral_code
     ? `${origin}/?ref=${profile.referral_code}`
     : user
