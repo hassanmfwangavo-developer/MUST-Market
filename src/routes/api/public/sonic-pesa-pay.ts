@@ -221,9 +221,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
                   .join(", ");
                 await dispatchOrderSms({
                   orderRef: String(orderId),
-                  itemIds: items
-                    .map((it) => it.itemId)
-                    .filter((id): id is string => Boolean(id)),
+                  cookPhone: payload.cookPhone ?? "",
                   itemSummary,
                   customerName,
                   customerPhone: phoneNumber,
