@@ -1,11 +1,11 @@
 const KEY = "mm_referral";
 
-/** Stores a `?ref=<userId>` URL param so it survives until sign-up/sign-in. */
+/** Stores a `?ref=<code|userId>` URL param so it survives until sign-up/sign-in. */
 export function captureReferralFromUrl() {
   if (typeof window === "undefined") return;
   try {
     const ref = new URLSearchParams(window.location.search).get("ref");
-    if (ref && /^[0-9a-f-]{36}$/i.test(ref)) {
+    if (ref && /^[0-9a-zA-Z-]{6,40}$/.test(ref)) {
       window.localStorage.setItem(KEY, ref);
     }
   } catch {
