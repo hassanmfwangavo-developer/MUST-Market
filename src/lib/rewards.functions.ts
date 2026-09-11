@@ -28,3 +28,12 @@ export const claimReferral = createServerFn({ method: "POST" })
     const { claimReferralForUser } = await import("./rewards.server");
     return claimReferralForUser(supabaseAdmin, context.userId, data.inviterId);
   });
+
+/** Bumps the daily login streak for the signed-in user. */
+export const touchLoginStreak = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { touchLoginStreakForUser } = await import("./rewards.server");
+    return touchLoginStreakForUser(supabaseAdmin, context.userId);
+  });
