@@ -62,7 +62,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
-  const [dark, setDark] = useState(false);
+  
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ fullName: "", phone: "", hostel: "" });
@@ -305,32 +305,6 @@ function ProfilePage() {
                 </span>
                 <span className="text-xs text-slate-400">Name · Phone · Hostel</span>
               </button>
-              <div className="flex items-center justify-between px-5 py-4">
-                <span className="flex items-center gap-3 text-sm font-semibold text-slate-900">
-                  {dark ? (
-                    <Sun className="h-4 w-4 text-[#008542]" />
-                  ) : (
-                    <Moon className="h-4 w-4 text-[#008542]" />
-                  )}
-                  Dark mode
-                </span>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={dark}
-                  aria-label="Toggle dark mode"
-                  onClick={toggleDark}
-                  className={`relative h-6 w-11 rounded-full transition-colors ${
-                    dark ? "bg-[#008542]" : "bg-slate-300"
-                  }`}
-                >
-                  <span
-                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
-                      dark ? "left-[22px]" : "left-0.5"
-                    }`}
-                  />
-                </button>
-              </div>
               <button
                 type="button"
                 onClick={handleLogout}
