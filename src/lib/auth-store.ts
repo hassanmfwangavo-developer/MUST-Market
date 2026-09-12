@@ -80,6 +80,29 @@ function tryTouchStreak() {
   });
 }
 
+/** Brevo contact sync — fire-and-forget, once per user per browser (Brevo updateEnabled makes repeats safe). */
+const BREVO_SYNC_KEY = "mm_brevo_synced";
+function trySyncBrevo(u: User) {
+  try {
+    if (localStorage.getItem(BREVO_SYNC_KEY) === u.id) return;
+  } catch {
+    /* private mode — still attempt sync */
+  }
+  void syncBrevoContact({ data: undefined })
+    .then((r) => {
+      if (r.ok) {
+        try {
+          localStorage.setItem(BREVO_SYNC_KEY, u.id);
+        } catch {
+          /* ignore */
+        }
+      }
+    })
+    .catch(() => {
+      /* retry on next sign-in */
+    });
+}
+
 if (typeof window !== "undefined") {
   captureReferralFromUrl();
   supabase.auth.getUser().then(({ data }) => {
