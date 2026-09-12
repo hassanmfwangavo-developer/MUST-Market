@@ -192,7 +192,11 @@ function MeetTheFounder() {
           <div className="space-y-2">
             <h2 className="text-lg font-bold text-teal-300 tracking-wide">Kuhusu MUST Market 💙</h2>
             <p className="text-sm text-teal-50/90 leading-relaxed font-normal">
-              MUST Market ilizaliwa kutokana na uhitaji halisi wa wanafunzi kupata vifaa vya masomo,
+              MUST Market ilizaliwa kutokana na uhitaji halisi wa wanafunzi kupata vifaa vya masomo,bidhaa na huduma muhimu kwa urahisi ndani ya mazingira ya chuo.
+              Leo, tunajenga zaidi ya marketplace. MUST Market inalenga kuwa sehemu moja ambapo mwanafunzi anaweza kununua na kuuza bidhaa, kupata huduma, na kupitia
+              Msosi Fasta, kuagiza chakula na kukifikishiwa hadi mlangoni.Tunatumia teknolojia kurahisisha maisha ya mwanafunzi na kujenga mfumo wa huduma unaolenga 
+              mahitaji halisi ya jamii ya MUST
+
               
               
             </p>
@@ -201,9 +205,9 @@ function MeetTheFounder() {
           <div className="space-y-2 pt-1">
             <h2 className="text-lg font-bold text-teal-300 tracking-wide">Maono Yetu</h2>
             <p className="text-sm text-teal-50/90 leading-relaxed font-normal">
-              Kurahisisha maisha ya chuo kwa kuondoa vikwazo vya kupata mahitaji muhimu, na kuwapa
-              wanafunzi nafasi ya kujitengenezea kipato kupitia biashara zao ndogo ndogo wakiwa
-              campus.
+              Jukwaa linalorahisisha maisha ya chuo kwa kuwaunganisha wanafunzi na bidhaa,
+              huduma na fursa wanazohitaji kila siku.
+
             </p>
           </div>
 
@@ -221,7 +225,7 @@ function MeetTheFounder() {
 
         {/* Kitufe cha Buy Me A Coffee chenye Interactive Smiling Animation */}
         <a
-          href="https://snippe.me/p/5sPlR2bcsm"
+          href="https://snippe.me/pay/hassanimfwangavo"
           target="_blank"
           rel="noopener noreferrer"
           className="w-full bg-[#0b4744]/50 border border-teal-500/30 hover:border-teal-400 py-3.5 rounded-full text-xs font-semibold text-teal-200 hover:text-white transition-all transform active:scale-95 shadow-md flex items-center justify-center gap-2"
