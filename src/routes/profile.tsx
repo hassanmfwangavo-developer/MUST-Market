@@ -62,7 +62,7 @@ function ProfilePage() {
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
-  const [dark, setDark] = useState(false);
+  
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ fullName: "", phone: "", hostel: "" });
