@@ -145,7 +145,7 @@ export function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 aria-label="Email address for newsletter"
-                className="h-11 border-white/10 bg-white/5 text-white placeholder:text-slate-500 focus-visible:border-emerald-500/50 focus-visible:ring-emerald-500/30"
+                className="className="h-11 border-slate-300 bg-white text-black placeholder:text-slate-500 focus-visible:border-emerald-500/50 focus-visible:ring-emerald-500/30"
               />
               <Button
                 type="submit"
