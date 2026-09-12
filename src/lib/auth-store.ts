@@ -88,7 +88,13 @@ function trySyncBrevo(u: User) {
   } catch {
     /* private mode — still attempt sync */
   }
-  void syncBrevoContact({ data: undefined })
+  const meta = (u.user_metadata ?? {}) as Record<string, unknown>;
+  const fullName =
+    (typeof meta.full_name === "string" && meta.full_name) ||
+    (typeof meta.name === "string" && meta.name) ||
+    "";
+  const firstName = fullName.trim().split(/\s+/)[0] || "Mwanafunzi";
+  void syncBrevoContact({ data: { email: u.email ?? "", firstName } })
     .then((r) => {
       if (r.ok) {
         try {
