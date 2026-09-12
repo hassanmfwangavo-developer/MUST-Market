@@ -114,6 +114,7 @@ if (typeof window !== "undefined") {
     if (user) {
       tryClaimReferral();
       tryTouchStreak();
+      trySyncBrevo(user);
     }
   });
   supabase.auth.onAuthStateChange((event, session) => {
@@ -125,6 +126,7 @@ if (typeof window !== "undefined") {
       void upsertProfile(user);
       tryClaimReferral();
       tryTouchStreak();
+      trySyncBrevo(user);
     }
   });
 }
