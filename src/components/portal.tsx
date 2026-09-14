@@ -67,7 +67,7 @@ export function Portal() {
             className="rounded-full px-3.5 py-1 text-[11px] font-semibold"
             style={{ background: "#E4F2E7", color: "#1B5E3A" }}
           >
-            800+ wanafunzi · Verified
+            1000+ wanafunzi · Verified
           </span>
         </div>
 
@@ -94,7 +94,7 @@ export function Portal() {
             </svg>
             <h2 className="text-lg font-bold">Msosi Fasta</h2>
             <p className="mb-4 mt-1 text-xs leading-relaxed text-white/90">
-              Msosi utokeapo cafeterias, mlangoni kwa dk chache
+              Msosi utokeapo migahawani, mlangoni kwa dk chache
             </p>
             <span
               className="flex w-full items-center justify-center rounded-xl bg-white py-2.5 text-sm font-bold shadow-xs"
@@ -111,7 +111,7 @@ export function Portal() {
             style={{ background: "linear-gradient(160deg, #6FAE7F 0%, #2E7A46 100%)" }}
           >
             <span className="absolute right-4 top-4 rounded-full bg-white/25 px-2.5 py-1 text-[11px] font-semibold backdrop-blur">
-              800+ wanafunzi
+              1000+ wanafunzi
             </span>
             <svg viewBox="0 0 120 90" className="mb-3 h-24 w-28" aria-hidden>
               <g className="mm-bob" stroke="#FFF" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none">
