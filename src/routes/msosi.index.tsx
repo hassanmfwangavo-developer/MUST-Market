@@ -581,19 +581,19 @@ function MsosiFasta() {
                 Kuza biashara yako ya chakula au pata kipato cha ziada kwa kuwafikia wanafunzi
                 wote wa MUST!
               </p>
-              <button
-                type="button"
-                onClick={() => setPartnerOpen(true)}
-                className="mt-5 inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-bold text-accent-foreground shadow-md transition-transform hover:scale-[1.02]"
-              >
-                Jisajili Kama Partner 🚀
-              </button>
             </div>
 
             <div className="flex flex-col items-center gap-4 sm:items-end">
               <div className="grid h-20 w-20 place-items-center rounded-2xl bg-primary-soft text-primary sm:h-24 sm:w-24">
                 <Store className="h-9 w-9 sm:h-10 sm:w-10" />
               </div>
+              <button
+                type="button"
+                onClick={() => setPartnerOpen(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-bold text-accent-foreground shadow-md transition-transform hover:scale-[1.02]"
+              >
+                Jisajili Kama Partner 🚀
+              </button>
             </div>
           </div>
         </div>
