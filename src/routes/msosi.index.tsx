@@ -629,6 +629,8 @@ function MsosiFasta() {
 
       <HelpDrawer open={helpOpen} onClose={() => setHelpOpen(false)} />
 
+      {partnerOpen && <PartnerModal onClose={() => setPartnerOpen(false)} />}
+
       {booking && (
         <BookingModal
           itemId={booking.id}
