@@ -13,6 +13,7 @@ import {
   Star,
   ChevronRight,
   Utensils,
+  Store,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
@@ -567,21 +568,34 @@ function MsosiFasta() {
 
       {/* ============ PARTNER WITH US ============ */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 pb-8">
-        <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#008542] to-emerald-500 p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
-            Je, una Mgahawa, Cafeteria, au Unataka Kufanya Delivery?
-          </h2>
-          <p className="mt-2 max-w-2xl text-sm font-medium text-white/90">
-            Kuza biashara yako ya chakula au pata kipato cha ziada kwa kuwafikia wanafunzi wote wa
-            MUST!
-          </p>
-          <button
-            type="button"
-            onClick={() => setPartnerOpen(true)}
-            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#006e36] shadow-xs transition-transform hover:scale-[1.03]"
-          >
-            Jisajili Kama Partner 🚀
-          </button>
+        <div className="overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-card sm:p-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+            <div className="min-w-0 flex-1">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-bold text-accent-foreground">
+                🚀 MUST Market Partners
+              </span>
+              <h2 className="mt-3 text-xl font-extrabold leading-tight tracking-tight text-foreground sm:text-2xl">
+                Je, una Mgahawa, Cafeteria, au Unataka Kufanya Delivery?
+              </h2>
+              <p className="mt-2 max-w-xl text-sm font-medium text-muted-foreground">
+                Kuza biashara yako ya chakula au pata kipato cha ziada kwa kuwafikia wanafunzi
+                wote wa MUST!
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center gap-4 sm:items-end">
+              <div className="grid h-20 w-20 place-items-center rounded-2xl bg-primary-soft text-primary sm:h-24 sm:w-24">
+                <Store className="h-9 w-9 sm:h-10 sm:w-10" />
+              </div>
+              <button
+                type="button"
+                onClick={() => setPartnerOpen(true)}
+                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-bold text-accent-foreground shadow-md transition-transform hover:scale-[1.02]"
+              >
+                Jisajili Kama Partner 🚀
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
