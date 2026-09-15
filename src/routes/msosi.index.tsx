@@ -563,6 +563,26 @@ function MsosiFasta() {
         </section>
       )}
 
+      {/* ============ PARTNER WITH US ============ */}
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pb-8">
+        <div className="overflow-hidden rounded-3xl bg-gradient-to-r from-[#008542] to-emerald-500 p-6 shadow-sm sm:p-8">
+          <h2 className="text-xl font-extrabold leading-tight tracking-tight text-white sm:text-2xl">
+            Je, una Mgahawa, Cafeteria, au Unataka Kufanya Delivery?
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm font-medium text-white/90">
+            Kuza biashara yako ya chakula au pata kipato cha ziada kwa kuwafikia wanafunzi wote wa
+            MUST!
+          </p>
+          <button
+            type="button"
+            onClick={() => setPartnerOpen(true)}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-[#006e36] shadow-xs transition-transform hover:scale-[1.03]"
+          >
+            Jisajili Kama Partner 🚀
+          </button>
+        </div>
+      </section>
+
       {/* ============ HOW IT WORKS + REFERRAL ============ */}
       <HowItWorks />
       <ReferralCard />
