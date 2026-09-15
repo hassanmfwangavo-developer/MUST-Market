@@ -20,7 +20,7 @@ import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
-import { CheckoutHelpModal } from "@/components/checkout-help-modal";
+import { HelpDrawer } from "@/components/help-drawer";
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
@@ -318,7 +318,18 @@ function MsosiCheckout() {
         </button>
       </header>
 
-      <CheckoutHelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
+      <HelpDrawer
+        open={helpOpen}
+        onClose={() => setHelpOpen(false)}
+        orderContext={{
+          itemName: cartMode ? cartItems.map((i) => i.name).join(", ") : order.name,
+          total,
+          customerName: fullName.trim() || undefined,
+          phone: phone ? sanitizeTzPhoneStrict(phone) || undefined : undefined,
+          area,
+          room: room.trim() || undefined,
+        }}
+      />
 
       {/* ===================== TWO-COLUMN LAYOUT ===================== */}
       <div className="relative mx-auto flex max-w-5xl flex-col gap-8 px-4 py-6 pb-28 md:flex-row md:py-10 md:pb-12">

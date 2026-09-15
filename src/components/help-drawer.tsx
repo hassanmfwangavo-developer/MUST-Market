@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, LifeBuoy, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const SUPPORT_WHATSAPP = "255674044676";
 
@@ -10,24 +11,71 @@ const QUICK_ISSUES = [
   "Something else",
 ];
 
+type OrderContext = {
+  orderId?: string;
+  itemName?: string;
+  total?: number;
+  customerName?: string;
+  phone?: string;
+  area?: string;
+  room?: string;
+};
+
 export function HelpDrawer({
   open,
   onClose,
+  orderContext,
 }: {
   open: boolean;
   onClose: () => void;
+  orderContext?: OrderContext;
 }) {
   const [issue, setIssue] = useState<string>(QUICK_ISSUES[0]);
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
+  const formatTsh = (n?: number) =>
+    n === undefined ? undefined : `TSh ${n.toLocaleString("en-TZ")}`;
+
   const send = () => {
-    const text = encodeURIComponent(
-      `Hello MUST Food Fasta support 👋\n\nIssue: ${issue}\nDetails: ${
-        message.trim() || "—"
-      }`,
-    );
+    const lines = [
+      "Hello MUST Food Fasta support 👋",
+      "",
+      `Issue: ${issue}`,
+      `Details: ${message.trim() || "—"}`,
+    ];
+
+    if (orderContext) {
+      const orderLines = [
+        orderContext.itemName ? `Order: ${orderContext.itemName}` : undefined,
+        formatTsh(orderContext.total) ? `Total: ${formatTsh(orderContext.total)}` : undefined,
+        orderContext.customerName ? `Name: ${orderContext.customerName}` : undefined,
+        orderContext.phone ? `Phone: +${orderContext.phone}` : undefined,
+        orderContext.area && orderContext.room
+          ? `Location: ${orderContext.area}, ${orderContext.room}`
+          : orderContext.area
+            ? `Location: ${orderContext.area}`
+            : undefined,
+        orderContext.orderId ? `Order ID: ${orderContext.orderId}` : undefined,
+      ].filter(Boolean) as string[];
+
+      if (orderLines.length > 0) {
+        lines.push("", ...orderLines);
+      }
+    }
+
+    const text = encodeURIComponent(lines.join("\n"));
+    toast.success("Opening WhatsApp support...");
     window.open(`https://wa.me/${SUPPORT_WHATSAPP}?text=${text}`, "_blank");
     onClose();
   };
