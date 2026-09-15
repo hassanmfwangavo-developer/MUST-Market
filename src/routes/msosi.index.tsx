@@ -575,7 +575,7 @@ function MsosiFasta() {
                 🚀 MUST Market Partners
               </span>
               <h2 className="mt-3 text-xl font-extrabold leading-tight tracking-tight text-foreground sm:text-2xl">
-                Je, una Mgahawa, Cafeteria, au Unataka Kufanya Delivery?
+                Je, una Mgahawa,  au Unataka Kufanya Delivery?
               </h2>
               <p className="mt-2 max-w-xl text-sm font-medium text-muted-foreground">
                 Kuza biashara yako ya chakula au pata kipato cha ziada kwa kuwafikia wanafunzi
