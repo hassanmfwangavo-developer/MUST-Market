@@ -61,6 +61,7 @@ type FooterLink = {
     | "/meet-the-founder"
     | "/feedback"
     | "/market"
+    | "/services"
     | "/market/electronics"
     | "/market/rooms-gheto"
     | "/market/books-stationery"
