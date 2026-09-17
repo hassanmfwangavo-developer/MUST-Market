@@ -1,8 +1,7 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   BadgeCheck,
-  BriefcaseBusiness,
   Clock3,
   MapPin,
   MessageCircle,
@@ -490,7 +489,7 @@ function ProviderSignupDialog({ open, onClose }: { open: boolean; onClose: () =>
   );
 }
 
-function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-semibold text-foreground">{label}{required ? " *" : ""}</span>

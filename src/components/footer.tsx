@@ -21,6 +21,7 @@ const MSOSI_LINKS = [
 
 const COMPANY_LINKS = [
   { label: "Marketplace Home", to: "/market" as const },
+  { label: "Service Mall", to: "/services" as const },
   { label: "Meet the Founder", to: "/meet-the-founder" as const },
   { label: "Contact & Feedback", to: "/feedback" as const },
   { label: "Privacy Policy", to: "/privacy" as const },
@@ -60,6 +61,7 @@ type FooterLink = {
     | "/meet-the-founder"
     | "/feedback"
     | "/market"
+    | "/services"
     | "/market/electronics"
     | "/market/rooms-gheto"
     | "/market/books-stationery"

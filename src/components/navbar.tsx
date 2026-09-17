@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
   { label: "Books", to: "/market/books-stationery" as const },
   { label: "Msosi Fasta", to: "/msosi" as const },
+  { label: "Service Mall", to: "/services" as const },
   { label: "Founder", to: "/meet-the-founder" as const },
 ];
 
