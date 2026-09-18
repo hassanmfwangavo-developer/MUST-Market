@@ -572,7 +572,7 @@ function MsosiFasta() {
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
             <div className="min-w-0 flex-1">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-bold text-accent-foreground">
-                🚀 MUST Market Partners
+                MUST Market Partners
               </span>
               <h2 className="mt-3 text-xl font-extrabold leading-tight tracking-tight text-foreground sm:text-2xl">
                 Je, una Mgahawa,  au Unataka Kufanya Delivery?
@@ -592,7 +592,7 @@ function MsosiFasta() {
                 onClick={() => setPartnerOpen(true)}
                 className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-bold text-accent-foreground shadow-md transition-transform hover:scale-[1.02]"
               >
-                Jisajili Kama Partner 🚀
+                Jisajili Kama Partner
               </button>
             </div>
           </div>
