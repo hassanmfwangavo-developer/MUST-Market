@@ -29,7 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { canonical } from "@/lib/site";
-import { useIsAdmin } from "@/lib/admin";
+import { isCurrentUserAdmin } from "@/lib/admin";
 import {
   fetchActiveCampusServices,
   formatServicePrice,
@@ -73,7 +73,10 @@ function ServicesPage() {
   const [category, setCategory] = useState<string>("all");
   const [selected, setSelected] = useState<CampusService | null>(null);
   const [joinOpen, setJoinOpen] = useState(false);
-  const isAdmin = useIsAdmin();
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ["is-current-user-admin"],
+    queryFn: isCurrentUserAdmin,
+  });
 
   const { data: providers = [], isLoading } = useQuery({
     queryKey: ["campus-services"],

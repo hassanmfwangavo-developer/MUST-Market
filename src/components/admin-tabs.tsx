@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Images, LayoutGrid, ShieldCheck, UtensilsCrossed } from "lucide-react";
+import { Images, LayoutGrid, ShieldCheck, UtensilsCrossed, Wrench } from "lucide-react";
 
 const TABS = [
   { to: "/admin", label: "Overview", icon: ShieldCheck, exact: true },
   { to: "/admin/banners", label: "Banners", icon: Images, exact: false },
   { to: "/admin/categories", label: "Categories", icon: LayoutGrid, exact: false },
   { to: "/admin/food", label: "Food & Vendors", icon: UtensilsCrossed, exact: false },
+  { to: "/admin/services", label: "Service Mall", icon: Wrench, exact: false },
 ] as const;
 
 /** Sub-navigation shared by every screen inside the admin console. */
