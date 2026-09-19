@@ -13,6 +13,7 @@ export interface MenuItem {
   description: string;
   delivery_fee: number;
   day_badge?: string | null;
+  is_available: boolean;
 }
 
 /** Realistic fallback dataset so the feed renders instantly. */
@@ -31,6 +32,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     description:
       "Golden crispy fries served with spiced grilled chicken and fresh kachumbari salad.",
     delivery_fee: 1000,
+    is_available: true,
   },
   {
     id: "chicken-biryani",
@@ -46,6 +48,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     description:
       "Chicken biryani cooked with coastal spices, fragrant rice and a side salad.",
     delivery_fee: 1000,
+    is_available: true,
   },
   {
     id: "wali-nyama-maharage",
@@ -61,6 +64,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     description:
       "Steamed white rice with beef or beans, rich gravy and leafy greens.",
     delivery_fee: 1000,
+    is_available: true,
   },
   {
     id: "chips-mayai-extra",
@@ -76,6 +80,7 @@ export const FALLBACK_MENU: MenuItem[] = [
     description:
       "Special chips omelette made with three eggs, kachumbari and homemade chilli.",
     delivery_fee: 1000,
+    is_available: true,
   },
 ];
 
@@ -99,6 +104,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     is_popular: Boolean(row.is_popular),
     description: String(row.description ?? ""),
     delivery_fee: Number(row.delivery_fee ?? DEFAULT_DELIVERY_FEE),
+    is_available: row.is_available === false ? false : true,
     day_badge: (row.day_badge as string) ?? null,
   };
 }
