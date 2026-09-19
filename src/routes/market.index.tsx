@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
 import { MarketHome } from "@/components/market-home";
 import { ProductShelves } from "@/components/product-shelves";
+import { ServiceMallBanner } from "@/components/service-mall-banner";
 import { HowItWorks } from "@/components/how-it-works";
 import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
@@ -37,6 +38,7 @@ function Market() {
       <Navbar />
       <main className="flex-1">
         <MarketHome />
+        <ServiceMallBanner />
         <ProductShelves />
 
         {/* Crawlable links to the permanent category pages */}
