@@ -445,6 +445,37 @@ function FoodTab() {
                 <p className="text-xs text-muted-foreground">
                   ⭐ {item.rating.toFixed(1)} · {item.addons.length} add-ons
                 </p>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={item.is_available !== false}
+                  aria-label={`Availability for ${item.name}`}
+                  disabled={toggleAvailability.isPending}
+                  onClick={() =>
+                    toggleAvailability.mutate({ id: item.id, next: item.is_available === false })
+                  }
+                  className="mt-2 inline-flex items-center gap-2"
+                >
+                  <span
+                    className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+                      item.is_available !== false ? "bg-primary" : "bg-muted-foreground/40"
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-all ${
+                        item.is_available !== false ? "left-[1.125rem]" : "left-0.5"
+                      }`}
+                    />
+                  </span>
+                  <span
+                    className={`text-xs font-semibold ${
+                      item.is_available !== false ? "text-primary" : "text-destructive"
+                    }`}
+                  >
+                    {item.is_available !== false ? "In Stock" : "Kimeisha"}
+                  </span>
+                </button>
+
               </div>
               <div className="flex flex-col gap-1.5">
                 <button
