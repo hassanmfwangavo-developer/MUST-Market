@@ -90,32 +90,32 @@ const CARDS: {
   {
     key: "rider",
     icon: Bike,
-    emoji: "🛵",
+    emoji: "",
     title: "Delivery Rider (Msafirishaji)",
     summary:
       "Earn daily income delivering hot meals to hostels and blocks around MUST campus.",
     features: ["Flexible hours", "Smartphone order alerts", "Direct daily payouts"],
-    cta: "Apply as Rider 📲",
+    cta: "Apply as Rider ",
   },
   {
     key: "vendor",
     icon: UtensilsCrossed,
-    emoji: "🍲",
+    emoji: "",
     title: "Restaurant & Cafeteria Vendor",
     summary:
       "Expand your food business and reach thousands of hungry students daily without extra marketing costs.",
     features: ["Free vendor dashboard", "Live order management", '1-tap "Sold Out" controls'],
-    cta: "Register Restaurant 🍲",
+    cta: "Register Restaurant ",
   },
   {
     key: "service",
     icon: Wrench,
-    emoji: "🛠️",
+    emoji: "",
     title: "Campus Service Mall Vendor",
     summary:
       "List your phone/laptop repair, laundry, gheto cleaning, printing, or beauty services.",
     features: ["Verified provider badge", "Direct WhatsApp customer leads", "Full profile page"],
-    cta: "Join Service Mall 🛠️",
+    cta: "Join Service Mall ",
   },
 ];
 
@@ -246,7 +246,7 @@ function CareersPage() {
                 <Mail className="h-5 w-5" />
               </span>
               <h2 className="text-base font-semibold tracking-tight text-foreground">
-                Open Applications &amp; Skilled Services <span aria-hidden="true">📩</span>
+                Open Applications &amp; Skilled Services <span aria-hidden="true"></span>
               </h2>
             </div>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
