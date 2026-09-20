@@ -54,6 +54,7 @@ type FooterLink = {
     | "/sell"
     | "/msosi"
     | "/orders"
+    | "/careers"
     | "/meet-the-founder"
     | "/feedback"
     | "/market"
