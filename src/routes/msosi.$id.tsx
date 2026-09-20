@@ -107,6 +107,14 @@ function MsosiDetail() {
           />
         )}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" />
+        {dish.is_available === false && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/50">
+            <span className="rounded-full bg-slate-900/90 px-4 py-2 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg">
+              Kimeisha kwa Leo · Sold Out
+            </span>
+          </div>
+        )}
+
 
         <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
           <Link
@@ -237,7 +245,18 @@ function MsosiDetail() {
       </main>
 
       {/* ===================== FIXED BOTTOM ACTION BAR ===================== */}
-      {dish.day_badge ? (
+      {dish.is_available === false ? (
+        <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 p-4 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">
+          <button
+            type="button"
+            disabled
+            className="flex h-[48px] w-full cursor-not-allowed items-center justify-center rounded-full bg-slate-200 text-sm font-extrabold text-slate-500"
+          >
+            Kimeisha · Sold Out
+          </button>
+        </div>
+      ) : dish.day_badge ? (
+
         <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 p-4 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">
           <button
             type="button"
