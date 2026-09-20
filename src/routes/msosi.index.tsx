@@ -440,11 +440,21 @@ function MsosiFasta() {
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
-            {visible.map((food) => (
+            {visible.map((food) => {
+              const soldOut = food.is_available === false;
+              return (
               <article
                 key={food.id}
-                onClick={() => openDish(food.id)}
-                className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all hover:shadow-sm"
+                onClick={() => {
+                  if (soldOut) {
+                    toast.error("Kimeisha kwa Leo · Sold Out");
+                    return;
+                  }
+                  openDish(food.id);
+                }}
+                className={`group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs transition-all ${
+                  soldOut ? "cursor-not-allowed opacity-70" : "cursor-pointer hover:shadow-sm"
+                }`}
               >
                 <div className="relative aspect-square overflow-hidden bg-slate-100">
                   {food.image_url && (
@@ -453,8 +463,17 @@ function MsosiFasta() {
                       alt={food.name}
                       loading="lazy"
                       decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className={`h-full w-full object-cover transition-transform duration-700 ${
+                        soldOut ? "grayscale" : "group-hover:scale-105"
+                      }`}
                     />
+                  )}
+                  {soldOut && (
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/45">
+                      <span className="rounded-full bg-slate-900/90 px-3 py-1 text-center text-[10px] font-extrabold uppercase tracking-wide text-white shadow-md">
+                        Kimeisha kwa Leo · Sold Out
+                      </span>
+                    </div>
                   )}
                   <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold text-slate-900 shadow-xs backdrop-blur">
                     <Star className="h-2.5 w-2.5 fill-amber-400 text-amber-400" />
@@ -478,7 +497,16 @@ function MsosiFasta() {
                     <span className="text-xs font-extrabold text-[#008542] sm:text-sm">
                       {formatTsh(food.price)}
                     </span>
-                    {food.day_badge ? (
+                    {soldOut ? (
+                      <button
+                        type="button"
+                        disabled
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex h-8 shrink-0 cursor-not-allowed items-center justify-center rounded-full bg-slate-200 px-3 text-[11px] font-extrabold text-slate-500"
+                      >
+                        Kimeisha
+                      </button>
+                    ) : food.day_badge ? (
                       <button
                         type="button"
                         onClick={(e) => {
@@ -505,7 +533,9 @@ function MsosiFasta() {
                   </div>
                 </div>
               </article>
-            ))}
+              );
+            })}
+
           </div>
         )}
       </section>
