@@ -32,7 +32,7 @@ export const MARKET_CATEGORY_PAGES = {
     path: "/market/books-stationery",
     dbName: "Books/Stationery",
     title: "Books & Study Supplies | MUST Market",
-    heading: "Books & Study Supplies at MUST",
+    heading: " MUST Book Store",
     description:
       "Second-hand textbooks, notes, calculators and stationery for Mbeya University of Science and Technology courses.",
     intro:
