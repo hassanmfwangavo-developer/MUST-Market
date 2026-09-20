@@ -107,6 +107,14 @@ function MsosiDetail() {
           />
         )}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent" />
+        {dish.is_available === false && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/50">
+            <span className="rounded-full bg-slate-900/90 px-4 py-2 text-sm font-extrabold uppercase tracking-wide text-white shadow-lg">
+              Kimeisha kwa Leo · Sold Out
+            </span>
+          </div>
+        )}
+
 
         <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4">
           <Link
