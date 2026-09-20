@@ -286,7 +286,31 @@ function FoodTab() {
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-menu-items"] });
     queryClient.invalidateQueries({ queryKey: ["menu-items"] });
+    queryClient.invalidateQueries({ queryKey: ["menu_items"] });
   };
+
+  const toggleAvailability = useMutation({
+    mutationFn: async ({ id, next }: { id: string; next: boolean }) => {
+      const { error } = await supabase
+        .from("menu_items")
+        .update({ is_available: next })
+        .eq("id", id);
+      if (error) {
+        throw new Error(
+          error.code === "42501"
+            ? "Update failed: administrator access could not be verified."
+            : error.message,
+        );
+      }
+      return next;
+    },
+    onSuccess: (next) => {
+      toast.success(next ? "In Stock" : "Chakula kwa sasa Kimeisha");
+      invalidate();
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
 
   const save = useMutation({
     mutationFn: async (d: FoodDraft) => {
