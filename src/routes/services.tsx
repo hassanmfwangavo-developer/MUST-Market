@@ -183,7 +183,7 @@ function ServicesPage() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="max-w-2xl">
                 <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 px-3 py-1 text-xs font-semibold text-primary-foreground">
-                  <Sparkles className="h-3.5 w-3.5" /> Grow with MUST Market
+                  <Sparkles className="h-3.5 w-3.5" />Grow with MUST Market
                 </div>
                 <h2 className="mt-4 text-2xl font-bold text-primary-foreground sm:text-3xl">
                   Unatoa Huduma Kampasi au Ni Fundi?
@@ -197,7 +197,7 @@ function ServicesPage() {
                 onClick={() => setJoinOpen(true)}
                 className="h-12 shrink-0 rounded-xl bg-accent px-6 font-bold text-accent-foreground shadow-amber hover:bg-accent/90"
               >
-                Orodhesha Biashara Yako 🚀
+                Orodhesha Biashara Yako 
               </Button>
             </div>
           </div>
