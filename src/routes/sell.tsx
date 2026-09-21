@@ -103,9 +103,9 @@ export const Route = createFileRoute("/sell")({
         property: "og:description",
         content: "List an item on MUST Market in under a minute.",
       },
-      { property: "og:url", content: "https://www.mustmarket.store/sell" },
+      { property: "og:url", content: "https://mustmarket.store/sell" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/sell" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/sell" }],
   }),
   component: SellPage,
 });

@@ -28,9 +28,9 @@ export const Route = createFileRoute("/browse")({
         property: "og:description",
         content: "Every active listing from MUST students, in one place.",
       },
-      { property: "og:url", content: "https://www.mustmarket.store/browse" },
+      { property: "og:url", content: "https://mustmarket.store/browse" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/browse" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/browse" }],
   }),
   component: BrowsePage,
 });

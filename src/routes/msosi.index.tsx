@@ -43,9 +43,9 @@ export const Route = createFileRoute("/msosi/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://www.mustmarket.store/msosi" },
+      { property: "og:url", content: "https://mustmarket.store/msosi" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/msosi" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/msosi" }],
   }),
   component: MsosiFasta,
 });

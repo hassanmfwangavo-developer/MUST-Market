@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
         content:
           "The MUST Market portal — buy & sell student gear in the marketplace, or order food fast with Msosi Fasta.",
       },
-      { property: "og:url", content: "https://www.mustmarket.store/" },
+      { property: "og:url", content: "https://mustmarket.store/" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -28,17 +28,17 @@ export const Route = createFileRoute("/")({
             {
               "@type": "Organization",
               name: "MUST Market",
-              url: "https://www.mustmarket.store/",
+              url: "https://mustmarket.store/",
               description:
                 "Multi-service portal for students at Mbeya University of Science and Technology: a peer-to-peer marketplace and Msosi Fasta express food delivery.",
             },
             {
               "@type": "WebSite",
               name: "MUST Market",
-              url: "https://www.mustmarket.store/",
+              url: "https://mustmarket.store/",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://www.mustmarket.store/browse?q={search_term_string}",
+                target: "https://mustmarket.store/browse?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             },

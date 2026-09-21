@@ -66,7 +66,7 @@ function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ fullName: "", phone: "", hostel: "" });
-  const [origin, setOrigin] = useState("https://www.mustmarket.store");
+  const [origin, setOrigin] = useState("https://mustmarket.store");
 
   useEffect(() => {
     setOrigin(window.location.origin);

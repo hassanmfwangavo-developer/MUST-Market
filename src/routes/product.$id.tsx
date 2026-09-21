@@ -31,10 +31,10 @@ export const Route = createFileRoute("/product/$id")({
         { property: "og:title", content: product.title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "product" },
-        { property: "og:url", content: `https://www.mustmarket.store/product/${product.id}` },
+        { property: "og:url", content: `https://mustmarket.store/product/${product.id}` },
         ...(product.image ? [{ property: "og:image", content: product.image }] : []),
       ],
-      links: [{ rel: "canonical", href: `https://www.mustmarket.store/product/${product.id}` }],
+      links: [{ rel: "canonical", href: `https://mustmarket.store/product/${product.id}` }],
       scripts: [
         {
           type: "application/ld+json",
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/product/$id")({
                 product.status === "sold"
                   ? "https://schema.org/SoldOut"
                   : "https://schema.org/InStock",
-              url: `https://www.mustmarket.store/product/${product.id}`,
+              url: `https://mustmarket.store/product/${product.id}`,
             },
           }),
         },

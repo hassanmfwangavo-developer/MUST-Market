@@ -1,5 +1,5 @@
 /** The single official public origin for MUST Market. */
-export const SITE_URL = "https://www.mustmarket.store";
+export const SITE_URL = "https://mustmarket.store";
 
 /** Absolute self-referencing URL for a path such as "/market/electronics". */
 export function canonical(path = "/"): string {

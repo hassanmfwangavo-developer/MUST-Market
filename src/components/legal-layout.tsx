@@ -121,10 +121,10 @@ export function LegalEmail() {
 export function LegalDomain() {
   return (
     <a
-      href="https://www.mustmarket.store"
+      href="https://mustmarket.store"
       className="font-medium text-primary underline underline-offset-4 hover:opacity-80"
     >
-      www.mustmarket.store
+      mustmarket.store
     </a>
   );
 }

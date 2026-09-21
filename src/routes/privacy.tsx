@@ -28,9 +28,9 @@ export const Route = createFileRoute("/privacy")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://www.mustmarket.store/privacy" },
+      { property: "og:url", content: "https://mustmarket.store/privacy" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/privacy" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/privacy" }],
   }),
   component: PrivacyPage,
 });
