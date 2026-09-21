@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "https://mustmarket.store";
+import { MARKET_CATEGORY_PAGES, SITE_URL } from "@/lib/site";
+
+const BASE_URL = SITE_URL;
 
 interface SitemapEntry {
   path: string;
@@ -9,20 +11,24 @@ interface SitemapEntry {
   priority?: string;
 }
 
+// Public, indexable routes only. Private/transactional routes
+// (/admin/*, /dashboard, /checkout, /profile, /orders, /browse) are excluded.
 const STATIC_ROUTES: SitemapEntry[] = [
   { path: "/", changefreq: "daily", priority: "1.0" },
-  { path: "/market", changefreq: "daily", priority: "0.9" },
   { path: "/msosi", changefreq: "daily", priority: "0.9" },
+  { path: "/market", changefreq: "daily", priority: "0.9" },
   { path: "/services", changefreq: "weekly", priority: "0.8" },
-  { path: "/careers", changefreq: "monthly", priority: "0.6" },
-  { path: "/orders", changefreq: "daily", priority: "0.7" },
-  { path: "/profile", changefreq: "weekly", priority: "0.6" },
   { path: "/sell", changefreq: "weekly", priority: "0.8" },
-  { path: "/browse", changefreq: "daily", priority: "0.8" },
+  { path: "/careers", changefreq: "monthly", priority: "0.7" },
+  { path: "/meet-the-founder", changefreq: "monthly", priority: "0.7" },
   { path: "/feedback", changefreq: "monthly", priority: "0.5" },
-  { path: "/meet-the-founder", changefreq: "monthly", priority: "0.5" },
-  { path: "/privacy", changefreq: "monthly", priority: "0.5" },
   { path: "/terms", changefreq: "monthly", priority: "0.5" },
+  { path: "/privacy", changefreq: "monthly", priority: "0.5" },
+  ...Object.values(MARKET_CATEGORY_PAGES).map((c) => ({
+    path: c.path,
+    changefreq: "weekly" as const,
+    priority: "0.8",
+  })),
 ];
 
 export const Route = createFileRoute("/sitemap.xml")({
