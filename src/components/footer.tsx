@@ -4,6 +4,8 @@ import { ArrowRight, Facebook, Instagram } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { syncBrevoContact } from "@/lib/brevo.functions";
 
 const MARKETPLACE_LINKS = [
   { label: "Used Electronics", to: "/market/electronics" as const },
@@ -107,16 +109,39 @@ function TwitterIcon({ className }: { className?: string }) {
 
 export function Footer() {
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubscribe(e: FormEvent) {
+  async function handleSubscribe(e: FormEvent) {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || trimmed.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       toast.error("Please enter a valid email address.");
       return;
     }
-    toast.success("Thanks for subscribing! We'll keep you in the loop.");
-    setEmail("");
+
+    setSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from("newsletter_subscribers")
+        .insert({ email: trimmed, source: "footer" });
+
+      // 23505 = already subscribed; treat as success.
+      if (error && error.code !== "23505") {
+        console.error("[Newsletter] Insert failed:", error);
+        toast.error("Could not subscribe right now. Please try again.");
+        return;
+      }
+
+      // Fire-and-forget Brevo contact sync — never blocks the UI.
+      void syncBrevoContact({ data: { email: trimmed, firstName: "Mwanafunzi" } }).catch(() => {
+        /* subscriber is saved; Brevo can retry later */
+      });
+
+      toast.success("Thanks for subscribing! We'll keep you in the loop.");
+      setEmail("");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -148,9 +173,10 @@ export function Footer() {
               />
               <Button
                 type="submit"
+                disabled={submitting}
                 className="h-11 w-full bg-[#008542] text-white hover:bg-[#006e36] sm:w-auto sm:px-6"
               >
-                Subscribe
+                {submitting ? "Subscribing…" : "Subscribe"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
