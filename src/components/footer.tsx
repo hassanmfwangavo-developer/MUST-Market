@@ -173,9 +173,10 @@ export function Footer() {
               />
               <Button
                 type="submit"
+                disabled={submitting}
                 className="h-11 w-full bg-[#008542] text-white hover:bg-[#006e36] sm:w-auto sm:px-6"
               >
-                Subscribe
+                {submitting ? "Subscribing…" : "Subscribe"}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
