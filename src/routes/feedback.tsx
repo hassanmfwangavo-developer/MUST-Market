@@ -22,9 +22,9 @@ export const Route = createFileRoute("/feedback")({
         content:
           "Help us improve MUST Market. Your feedback goes straight to the team on WhatsApp.",
       },
-      { property: "og:url", content: "https://www.mustmarket.store/feedback" },
+      { property: "og:url", content: "https://mustmarket.store/feedback" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/feedback" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/feedback" }],
   }),
   component: FeedbackPage,
 });

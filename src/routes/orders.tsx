@@ -28,7 +28,7 @@ export const Route = createFileRoute("/orders")({
       },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/orders" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/orders" }],
   }),
   component: OrdersPage,
 });

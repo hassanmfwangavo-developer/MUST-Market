@@ -27,9 +27,9 @@ export const Route = createFileRoute("/terms")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:url", content: "https://www.mustmarket.store/terms" },
+      { property: "og:url", content: "https://mustmarket.store/terms" },
     ],
-    links: [{ rel: "canonical", href: "https://www.mustmarket.store/terms" }],
+    links: [{ rel: "canonical", href: "https://mustmarket.store/terms" }],
   }),
   component: TermsPage,
 });
