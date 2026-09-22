@@ -104,6 +104,23 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [voucher, setVoucher] = useState<UserVoucher | null>(null);
+  const [useSodaVoucher, setUseSodaVoucher] = useState(false);
+
+  // Free-soda voucher available to the signed-in student.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
+      if (!uid) return;
+      const v = await fetchActiveVoucher(uid).catch(() => null);
+      if (!cancelled) setVoucher(v);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Discounts are never persisted — they only exist for this navigation.
   const claimedPercent = !locationState?.name ? 0 : (locationState?.discountPercent ?? 0);
