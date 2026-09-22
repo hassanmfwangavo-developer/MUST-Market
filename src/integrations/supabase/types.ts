@@ -713,6 +713,47 @@ export type Database = {
         }
         Relationships: []
       }
+      user_vouchers: {
+        Row: {
+          created_at: string
+          discount_type: string
+          id: string
+          is_used: boolean
+          order_id: string | null
+          used_at: string | null
+          user_id: string
+          voucher_code: string
+        }
+        Insert: {
+          created_at?: string
+          discount_type?: string
+          id?: string
+          is_used?: boolean
+          order_id?: string | null
+          used_at?: string | null
+          user_id: string
+          voucher_code: string
+        }
+        Update: {
+          created_at?: string
+          discount_type?: string
+          id?: string
+          is_used?: boolean
+          order_id?: string | null
+          used_at?: string | null
+          user_id?: string
+          voucher_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_vouchers_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "food_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendors: {
         Row: {
           created_at: string

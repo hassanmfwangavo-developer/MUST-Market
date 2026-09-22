@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { sanitizeTzPhone } from "@/lib/phone";
+import { fetchVouchers, voucherLabel, type UserVoucher } from "@/lib/vouchers";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -60,6 +61,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const { user, initialized } = useAuthUser();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
+  const [vouchers, setVouchers] = useState<UserVoucher[]>([]);
   const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
   
@@ -75,15 +77,17 @@ function ProfilePage() {
   const load = useCallback(async (userId: string) => {
     setLoading(true);
     try {
-      const [{ data: p }, { data: refs }] = await Promise.all([
+      const [{ data: p }, { data: refs }, vouchersList] = await Promise.all([
         supabase
           .from("profiles")
           .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points, referral_code, referral_count")
           .eq("id", userId)
           .maybeSingle(),
         supabase.from("referrals").select("order_counted").eq("inviter_id", userId),
+        fetchVouchers(userId).catch(() => [] as UserVoucher[]),
       ]);
       setProfile((p as ProfileRow | null) ?? null);
+      setVouchers(vouchersList);
       const rows = refs ?? [];
       setRefStats({
         friends: (p as ProfileRow | null)?.referral_count ?? rows.length,
@@ -111,6 +115,10 @@ function ProfilePage() {
     toast.success("Logged out. See you again! 👋");
     void navigate({ to: "/", replace: true });
   };
+
+  const activeVouchers = vouchers.filter((v) => !v.is_used);
+  const usedVouchers = vouchers.filter((v) => v.is_used);
+  const sodaProgress = refStats.friends % 3;
 
   const referralLink = profile?.referral_code
     ? `${origin}/?ref=${profile.referral_code}`
@@ -256,12 +264,28 @@ function ProfilePage() {
             {/* ===== REFERRAL CARD ===== */}
             <section className="mt-4 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-2xs">
               <h3 className="text-base font-bold text-slate-900">
-                Invite Roommates, Get Free Soda! 🥤
+                Invite 3 Roommates, Get a Free Soda 🥤
               </h3>
               <p className="mt-1 text-sm text-slate-500">
-                You earn <span className="font-bold text-slate-700">50 points</span> when a friend
-                signs up with your link.
+                You earn <span className="font-bold text-slate-700">50 points</span> each time a
+                friend you invited completes their first order.
               </p>
+
+              {/* Progress to the next free soda */}
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+                  <span>{sodaProgress} / 3 invited</span>
+                  <span className="text-[#008542]">
+                    {3 - sodaProgress} more for a free soda
+                  </span>
+                </div>
+                <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full bg-[#008542] transition-all"
+                    style={{ width: `${(sodaProgress / 3) * 100}%` }}
+                  />
+                </div>
+              </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 <div className="rounded-2xl bg-slate-50 p-3 text-center ring-1 ring-slate-200">
                   <p className="text-base font-extrabold text-slate-900">{refStats.friends}</p>
@@ -290,6 +314,45 @@ function ProfilePage() {
                   Copy Link
                 </button>
               </div>
+            </section>
+
+            {/* ===== VOUCHERS ===== */}
+            <section className="mt-4 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-2xs">
+              <h3 className="text-base font-bold text-slate-900">My Rewards 🎁</h3>
+              {activeVouchers.length === 0 ? (
+                <p className="mt-1 text-sm text-slate-500">
+                  No vouchers yet — invite 3 roommates to unlock a free soda.
+                </p>
+              ) : (
+                <ul className="mt-3 space-y-2">
+                  {activeVouchers.map((v) => (
+                    <li
+                      key={v.id}
+                      className="flex items-center justify-between gap-3 rounded-2xl bg-emerald-50 p-3 ring-1 ring-emerald-100"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-slate-900">
+                          {voucherLabel(v.discount_type)}
+                        </p>
+                        <p className="truncate text-[11px] font-medium text-slate-500">
+                          Code: {v.voucher_code}
+                        </p>
+                      </div>
+                      <Link
+                        to="/msosi"
+                        className="shrink-0 rounded-full bg-amber-500 px-4 py-2 text-xs font-bold text-slate-950 transition-colors hover:bg-amber-600"
+                      >
+                        Use at Checkout
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {usedVouchers.length > 0 && (
+                <p className="mt-3 text-xs text-slate-400">
+                  {usedVouchers.length} voucher{usedVouchers.length > 1 ? "s" : ""} already used.
+                </p>
+              )}
             </section>
 
             {/* ===== SETTINGS ===== */}

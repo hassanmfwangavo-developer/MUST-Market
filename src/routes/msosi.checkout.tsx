@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   HelpCircle,
@@ -20,6 +20,7 @@ import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
+import { fetchActiveVoucher, redeemVoucher, type UserVoucher } from "@/lib/vouchers";
 import { HelpDrawer } from "@/components/help-drawer";
 
 
@@ -103,6 +104,23 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [voucher, setVoucher] = useState<UserVoucher | null>(null);
+  const [useSodaVoucher, setUseSodaVoucher] = useState(false);
+
+  // Free-soda voucher available to the signed-in student.
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
+      if (!uid) return;
+      const v = await fetchActiveVoucher(uid).catch(() => null);
+      if (!cancelled) setVoucher(v);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Discounts are never persisted — they only exist for this navigation.
   const claimedPercent = !locationState?.name ? 0 : (locationState?.discountPercent ?? 0);
@@ -130,6 +148,7 @@ function MsosiCheckout() {
       ? Math.round((order.price * order.quantity * claimedPercent) / 100)
       : 0;
   const total = subtotal - discount + deliveryFee;
+  const voucherApplied = Boolean(voucher) && useSodaVoucher;
 
 
   const handleSonicPesaPayment = async () => {
@@ -215,23 +234,33 @@ function MsosiCheckout() {
       const uid = authUser?.id ?? null;
       let orderId: string | null = null;
       if (uid) {
+        const orderedItems: OrderItem[] = cartMode
+          ? [...cartItems]
+          : [
+              {
+                itemId: order.itemId,
+                name: order.name,
+                price: order.price,
+                quantity: order.quantity,
+                imageUrl: order.imageUrl || undefined,
+                vendorName: order.vendorName || undefined,
+                addSoda: order.addSoda,
+                deliveryFee: order.deliveryFee,
+              },
+            ];
+        // Free soda goes on the ticket for the cafeteria at zero cost.
+        if (voucherApplied) {
+          orderedItems.push({
+            itemId: "free-soda-voucher",
+            name: "Soda ya Bure (Free Soda Voucher 🥤)",
+            price: 0,
+            quantity: 1,
+          });
+        }
 
         orderId = await createOrder({
           userId: uid,
-          items: cartMode
-            ? cartItems
-            : [
-                {
-                  itemId: order.itemId,
-                  name: order.name,
-                  price: order.price,
-                  quantity: order.quantity,
-                  imageUrl: order.imageUrl || undefined,
-                  vendorName: order.vendorName || undefined,
-                  addSoda: order.addSoda,
-                  deliveryFee: order.deliveryFee,
-                },
-              ],
+          items: orderedItems,
           total,
           area,
           room: room.trim(),
@@ -252,6 +281,15 @@ function MsosiCheckout() {
           }
         } catch {
           /* rewards are best-effort */
+        }
+      }
+      // Burn the free-soda voucher now that the order exists.
+      if (voucherApplied && voucher) {
+        const redeemed = await redeemVoucher(voucher.id, orderId).catch(() => false);
+        if (redeemed) {
+          setVoucher(null);
+          setUseSodaVoucher(false);
+          toast.success("Free soda added to your order 🥤");
         }
       }
       clearPendingOffer();
@@ -430,6 +468,25 @@ function MsosiCheckout() {
                   {formatTsh(SODA_PRICE, "TSh")}
                 </span>
               </div>
+            )}
+
+            {voucher && (
+              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl bg-emerald-50 p-3 ring-1 ring-emerald-100">
+                <input
+                  type="checkbox"
+                  checked={useSodaVoucher}
+                  onChange={(e) => setUseSodaVoucher(e.target.checked)}
+                  className="h-5 w-5 shrink-0 accent-[#008542]"
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold text-slate-900">
+                    Redeem Free Soda 🥤
+                  </span>
+                  <span className="block truncate text-[11px] font-medium text-slate-500">
+                    Voucher {voucher.voucher_code} — added free to your order
+                  </span>
+                </span>
+              </label>
             )}
 
             <div className="mt-5 space-y-2 border-t border-dashed border-slate-200 pt-4 text-sm">
