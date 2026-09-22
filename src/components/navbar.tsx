@@ -43,11 +43,24 @@ export function Navbar() {
     let cancelled = false;
     if (!user) {
       setIsAdmin(false);
+      setRewards({ streak: 0, points: 0 });
       return;
     }
     void isCurrentUserAdmin().then((allowed) => {
       if (!cancelled) setIsAdmin(allowed);
     });
+    void supabase
+      .from("profiles")
+      .select("current_streak, reward_points")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || !data) return;
+        setRewards({
+          streak: data.current_streak ?? 0,
+          points: data.reward_points ?? 0,
+        });
+      });
     return () => {
       cancelled = true;
     };
