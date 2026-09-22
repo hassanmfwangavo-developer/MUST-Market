@@ -470,6 +470,25 @@ function MsosiCheckout() {
               </div>
             )}
 
+            {voucher && (
+              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-2xl bg-emerald-50 p-3 ring-1 ring-emerald-100">
+                <input
+                  type="checkbox"
+                  checked={useSodaVoucher}
+                  onChange={(e) => setUseSodaVoucher(e.target.checked)}
+                  className="h-5 w-5 shrink-0 accent-[#008542]"
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold text-slate-900">
+                    Redeem Free Soda 🥤
+                  </span>
+                  <span className="block truncate text-[11px] font-medium text-slate-500">
+                    Voucher {voucher.voucher_code} — added free to your order
+                  </span>
+                </span>
+              </label>
+            )}
+
             <div className="mt-5 space-y-2 border-t border-dashed border-slate-200 pt-4 text-sm">
               <div className="flex items-center justify-between text-slate-600">
                 <span>Subtotal</span>
