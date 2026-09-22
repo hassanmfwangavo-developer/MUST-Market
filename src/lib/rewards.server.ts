@@ -129,6 +129,7 @@ export async function applyOrderRewards(
     streak: 0,
     streakIncreased: false,
     referralBonusAwarded: false,
+    voucherIssued: false,
   };
 
   // Atomically claim the right to award this order.
@@ -178,8 +179,15 @@ export async function applyOrderRewards(
     })
     .eq("id", userId);
 
-  // Referral bonuses are settled at sign-up time (see claimReferralForUser).
-  return { pointsEarned, streak, streakIncreased, referralBonusAwarded: false };
+  // The inviter is rewarded on this user's FIRST completed order.
+  const referral = await settleReferralOnFirstOrder(admin, userId);
+  return {
+    pointsEarned,
+    streak,
+    streakIncreased,
+    referralBonusAwarded: referral.bonusAwarded,
+    voucherIssued: referral.voucherIssued,
+  };
 }
 
 /**
