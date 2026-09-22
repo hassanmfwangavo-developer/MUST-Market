@@ -148,6 +148,7 @@ function MsosiCheckout() {
       ? Math.round((order.price * order.quantity * claimedPercent) / 100)
       : 0;
   const total = subtotal - discount + deliveryFee;
+  const voucherApplied = Boolean(voucher) && useSodaVoucher;
 
 
   const handleSonicPesaPayment = async () => {
