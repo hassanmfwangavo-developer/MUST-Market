@@ -219,10 +219,12 @@ export async function claimReferralForUser(
     .maybeSingle();
   if (!inviter || inviter.id === userId) return { claimed: false };
 
+  // order_counted stays false until the invitee completes their first order,
+  // which is when the inviter earns points / referral_count / a voucher.
   const { error: refError } = await admin.from("referrals").insert({
     inviter_id: inviter.id,
     invited_id: userId,
-    order_counted: true,
+    order_counted: false,
   });
   if (refError) return { claimed: false }; // e.g. duplicate invited_id
 
@@ -233,15 +235,6 @@ export async function claimReferralForUser(
       reward_points: (profile.reward_points ?? 0) + REFERRAL_INVITEE_BONUS,
     })
     .eq("id", userId);
-
-  const inv = inviter as { reward_points: number; referral_count?: number };
-  await admin
-    .from("profiles")
-    .update({
-      reward_points: (inv.reward_points ?? 0) + REFERRAL_INVITER_BONUS,
-      referral_count: (inv.referral_count ?? 0) + 1,
-    } as never)
-    .eq("id", inviter.id);
 
   return { claimed: true };
 }
