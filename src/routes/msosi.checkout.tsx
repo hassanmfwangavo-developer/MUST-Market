@@ -283,6 +283,15 @@ function MsosiCheckout() {
           /* rewards are best-effort */
         }
       }
+      // Burn the free-soda voucher now that the order exists.
+      if (voucherApplied && voucher) {
+        const redeemed = await redeemVoucher(voucher.id, orderId).catch(() => false);
+        if (redeemed) {
+          setVoucher(null);
+          setUseSodaVoucher(false);
+          toast.success("Free soda added to your order 🥤");
+        }
+      }
       clearPendingOffer();
       if (cartMode) cart.clear();
       toast.success(
