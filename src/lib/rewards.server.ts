@@ -8,12 +8,76 @@ export const REFERRAL_INVITEE_BONUS = 10;
 
 type AdminClient = SupabaseClient<Database>;
 
+/** Referrals needed per free-soda voucher. */
+export const REFERRALS_PER_VOUCHER = 3;
+
 export type OrderRewardsResult = {
   pointsEarned: number;
   streak: number;
   streakIncreased: boolean;
   referralBonusAwarded: boolean;
+  voucherIssued: boolean;
 };
+
+function voucherCode(): string {
+  return `SODA-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+}
+
+/** Issues a free-soda voucher for every 3rd successful referral. */
+async function issueSodaVoucherIfEarned(
+  admin: AdminClient,
+  userId: string,
+  referralCount: number,
+): Promise<boolean> {
+  if (referralCount <= 0 || referralCount % REFERRALS_PER_VOUCHER !== 0) return false;
+  const { error } = await admin.from("user_vouchers").insert({
+    user_id: userId,
+    voucher_code: voucherCode(),
+    discount_type: "free_soda",
+  });
+  if (error) {
+    console.error("[Rewards] Voucher insert failed:", error.message);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Settles the referral that brought this user in, on their FIRST completed
+ * order: the inviter gets bonus points, +1 referral_count and, every third
+ * referral, a free-soda voucher. Idempotent via referrals.order_counted.
+ */
+async function settleReferralOnFirstOrder(
+  admin: AdminClient,
+  userId: string,
+): Promise<{ bonusAwarded: boolean; voucherIssued: boolean }> {
+  const { data: claimed } = await admin
+    .from("referrals")
+    .update({ order_counted: true })
+    .eq("invited_id", userId)
+    .eq("order_counted", false)
+    .select("inviter_id");
+  const inviterId = claimed?.[0]?.inviter_id;
+  if (!inviterId) return { bonusAwarded: false, voucherIssued: false };
+
+  const { data: inviter } = await admin
+    .from("profiles")
+    .select("reward_points, referral_count")
+    .eq("id", inviterId)
+    .maybeSingle();
+
+  const nextCount = (inviter?.referral_count ?? 0) + 1;
+  await admin
+    .from("profiles")
+    .update({
+      reward_points: (inviter?.reward_points ?? 0) + REFERRAL_INVITER_BONUS,
+      referral_count: nextCount,
+    } as never)
+    .eq("id", inviterId);
+
+  const voucherIssued = await issueSodaVoucherIfEarned(admin, inviterId, nextCount);
+  return { bonusAwarded: true, voucherIssued };
+}
 
 function utcDay(offsetDays = 0): string {
   const d = new Date();
