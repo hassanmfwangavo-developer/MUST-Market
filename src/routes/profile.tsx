@@ -77,15 +77,17 @@ function ProfilePage() {
   const load = useCallback(async (userId: string) => {
     setLoading(true);
     try {
-      const [{ data: p }, { data: refs }] = await Promise.all([
+      const [{ data: p }, { data: refs }, vouchersList] = await Promise.all([
         supabase
           .from("profiles")
           .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points, referral_code, referral_count")
           .eq("id", userId)
           .maybeSingle(),
         supabase.from("referrals").select("order_counted").eq("inviter_id", userId),
+        fetchVouchers(userId).catch(() => [] as UserVoucher[]),
       ]);
       setProfile((p as ProfileRow | null) ?? null);
+      setVouchers(vouchersList);
       const rows = refs ?? [];
       setRefStats({
         friends: (p as ProfileRow | null)?.referral_count ?? rows.length,
