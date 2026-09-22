@@ -116,6 +116,10 @@ function ProfilePage() {
     void navigate({ to: "/", replace: true });
   };
 
+  const activeVouchers = vouchers.filter((v) => !v.is_used);
+  const usedVouchers = vouchers.filter((v) => v.is_used);
+  const sodaProgress = refStats.friends % 3;
+
   const referralLink = profile?.referral_code
     ? `${origin}/?ref=${profile.referral_code}`
     : user
