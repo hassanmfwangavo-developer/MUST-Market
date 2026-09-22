@@ -233,23 +233,33 @@ function MsosiCheckout() {
       const uid = authUser?.id ?? null;
       let orderId: string | null = null;
       if (uid) {
+        const orderedItems: OrderItem[] = cartMode
+          ? [...cartItems]
+          : [
+              {
+                itemId: order.itemId,
+                name: order.name,
+                price: order.price,
+                quantity: order.quantity,
+                imageUrl: order.imageUrl || undefined,
+                vendorName: order.vendorName || undefined,
+                addSoda: order.addSoda,
+                deliveryFee: order.deliveryFee,
+              },
+            ];
+        // Free soda goes on the ticket for the cafeteria at zero cost.
+        if (voucherApplied) {
+          orderedItems.push({
+            itemId: "free-soda-voucher",
+            name: "Soda ya Bure (Free Soda Voucher 🥤)",
+            price: 0,
+            quantity: 1,
+          });
+        }
 
         orderId = await createOrder({
           userId: uid,
-          items: cartMode
-            ? cartItems
-            : [
-                {
-                  itemId: order.itemId,
-                  name: order.name,
-                  price: order.price,
-                  quantity: order.quantity,
-                  imageUrl: order.imageUrl || undefined,
-                  vendorName: order.vendorName || undefined,
-                  addSoda: order.addSoda,
-                  deliveryFee: order.deliveryFee,
-                },
-              ],
+          items: orderedItems,
           total,
           area,
           room: room.trim(),
