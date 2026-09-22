@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { sanitizeTzPhone } from "@/lib/phone";
+import { fetchVouchers, voucherLabel, type UserVoucher } from "@/lib/vouchers";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -60,6 +61,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const { user, initialized } = useAuthUser();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
+  const [vouchers, setVouchers] = useState<UserVoucher[]>([]);
   const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
   
