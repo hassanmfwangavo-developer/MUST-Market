@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   HelpCircle,
@@ -20,6 +20,7 @@ import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
+import { fetchActiveVoucher, redeemVoucher, type UserVoucher } from "@/lib/vouchers";
 import { HelpDrawer } from "@/components/help-drawer";
 
 
