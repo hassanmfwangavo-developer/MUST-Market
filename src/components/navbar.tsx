@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
@@ -27,6 +27,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
