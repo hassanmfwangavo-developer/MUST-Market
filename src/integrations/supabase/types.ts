@@ -204,6 +204,7 @@ export type Database = {
           total_tsh: number
           updated_at: string
           user_id: string | null
+          vendor_id: string | null
         }
         Insert: {
           created_at?: string
@@ -221,6 +222,7 @@ export type Database = {
           total_tsh?: number
           updated_at?: string
           user_id?: string | null
+          vendor_id?: string | null
         }
         Update: {
           created_at?: string
@@ -238,8 +240,17 @@ export type Database = {
           total_tsh?: number
           updated_at?: string
           user_id?: string | null
+          vendor_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "food_orders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       homepage_shelves: {
         Row: {
@@ -382,8 +393,10 @@ export type Database = {
           item_name: string
           message: string
           phone_number: string
+          scheduled_for: string | null
           status: string
           updated_at: string
+          vendor_id: string | null
         }
         Insert: {
           created_at?: string
@@ -394,8 +407,10 @@ export type Database = {
           item_name?: string
           message: string
           phone_number?: string
+          scheduled_for?: string | null
           status?: string
           updated_at?: string
+          vendor_id?: string | null
         }
         Update: {
           created_at?: string
@@ -406,8 +421,10 @@ export type Database = {
           item_name?: string
           message?: string
           phone_number?: string
+          scheduled_for?: string | null
           status?: string
           updated_at?: string
+          vendor_id?: string | null
         }
         Relationships: [
           {
@@ -415,6 +432,13 @@ export type Database = {
             columns: ["item_id"]
             isOneToOne: false
             referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "msosi_pre_orders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
         ]
@@ -754,6 +778,38 @@ export type Database = {
           },
         ]
       }
+      vendor_members: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          user_id: string
+          vendor_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          user_id: string
+          vendor_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          user_id?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_members_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendors: {
         Row: {
           created_at: string
@@ -805,9 +861,10 @@ export type Database = {
         Args: { _product_id: string }
         Returns: undefined
       }
+      vendor_id_for: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "vendor"
       product_condition: "Like New" | "Good" | "Fair"
       product_status: "active" | "sold" | "hidden"
     }
@@ -937,7 +994,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "vendor"],
       product_condition: ["Like New", "Good", "Fair"],
       product_status: ["active", "sold", "hidden"],
     },

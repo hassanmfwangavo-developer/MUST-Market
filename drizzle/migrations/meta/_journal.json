@@ -22,6 +22,20 @@
       "when": 1790042524023,
       "tag": "0002_create_user_vouchers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790192739975,
+      "tag": "0003_add_vendor_role_enum_value",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790192779209,
+      "tag": "0004_multi_vendor_isolation",
+      "breakpoints": true
     }
   ]
 }
