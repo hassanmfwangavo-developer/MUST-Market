@@ -28,6 +28,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as MsosiIndexRouteImport } from './routes/msosi.index'
 import { Route as MarketIndexRouteImport } from './routes/market.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as VendorDashboardRouteImport } from './routes/vendor.dashboard'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
@@ -138,6 +139,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const VendorDashboardRoute = VendorDashboardRouteImport.update({
+  id: '/vendor/dashboard',
+  path: '/vendor/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReportIdRoute = ReportIdRouteImport.update({
   id: '/report/$id',
   path: '/report/$id',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
   '/admin/': typeof AdminIndexRoute
   '/market/': typeof MarketIndexRoute
   '/msosi/': typeof MsosiIndexRoute
@@ -270,6 +277,7 @@ export interface FileRoutesByTo {
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
   '/admin': typeof AdminIndexRoute
   '/market': typeof MarketIndexRoute
   '/msosi': typeof MsosiIndexRoute
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/msosi/checkout': typeof MsosiCheckoutRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
+  '/vendor/dashboard': typeof VendorDashboardRoute
   '/admin/': typeof AdminIndexRoute
   '/market/': typeof MarketIndexRoute
   '/msosi/': typeof MsosiIndexRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
+    | '/vendor/dashboard'
     | '/admin/'
     | '/market/'
     | '/msosi/'
@@ -375,6 +385,7 @@ export interface FileRouteTypes {
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
+    | '/vendor/dashboard'
     | '/admin'
     | '/market'
     | '/msosi'
@@ -410,6 +421,7 @@ export interface FileRouteTypes {
     | '/msosi/checkout'
     | '/product/$id'
     | '/report/$id'
+    | '/vendor/dashboard'
     | '/admin/'
     | '/market/'
     | '/msosi/'
@@ -436,6 +448,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   ProductIdRoute: typeof ProductIdRoute
   ReportIdRoute: typeof ReportIdRoute
+  VendorDashboardRoute: typeof VendorDashboardRoute
   ApiPublicSonicPesaPayRoute: typeof ApiPublicSonicPesaPayRoute
 }
 
@@ -573,6 +586,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/vendor/dashboard': {
+      id: '/vendor/dashboard'
+      path: '/vendor/dashboard'
+      fullPath: '/vendor/dashboard'
+      preLoaderRoute: typeof VendorDashboardRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/report/$id': {
       id: '/report/$id'
@@ -747,6 +767,7 @@ const rootRouteChildren: RootRouteChildren = {
   TermsRoute: TermsRoute,
   ProductIdRoute: ProductIdRoute,
   ReportIdRoute: ReportIdRoute,
+  VendorDashboardRoute: VendorDashboardRoute,
   ApiPublicSonicPesaPayRoute: ApiPublicSonicPesaPayRoute,
 }
 export const routeTree = rootRouteImport
