@@ -37,6 +37,7 @@ import { Route as MarketUsedItemsRouteImport } from './routes/market.used-items'
 import { Route as MarketRoomsGhetoRouteImport } from './routes/market.rooms-gheto'
 import { Route as MarketElectronicsRouteImport } from './routes/market.electronics'
 import { Route as MarketBooksStationeryRouteImport } from './routes/market.books-stationery'
+import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
 import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
@@ -184,6 +185,11 @@ const MarketBooksStationeryRoute = MarketBooksStationeryRouteImport.update({
   path: '/books-stationery',
   getParentRoute: () => MarketRoute,
 } as any)
+const AdminStaffRoute = AdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminServicesRoute = AdminServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
   '/market/electronics': typeof MarketElectronicsRoute
   '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
   '/market/electronics': typeof MarketElectronicsRoute
   '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/services': typeof AdminServicesRoute
+  '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
   '/market/electronics': typeof MarketElectronicsRoute
   '/market/rooms-gheto': typeof MarketRoomsGhetoRoute
@@ -344,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/food'
     | '/admin/services'
+    | '/admin/staff'
     | '/market/books-stationery'
     | '/market/electronics'
     | '/market/rooms-gheto'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/food'
     | '/admin/services'
+    | '/admin/staff'
     | '/market/books-stationery'
     | '/market/electronics'
     | '/market/rooms-gheto'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/admin/categories'
     | '/admin/food'
     | '/admin/services'
+    | '/admin/staff'
     | '/market/books-stationery'
     | '/market/electronics'
     | '/market/rooms-gheto'
@@ -650,6 +662,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketBooksStationeryRouteImport
       parentRoute: typeof MarketRoute
     }
+    '/admin/staff': {
+      id: '/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AdminStaffRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/services': {
       id: '/admin/services'
       path: '/services'
@@ -700,6 +719,7 @@ interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminFoodRoute: typeof AdminFoodRoute
   AdminServicesRoute: typeof AdminServicesRoute
+  AdminStaffRoute: typeof AdminStaffRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -708,6 +728,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminFoodRoute: AdminFoodRoute,
   AdminServicesRoute: AdminServicesRoute,
+  AdminStaffRoute: AdminStaffRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
