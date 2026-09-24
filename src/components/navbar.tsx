@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
+import { ChefHat, Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { isCurrentUserAdmin } from "@/lib/admin";
+import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -26,7 +26,7 @@ export function Navbar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [portalRole, setPortalRole] = useState<PortalRole>("none");
   const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +42,12 @@ export function Navbar() {
   useEffect(() => {
     let cancelled = false;
     if (!user) {
-      setIsAdmin(false);
+      setPortalRole("none");
       setRewards({ streak: 0, points: 0 });
       return;
     }
-    void isCurrentUserAdmin().then((allowed) => {
-      if (!cancelled) setIsAdmin(allowed);
+    void fetchPortalAccess().then((access) => {
+      if (!cancelled) setPortalRole(access.role);
     });
     void supabase
       .from("profiles")
@@ -173,7 +173,17 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                     {t.nav.dashboard}
                   </Link>
-                  {isAdmin && (
+                  {(portalRole === "vendor" || portalRole === "admin") && (
+                    <Link
+                      to="/vendor/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                    >
+                      <ChefHat className="h-4 w-4 text-accent" />
+                      Vendor Kitchen Portal
+                    </Link>
+                  )}
+                  {portalRole === "admin" && (
                     <Link
                       to="/admin"
                       onClick={() => setMenuOpen(false)}
