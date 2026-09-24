@@ -173,7 +173,17 @@ export function Navbar() {
                     <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
                     {t.nav.dashboard}
                   </Link>
-                  {isAdmin && (
+                  {(portalRole === "vendor" || portalRole === "admin") && (
+                    <Link
+                      to="/vendor/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                    >
+                      <ChefHat className="h-4 w-4 text-accent" />
+                      Vendor Kitchen Portal
+                    </Link>
+                  )}
+                  {portalRole === "admin" && (
                     <Link
                       to="/admin"
                       onClick={() => setMenuOpen(false)}
