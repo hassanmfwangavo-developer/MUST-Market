@@ -36,6 +36,13 @@
       "when": 1790192779209,
       "tag": "0004_multi_vendor_isolation",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790214945652,
+      "tag": "0005_admin_manage_user_roles",
+      "breakpoints": true
     }
   ]
 }
