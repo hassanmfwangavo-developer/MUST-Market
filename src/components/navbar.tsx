@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { isCurrentUserAdmin } from "@/lib/admin";
+import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -26,7 +26,7 @@ export function Navbar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [portalRole, setPortalRole] = useState<PortalRole>("none");
   const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +42,12 @@ export function Navbar() {
   useEffect(() => {
     let cancelled = false;
     if (!user) {
-      setIsAdmin(false);
+      setPortalRole("none");
       setRewards({ streak: 0, points: 0 });
       return;
     }
-    void isCurrentUserAdmin().then((allowed) => {
-      if (!cancelled) setIsAdmin(allowed);
+    void fetchPortalAccess().then((access) => {
+      if (!cancelled) setPortalRole(access.role);
     });
     void supabase
       .from("profiles")
