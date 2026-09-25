@@ -51,3 +51,6 @@ export const MARKET_CATEGORY_PAGES = {
 } as const;
 
 export type MarketCategorySlug = keyof typeof MARKET_CATEGORY_PAGES;
+
+/** Partner bookstore (Books24) — opens in a new tab wherever "Books" is linked. */
+export const BOOKS24_URL = "https://books24.store/mustmarket";

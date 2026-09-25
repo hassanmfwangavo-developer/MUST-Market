@@ -49,6 +49,7 @@ interface AdminProduct {
   whatsapp_number: string | null;
   images: string[] | null;
   featured_shelf: string | null;
+  category_id: string | null;
   created_at: string;
 }
 
@@ -56,7 +57,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,created_at",
+      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -137,6 +138,34 @@ function AdminConsole() {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Listing deleted permanently");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const { data: cats = [] } = useQuery({
+    queryKey: ["admin-categories-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("categories")
+        .select("id,name")
+        .order("sort_order", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+  const assignCategory = useMutation({
+    mutationFn: async ({ id, categoryId }: { id: string; categoryId: string }) => {
+      const { error } = await supabase
+        .from("products")
+        .update({ category_id: categoryId || null })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Category updated successfully");
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -255,6 +284,19 @@ function AdminConsole() {
                   >
                     {p.status}
                   </span>
+                  <select
+                    value={p.category_id ?? ""}
+                    onChange={(e) => assignCategory.mutate({ id: p.id, categoryId: e.target.value })}
+                    aria-label={`Category for ${p.title}`}
+                    className="h-9 rounded-full border border-border bg-surface-2 px-3 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="">No category</option>
+                    {cats.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
                   <select
                     value={p.featured_shelf ?? ""}
                     onChange={(e) => assignShelf.mutate({ id: p.id, shelf: e.target.value })}

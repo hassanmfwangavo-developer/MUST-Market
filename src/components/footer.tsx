@@ -1,16 +1,16 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Facebook, Instagram } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Facebook, Instagram } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { BOOKS24_URL } from "@/lib/site";
 import { syncBrevoContact } from "@/lib/brevo.functions";
 
 const MARKETPLACE_LINKS = [
   { label: "Used Electronics", to: "/market/electronics" as const },
   { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
-  { label: "Books & Study Supplies", to: "/market/books-stationery" as const },
   { label: "Used Items", to: "/market/used-items" as const },
   { label: "Post an Ad", to: "/sell" as const },
 ];
@@ -86,6 +86,18 @@ function FooterLinkColumn({ title, links }: { title: string; links: FooterLink[]
             </Link>
           </li>
         ))}
+        {title === "Marketplace" && (
+          <li>
+            <a
+              href={BOOKS24_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm text-slate-400 transition-colors hover:text-[#008542]"
+            >
+              Books &amp; Study Supplies <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
+          </li>
+        )}
       </ul>
     </div>
   );
