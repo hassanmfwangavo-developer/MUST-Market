@@ -1,6 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowUpRight, ChefHat, Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
+import {
+  ArrowUpRight,
+  BedDouble,
+  BookOpen,
+  ChefHat,
+  Flame,
+  Home,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Search,
+  ShieldCheck,
+  ShoppingBag,
+  Smartphone,
+  User as UserIcon,
+  UtensilsCrossed,
+  Wrench,
+  X,
+} from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
@@ -18,6 +36,16 @@ const NAV_LINKS = [
   { label: "Msosi Fasta", to: "/msosi" as const },
   { label: "Service Mall", to: "/services" as const },
   { label: "Founder", to: "/meet-the-founder" as const },
+];
+
+const DRAWER_LINKS = [
+  { label: "Home Portal", to: "/" as const, icon: Home },
+  { label: "Marketplace", to: "/market" as const, icon: ShoppingBag },
+  { label: "Electronics", to: "/market/electronics" as const, icon: Smartphone },
+  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const, icon: BedDouble },
+  { label: "Msosi Fasta", to: "/msosi" as const, icon: UtensilsCrossed },
+  { label: "Service Mall", to: "/services" as const, icon: Wrench },
+  { label: "Meet the Founder", to: "/meet-the-founder" as const, icon: UserIcon },
 ];
 
 export function Navbar() {
