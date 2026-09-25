@@ -1,15 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
-import { MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
+import { BOOKS24_URL, MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
 
 /** Full listing page pre-filtered to one permanent marketplace category. */
+const PAGE_SIZE = 24;
+
 export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
   const meta = MARKET_CATEGORY_PAGES[slug];
   const query = useSearchQuery();
@@ -20,13 +22,19 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
   });
 
   const items = useMemo(() => {
-    const byCat = products.filter((p) => p.category === meta.dbName);
+    // "Used items" is the catch-all page: every active listing, any category.
+    const byCat =
+      slug === "used-items"
+        ? products.filter((p) => p.status === "active")
+        : products.filter((p) => p.category === meta.dbName);
     const q = query.trim().toLowerCase();
     if (!q) return byCat;
     return byCat.filter(
       (p) => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q),
     );
-  }, [products, query, meta.dbName]);
+  }, [products, query, meta.dbName, slug]);
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const shown = items.slice(0, visible);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -55,7 +63,18 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
         </div>
 
         <nav aria-label="Other categories" className="mt-6 flex flex-wrap gap-2">
-          {(Object.keys(MARKET_CATEGORY_PAGES) as MarketCategorySlug[]).map((s) => (
+          {(Object.keys(MARKET_CATEGORY_PAGES) as MarketCategorySlug[]).map((s) =>
+            s === "books-stationery" ? (
+              <a
+                key={s}
+                href={BOOKS24_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-primary/30 hover:text-foreground"
+              >
+                {MARKET_CATEGORY_PAGES[s].heading.trim()} <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
+            ) : (
             <Link
               key={s}
               to={MARKET_CATEGORY_PAGES[s].path}
@@ -67,7 +86,8 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
             >
               {MARKET_CATEGORY_PAGES[s].heading.replace(" at MUST", "").replace(" Near MUST", "")}
             </Link>
-          ))}
+            ),
+          )}
         </nav>
 
         {isLoading ? (
@@ -88,9 +108,19 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
           </div>
         ) : (
           <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4">
-            {items.map((p) => (
+            {shown.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
+          </div>
+        )}
+        {!isLoading && items.length > visible && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={() => setVisible((v) => v + PAGE_SIZE)}
+              className="rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
+            >
+              Load more ({items.length - visible} left)
+            </button>
           </div>
         )}
       </main>

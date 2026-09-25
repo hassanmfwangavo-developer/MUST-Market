@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ChefHat, Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
+import { ArrowUpRight, ChefHat, Flame, LayoutDashboard, LogOut, Search, ShieldCheck, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
@@ -8,13 +8,13 @@ import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
+import { BOOKS24_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
 
 const NAV_LINKS = [
   { label: "Marketplace", to: "/market" as const },
   { label: "Electronics", to: "/market/electronics" as const },
   { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
-  { label: "Books", to: "/market/books-stationery" as const },
   { label: "Msosi Fasta", to: "/msosi" as const },
   { label: "Service Mall", to: "/services" as const },
   { label: "Founder", to: "/meet-the-founder" as const },
@@ -123,6 +123,14 @@ export function Navbar() {
               {l.label}
             </Link>
           ))}
+          <a
+            href={BOOKS24_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+          >
+            Books <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
