@@ -38,6 +38,16 @@ const NAV_LINKS = [
   { label: "Founder", to: "/meet-the-founder" as const },
 ];
 
+const DRAWER_LINKS = [
+  { label: "Home Portal", to: "/" as const, icon: Home },
+  { label: "Marketplace", to: "/market" as const, icon: ShoppingBag },
+  { label: "Electronics", to: "/market/electronics" as const, icon: Smartphone },
+  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const, icon: BedDouble },
+  { label: "Msosi Fasta", to: "/msosi" as const, icon: UtensilsCrossed },
+  { label: "Service Mall", to: "/services" as const, icon: Wrench },
+  { label: "Meet the Founder", to: "/meet-the-founder" as const, icon: UserIcon },
+];
+
 export function Navbar() {
   const query = useSearchQuery();
   const { user } = useAuthUser();
