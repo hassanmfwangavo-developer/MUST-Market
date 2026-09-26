@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowUpRight,
@@ -54,6 +55,7 @@ export function Navbar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [portalRole, setPortalRole] = useState<PortalRole>("none");
   const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
@@ -66,6 +68,15 @@ export function Navbar() {
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!drawerOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setDrawerOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [drawerOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,6 +121,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          aria-label="Open navigation menu"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-surface-2 text-foreground transition-colors hover:bg-primary-soft hover:text-primary lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
         <Link to="/" className="group flex shrink-0 items-center gap-2" aria-label="Go to home">
           {/* NEMBO YAKO MPYA INAKAA HAPA SASA HIVI (TUMEFUTA KIBEGI CHA LOVABLE) */}
           <img
@@ -123,7 +143,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="relative min-w-0 flex-1 max-w-xl">
+        <div className="relative hidden min-w-0 max-w-xl flex-1 lg:block">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="search"
@@ -161,7 +181,7 @@ export function Navbar() {
           </a>
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           <LanguageToggle />
           {user ? (
             <div ref={menuRef} className="relative">
@@ -250,6 +270,67 @@ export function Navbar() {
           )}
         </div>
       </div>
+
+      {drawerOpen && typeof document !== "undefined" && createPortal(
+        <div className="lg:hidden">
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={() => setDrawerOpen(false)}
+            className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm"
+          />
+          <aside className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-[82vw] flex-col border-r border-border bg-surface shadow-lift">
+            <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4">
+              <div className="flex min-w-0 items-center gap-2">
+                <img
+                  src="/favicon-32x32.png"
+                  alt="MUST Market Logo"
+                  className="h-8 w-8 shrink-0 rounded-lg object-contain"
+                />
+                <span className="truncate text-[15px] font-semibold tracking-tight text-foreground">
+                  MUST <span className="text-primary">Market</span>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close menu"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-surface-2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-2 py-3">
+              {DRAWER_LINKS.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setDrawerOpen(false)}
+                  activeOptions={{ exact: l.to === "/" }}
+                  activeProps={{ className: "bg-primary-soft text-primary" }}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+                >
+                  <l.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                  {l.label}
+                </Link>
+              ))}
+              <a
+                href={BOOKS24_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+              >
+                <BookOpen className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                Books &amp; E-Books
+                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
+              </a>
+            </nav>
+          </aside>
+        </div>,
+        document.body,
+      )}
     </header>
   );
 }
