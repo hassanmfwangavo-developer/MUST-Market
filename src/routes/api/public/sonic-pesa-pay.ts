@@ -235,6 +235,15 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const createData = await createRes.json().catch(() => null);
 
           if (!createRes.ok || createData?.status !== "success") {
+            await notifyAdminPayment({
+              status: "FAILED",
+              amount,
+              phone: phoneNumber,
+              customerName,
+              reason:
+                createData?.message ??
+                "Sonic Pesa rejected the payment order request.",
+            });
             return jsonResponse(
               {
                 error:
