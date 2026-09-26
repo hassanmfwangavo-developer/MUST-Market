@@ -271,7 +271,7 @@ export function Navbar() {
         </div>
       </div>
 
-      {drawerOpen && (
+      {drawerOpen && typeof document !== "undefined" && createPortal(
         <div className="lg:hidden">
           <button
             type="button"
