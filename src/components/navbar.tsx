@@ -69,6 +69,15 @@ export function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
+    if (!drawerOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setDrawerOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [drawerOpen]);
+
+  useEffect(() => {
     let cancelled = false;
     if (!user) {
       setPortalRole("none");
