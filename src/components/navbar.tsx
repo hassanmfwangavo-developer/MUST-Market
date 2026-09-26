@@ -54,6 +54,7 @@ export function Navbar() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [portalRole, setPortalRole] = useState<PortalRole>("none");
   const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
