@@ -302,6 +302,13 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
 
             // If user successfully entered PIN
             if (currentStatus === "SUCCESS") {
+              await notifyAdminPayment({
+                status: "SUCCESS",
+                amount,
+                phone: phoneNumber,
+                customerName,
+                orderRef: String(orderId),
+              });
               // Fire the dual SMS alerts (cook + customer). Awaited via
               // Promise.all inside; failures never break the payment flow.
               const details = payload.orderDetails;
