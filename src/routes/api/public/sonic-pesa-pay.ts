@@ -347,6 +347,14 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
               currentStatus === "CANCELLED" ||
               currentStatus === "REJECTED"
             ) {
+              await notifyAdminPayment({
+                status: "CANCELLED",
+                amount,
+                phone: phoneNumber,
+                customerName,
+                orderRef: String(orderId),
+                reason: `Customer cancelled or payment was rejected (${currentStatus}).`,
+              });
               return jsonResponse(
                 {
                   error: "Umeghairi au umekataa ombi la malipo kwenye simu.",
