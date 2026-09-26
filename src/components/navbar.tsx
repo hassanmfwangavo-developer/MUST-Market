@@ -269,6 +269,66 @@ export function Navbar() {
           )}
         </div>
       </div>
+
+      {drawerOpen && (
+        <div className="lg:hidden">
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            onClick={() => setDrawerOpen(false)}
+            className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm animate-fade-in"
+          />
+          <aside className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-[82vw] flex-col border-r border-border bg-surface shadow-lift">
+            <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4">
+              <div className="flex min-w-0 items-center gap-2">
+                <img
+                  src="/favicon-32x32.png"
+                  alt="MUST Market Logo"
+                  className="h-8 w-8 shrink-0 rounded-lg object-contain"
+                />
+                <span className="truncate text-[15px] font-semibold tracking-tight text-foreground">
+                  MUST <span className="text-primary">Market</span>
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(false)}
+                aria-label="Close menu"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border bg-surface-2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <nav className="flex-1 overflow-y-auto px-2 py-3">
+              {DRAWER_LINKS.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setDrawerOpen(false)}
+                  activeOptions={{ exact: l.to === "/" }}
+                  activeProps={{ className: "bg-primary-soft text-primary" }}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+                >
+                  <l.icon className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                  {l.label}
+                </Link>
+              ))}
+              <a
+                href={BOOKS24_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+              >
+                <BookOpen className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                Books &amp; E-Books
+                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
+              </a>
+            </nav>
+          </aside>
+        </div>
+      )}
     </header>
   );
 }
