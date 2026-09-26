@@ -249,11 +249,27 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             createData?.data?.order_id || createData?.data?.reference;
 
           if (!orderId) {
+            await notifyAdminPayment({
+              status: "ERROR",
+              amount,
+              phone: phoneNumber,
+              customerName,
+              reason: "Sonic Pesa did not return an order ID.",
+            });
             return jsonResponse(
               { error: "Order ID haikupatikana kutoka Sonic Pesa." },
               400
             );
           }
+
+          // Notify admin that a payment attempt has started (USSD push sent).
+          await notifyAdminPayment({
+            status: "PENDING",
+            amount,
+            phone: phoneNumber,
+            customerName,
+            orderRef: String(orderId),
+          });
 
           // 2. Poll Order Status every 3 seconds (30 retries x 3s = 90 seconds total)
           const maxRetries = 30;
