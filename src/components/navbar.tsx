@@ -120,6 +120,15 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-4 sm:px-6 lg:px-8">
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(true)}
+          aria-label="Open navigation menu"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-border bg-surface-2 text-foreground transition-colors hover:bg-primary-soft hover:text-primary lg:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
         <Link to="/" className="group flex shrink-0 items-center gap-2" aria-label="Go to home">
           {/* NEMBO YAKO MPYA INAKAA HAPA SASA HIVI (TUMEFUTA KIBEGI CHA LOVABLE) */}
           <img
