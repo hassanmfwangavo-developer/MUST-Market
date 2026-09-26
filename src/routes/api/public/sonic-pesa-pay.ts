@@ -365,6 +365,14 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           }
 
           // If 90 seconds timeout reached without confirmation
+          await notifyAdminPayment({
+            status: "FAILED",
+            amount,
+            phone: phoneNumber,
+            customerName,
+            orderRef: String(orderId),
+            reason: "Timed out after 90 seconds — customer never confirmed the PIN.",
+          });
           return jsonResponse(
             {
               error:
