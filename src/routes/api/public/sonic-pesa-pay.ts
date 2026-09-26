@@ -105,6 +105,74 @@ async function dispatchOrderSms(opts: {
   }
 }
 
+const ADMIN_NOTIFY_EMAIL = "hassani@mustmarket.store";
+
+type PaymentNotifyStatus = "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED" | "ERROR";
+
+// Fire-and-forget admin email via Brevo. Never throws, never blocks checkout.
+async function notifyAdminPayment(opts: {
+  status: PaymentNotifyStatus;
+  amount: number;
+  phone: string;
+  customerName: string;
+  orderRef?: string;
+  serviceType?: string;
+  reason?: string;
+}): Promise<void> {
+  try {
+    const apiKey = process.env["BREVO_API_KEY"];
+    if (!apiKey) {
+      console.warn("[AdminNotify] BREVO_API_KEY missing — skipping email.");
+      return;
+    }
+    const success = opts.status === "SUCCESS";
+    const subject = success
+      ? `🟢 [NEW ORDER PAID] MUST Market - TZS ${opts.amount}`
+      : `🔴 [PAYMENT ${opts.status}] MUST Market - TZS ${opts.amount}`;
+    const rows: [string, string][] = [
+      ["Payment Status", opts.status],
+      ["Customer", `${opts.customerName} (${opts.phone})`],
+      ["Order Reference", opts.orderRef ?? "—"],
+      ["Total Amount", `TZS ${opts.amount}`],
+      ["Service Type", opts.serviceType ?? "Msosi Fasta"],
+      ["Timestamp", new Date().toISOString()],
+    ];
+    if (opts.reason) rows.push(["Failure Reason", opts.reason]);
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#ffffff">
+        <h2 style="margin:0 0 16px;color:${success ? "#008542" : "#dc2626"}">${subject}</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          ${rows
+            .map(
+              ([k, v]) =>
+                `<tr><td style="padding:8px 12px;border:1px solid #e2e8f0;font-weight:bold;width:40%">${k}</td><td style="padding:8px 12px;border:1px solid #e2e8f0">${v}</td></tr>`,
+            )
+            .join("")}
+        </table>
+        <p style="margin-top:16px;font-size:12px;color:#64748b">Automated payment notification from MUST Market checkout.</p>
+      </div>`;
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": apiKey,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "MUST Market Payments", email: ADMIN_NOTIFY_EMAIL },
+        to: [{ email: ADMIN_NOTIFY_EMAIL }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+    if (!res.ok) {
+      console.error(`[AdminNotify] Brevo send failed [${res.status}]: ${await res.text()}`);
+    }
+  } catch (err) {
+    console.error("[AdminNotify] Email dispatch error:", err);
+  }
+}
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -167,6 +235,15 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           const createData = await createRes.json().catch(() => null);
 
           if (!createRes.ok || createData?.status !== "success") {
+            await notifyAdminPayment({
+              status: "FAILED",
+              amount,
+              phone: phoneNumber,
+              customerName,
+              reason:
+                createData?.message ??
+                "Sonic Pesa rejected the payment order request.",
+            });
             return jsonResponse(
               {
                 error:
@@ -181,11 +258,27 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             createData?.data?.order_id || createData?.data?.reference;
 
           if (!orderId) {
+            await notifyAdminPayment({
+              status: "ERROR",
+              amount,
+              phone: phoneNumber,
+              customerName,
+              reason: "Sonic Pesa did not return an order ID.",
+            });
             return jsonResponse(
               { error: "Order ID haikupatikana kutoka Sonic Pesa." },
               400
             );
           }
+
+          // Notify admin that a payment attempt has started (USSD push sent).
+          await notifyAdminPayment({
+            status: "PENDING",
+            amount,
+            phone: phoneNumber,
+            customerName,
+            orderRef: String(orderId),
+          });
 
           // 2. Poll Order Status every 3 seconds (30 retries x 3s = 90 seconds total)
           const maxRetries = 30;
@@ -209,6 +302,13 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
 
             // If user successfully entered PIN
             if (currentStatus === "SUCCESS") {
+              await notifyAdminPayment({
+                status: "SUCCESS",
+                amount,
+                phone: phoneNumber,
+                customerName,
+                orderRef: String(orderId),
+              });
               // Fire the dual SMS alerts (cook + customer). Awaited via
               // Promise.all inside; failures never break the payment flow.
               const details = payload.orderDetails;
@@ -247,6 +347,14 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
               currentStatus === "CANCELLED" ||
               currentStatus === "REJECTED"
             ) {
+              await notifyAdminPayment({
+                status: "CANCELLED",
+                amount,
+                phone: phoneNumber,
+                customerName,
+                orderRef: String(orderId),
+                reason: `Customer cancelled or payment was rejected (${currentStatus}).`,
+              });
               return jsonResponse(
                 {
                   error: "Umeghairi au umekataa ombi la malipo kwenye simu.",
@@ -257,6 +365,14 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
           }
 
           // If 90 seconds timeout reached without confirmation
+          await notifyAdminPayment({
+            status: "FAILED",
+            amount,
+            phone: phoneNumber,
+            customerName,
+            orderRef: String(orderId),
+            reason: "Timed out after 90 seconds — customer never confirmed the PIN.",
+          });
           return jsonResponse(
             {
               error:
@@ -265,6 +381,18 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             400
           );
         } catch (err) {
+          try {
+            const p = (await request.clone().json().catch(() => null)) as SonicPesaPayload | null;
+            await notifyAdminPayment({
+              status: "ERROR",
+              amount: Math.round(Number(p?.amount)) || 0,
+              phone: String(p?.phoneNumber ?? "unknown"),
+              customerName: String(p?.customerName ?? "unknown"),
+              reason: err instanceof Error ? err.message : "Unexpected server error.",
+            });
+          } catch {
+            // Never let notification failures affect the response.
+          }
           return jsonResponse(
             {
               error:
