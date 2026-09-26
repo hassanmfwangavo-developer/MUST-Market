@@ -276,7 +276,7 @@ export function Navbar() {
             type="button"
             aria-label="Close navigation menu"
             onClick={() => setDrawerOpen(false)}
-            className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm animate-fade-in"
+            className="fixed inset-0 z-40 bg-foreground/40 backdrop-blur-sm"
           />
           <aside className="fixed inset-y-0 left-0 z-50 flex w-72 max-w-[82vw] flex-col border-r border-border bg-surface shadow-lift">
             <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-4">
