@@ -381,6 +381,18 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             400
           );
         } catch (err) {
+          try {
+            const p = (await request.clone().json().catch(() => null)) as SonicPesaPayload | null;
+            await notifyAdminPayment({
+              status: "ERROR",
+              amount: Math.round(Number(p?.amount)) || 0,
+              phone: String(p?.phoneNumber ?? "unknown"),
+              customerName: String(p?.customerName ?? "unknown"),
+              reason: err instanceof Error ? err.message : "Unexpected server error.",
+            });
+          } catch {
+            // Never let notification failures affect the response.
+          }
           return jsonResponse(
             {
               error:
