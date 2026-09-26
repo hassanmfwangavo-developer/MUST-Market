@@ -105,6 +105,74 @@ async function dispatchOrderSms(opts: {
   }
 }
 
+const ADMIN_NOTIFY_EMAIL = "hassani@mustmarket.store";
+
+type PaymentNotifyStatus = "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED" | "ERROR";
+
+// Fire-and-forget admin email via Brevo. Never throws, never blocks checkout.
+async function notifyAdminPayment(opts: {
+  status: PaymentNotifyStatus;
+  amount: number;
+  phone: string;
+  customerName: string;
+  orderRef?: string;
+  serviceType?: string;
+  reason?: string;
+}): Promise<void> {
+  try {
+    const apiKey = process.env["BREVO_API_KEY"];
+    if (!apiKey) {
+      console.warn("[AdminNotify] BREVO_API_KEY missing — skipping email.");
+      return;
+    }
+    const success = opts.status === "SUCCESS";
+    const subject = success
+      ? `🟢 [NEW ORDER PAID] MUST Market - TZS ${opts.amount}`
+      : `🔴 [PAYMENT ${opts.status}] MUST Market - TZS ${opts.amount}`;
+    const rows: [string, string][] = [
+      ["Payment Status", opts.status],
+      ["Customer", `${opts.customerName} (${opts.phone})`],
+      ["Order Reference", opts.orderRef ?? "—"],
+      ["Total Amount", `TZS ${opts.amount}`],
+      ["Service Type", opts.serviceType ?? "Msosi Fasta"],
+      ["Timestamp", new Date().toISOString()],
+    ];
+    if (opts.reason) rows.push(["Failure Reason", opts.reason]);
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#ffffff">
+        <h2 style="margin:0 0 16px;color:${success ? "#008542" : "#dc2626"}">${subject}</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          ${rows
+            .map(
+              ([k, v]) =>
+                `<tr><td style="padding:8px 12px;border:1px solid #e2e8f0;font-weight:bold;width:40%">${k}</td><td style="padding:8px 12px;border:1px solid #e2e8f0">${v}</td></tr>`,
+            )
+            .join("")}
+        </table>
+        <p style="margin-top:16px;font-size:12px;color:#64748b">Automated payment notification from MUST Market checkout.</p>
+      </div>`;
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "api-key": apiKey,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        sender: { name: "MUST Market Payments", email: ADMIN_NOTIFY_EMAIL },
+        to: [{ email: ADMIN_NOTIFY_EMAIL }],
+        subject,
+        htmlContent: html,
+      }),
+    });
+    if (!res.ok) {
+      console.error(`[AdminNotify] Brevo send failed [${res.status}]: ${await res.text()}`);
+    }
+  } catch (err) {
+    console.error("[AdminNotify] Email dispatch error:", err);
+  }
+}
+
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
     status,
