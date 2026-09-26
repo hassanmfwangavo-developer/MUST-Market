@@ -328,7 +328,8 @@ export function Navbar() {
               </a>
             </nav>
           </aside>
-        </div>
+        </div>,
+        document.body,
       )}
     </header>
   );
