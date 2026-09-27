@@ -303,18 +303,18 @@ function MsosiFasta() {
               aria-hidden
               className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent"
             />
-            <div className="relative flex items-center gap-4 p-5 sm:p-7">
+            <div className="relative flex items-center gap-3 p-4 sm:gap-4 sm:p-7">
               <div className="min-w-0 flex-1">
                 {slide.promo_code && (
-                  <span className="inline-flex items-center rounded-full bg-white/25 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur">
+                  <span className="inline-flex items-center rounded-full bg-white/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur sm:px-3 sm:text-[11px]">
                     Use code {slide.promo_code}
                   </span>
                 )}
-                <h2 className="mt-2 text-lg font-extrabold leading-tight tracking-tight text-white drop-shadow-sm sm:text-2xl">
+                <h2 className="mt-1.5 text-base font-extrabold leading-tight tracking-tight text-white drop-shadow-sm sm:mt-2 sm:text-2xl">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="mt-1 line-clamp-2 text-xs font-medium text-white/90 drop-shadow-sm sm:text-sm">
+                  <p className="mt-1 line-clamp-2 text-[11px] font-medium text-white/90 drop-shadow-sm sm:text-sm">
                     {slide.subtitle}
                   </p>
                 )}
@@ -326,18 +326,23 @@ function MsosiFasta() {
                 <button
                   type="button"
                   onClick={handleClaim}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-sm font-bold text-slate-900 shadow-xs transition-transform hover:scale-[1.03]"
+                  className="mt-2.5 inline-flex items-center gap-1 rounded-xl bg-white px-3 py-2 text-xs font-bold text-slate-900 shadow-xs transition-transform hover:scale-[1.03] sm:mt-3 sm:gap-1.5 sm:px-4 sm:text-sm"
                 >
                   {BANNER_CTA[slide.banner_type] ?? "Order Now"}
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </button>
               </div>
               {slide.discount_percent ? (
-                <div className="hidden shrink-0 rounded-2xl bg-white/20 px-4 py-3 text-center text-white backdrop-blur sm:block">
-                  <p className="text-3xl font-extrabold leading-none">
+                <div
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-white/20 text-center text-white backdrop-blur sm:h-20 sm:w-20 sm:rounded-2xl"
+                  aria-label={`${slide.discount_percent} percent off`}
+                >
+                  <p className="text-sm font-extrabold leading-none sm:text-3xl">
                     {slide.discount_percent}%
                   </p>
-                  <p className="text-[11px] font-bold uppercase tracking-wide">Off</p>
+                  <p className="mt-0.5 text-[8px] font-bold uppercase tracking-wide sm:text-[11px]">
+                    Off
+                  </p>
                 </div>
               ) : null}
             </div>
