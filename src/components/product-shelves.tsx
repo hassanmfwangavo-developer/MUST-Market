@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Plus, ArrowRight } from "lucide-react";
@@ -7,6 +7,7 @@ import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchShelves, DEFAULT_SHELVES, type HomepageShelf } from "@/lib/shelves";
+import { ServiceMallBanner } from "./service-mall-banner";
 
 const FRESHER_KEYWORDS = [
   "kettle",
@@ -204,7 +205,14 @@ export function ProductShelves() {
       ) : (
         <div className="mt-8">
           {shelves.map((s) => (
-            <ShelfRow key={s.key} shelf={s} />
+            <Fragment key={s.key}>
+              <ShelfRow shelf={s} />
+              {s.key === "rooms" && (
+                <div className="mt-10">
+                  <ServiceMallBanner />
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
       )}
