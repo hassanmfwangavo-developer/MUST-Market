@@ -42,6 +42,7 @@
   --color-ring: var(--ring);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-banner-foreground: var(--banner-foreground);
 
   --shadow-soft: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
   --shadow-card: 0 4px 24px -8px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.04);
@@ -85,6 +86,8 @@
   --border: oklch(0.92 0.005 250);
   --input: oklch(0.92 0.005 250);
   --ring: oklch(0.42 0.12 165);
+  --banner-foreground: oklch(0.99 0.003 90);
+  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.64) 56%, transparent);
 }
 
 .dark {
@@ -109,6 +112,8 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.72 0.15 165);
+  --banner-foreground: oklch(0.99 0.003 90);
+  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.64) 56%, transparent);
 }
 
 @layer base {
