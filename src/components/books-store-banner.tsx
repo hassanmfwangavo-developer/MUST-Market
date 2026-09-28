@@ -55,19 +55,22 @@ export function BooksStoreBanner() {
           />
         ))}
         <div className="absolute inset-0 bg-[image:var(--banner-shade)]" aria-hidden="true" />
-        <div className="banner-text-legible relative flex h-full flex-col justify-center px-6 pb-9 pt-5 text-banner-foreground sm:px-12 lg:px-16">
-          <p className="text-xs font-semibold uppercase tracking-widest text-banner-foreground/80">Official Book Partner</p>
-          <h2 className="mt-3 text-3xl font-semibold sm:text-4xl lg:text-5xl">MUST Books Store</h2>
-          <p className="mt-3 max-w-md text-sm italic leading-relaxed text-banner-foreground/90 sm:text-base">
-            &ldquo;The more you read, the more you realize how little you know&rdquo;
-          </p>
-          <Button asChild className="mt-6 h-11 w-fit rounded-md bg-accent px-6 font-bold text-accent-foreground hover:bg-accent/90">
-            <a href={BOOKS24_URL} target="_blank" rel="noopener noreferrer">
-              Explore Books
-              <ArrowUpRight aria-hidden="true" />
-            </a>
-          </Button>
+        <div className="relative flex h-full items-center px-4 pb-10 pt-4 sm:px-8 lg:px-12">
+          <div className="w-full max-w-md rounded-2xl border border-banner-foreground/15 bg-banner-glass p-5 shadow-lift backdrop-blur-md sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-banner-foreground/85 sm:text-xs">Official Book Partner</p>
+            <h2 className="mt-2 text-2xl font-semibold text-banner-foreground sm:text-3xl lg:text-4xl">MUST Books Store</h2>
+            <p className="mt-2 text-sm italic leading-relaxed text-banner-foreground/85">
+              &ldquo;The more you read, the more you realize how little you know&rdquo;
+            </p>
+            <Button asChild className="mt-5 h-11 w-fit rounded-md bg-accent px-6 font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90">
+              <a href={BOOKS24_URL} target="_blank" rel="noopener noreferrer">
+                Explore Books
+                <ArrowUpRight aria-hidden="true" />
+              </a>
+            </Button>
+          </div>
         </div>
+
         {images.length > 1 && (
           <div className="absolute inset-x-0 bottom-3 flex items-center justify-center gap-2" aria-label="Choose banner slide">
             <Button variant="ghost" size="icon" className="h-8 w-8 text-banner-foreground hover:bg-banner-foreground/20 hover:text-banner-foreground" aria-label="Previous banner" onClick={() => setSlide((active - 1 + images.length) % images.length)}>
