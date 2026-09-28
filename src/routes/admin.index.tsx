@@ -22,6 +22,7 @@ import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { AdminTabs } from "@/components/admin-tabs";
 import { AdminMarketBanners } from "@/components/admin-market-banners";
+import { AdminBooksBanners } from "@/components/admin-books-banners";
 import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
 
 export const Route = createFileRoute("/admin/")({
@@ -206,6 +207,7 @@ function AdminConsole() {
         <AdminTabs />
 
         <AdminMarketBanners />
+        <AdminBooksBanners />
 
         <ShelfManager />
 
