@@ -67,6 +67,30 @@ export type Database = {
           },
         ]
       }
+      books_store_banners: {
+        Row: {
+          created_at: string
+          id: string
+          image_path: string
+          image_url: string
+          slot: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_path: string
+          image_url: string
+          slot: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_path?: string
+          image_url?: string
+          slot?: number
+        }
+        Relationships: []
+      }
       campus_services: {
         Row: {
           category: string
