@@ -43,6 +43,13 @@
       "when": 1790214945652,
       "tag": "0005_admin_manage_user_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790565312764,
+      "tag": "0006_create_books_store_banners",
+      "breakpoints": true
     }
   ]
 }
