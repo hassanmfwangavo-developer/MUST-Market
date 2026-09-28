@@ -87,7 +87,7 @@
   --input: oklch(0.92 0.005 250);
   --ring: oklch(0.42 0.12 165);
   --banner-foreground: oklch(0.99 0.003 90);
-  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.64) 56%, transparent);
+  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.78) 72%, oklch(0.10 0.02 160 / 0.43));
 }
 
 .dark {
@@ -113,7 +113,13 @@
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.72 0.15 165);
   --banner-foreground: oklch(0.99 0.003 90);
-  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.64) 56%, transparent);
+  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.78) 72%, oklch(0.10 0.02 160 / 0.43));
+}
+
+@media (min-width: 640px) {
+  :root, .dark {
+    --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.94), oklch(0.10 0.02 160 / 0.64) 56%, transparent);
+  }
 }
 
 @layer base {
