@@ -87,8 +87,10 @@
   --input: oklch(0.92 0.005 250);
   --ring: oklch(0.42 0.12 165);
   --banner-foreground: oklch(0.99 0.003 90);
-  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.62), oklch(0.10 0.02 160 / 0.34) 62%, oklch(0.10 0.02 160 / 0.12));
-  --banner-text-shadow: 0 1px 3px oklch(0.08 0.02 160 / 0.85), 0 6px 18px oklch(0.08 0.02 160 / 0.55);
+  --banner-glass: oklch(0.14 0.02 160 / 0.6);
+  --banner-shade: linear-gradient(90deg, oklch(0.10 0.02 160 / 0.22), transparent 60%);
+  --banner-text-shadow: 0 1px 2px oklch(0.08 0.02 160 / 0.45);
+
 }
 
 .dark {
