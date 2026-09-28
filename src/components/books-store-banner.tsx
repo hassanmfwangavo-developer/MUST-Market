@@ -55,7 +55,7 @@ export function BooksStoreBanner() {
           />
         ))}
         <div className="absolute inset-0 bg-[image:var(--banner-shade)]" aria-hidden="true" />
-        <div className="relative flex h-full flex-col justify-center px-6 pb-9 pt-5 text-banner-foreground sm:px-12 lg:px-16">
+        <div className="banner-text-legible relative flex h-full flex-col justify-center px-6 pb-9 pt-5 text-banner-foreground sm:px-12 lg:px-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-banner-foreground/80">Official Book Partner</p>
           <h2 className="mt-3 text-3xl font-semibold sm:text-4xl lg:text-5xl">MUST Books Store</h2>
           <p className="mt-3 max-w-md text-sm italic leading-relaxed text-banner-foreground/90 sm:text-base">
