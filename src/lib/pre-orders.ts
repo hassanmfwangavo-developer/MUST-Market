@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAdminInBackground } from "./admin-notify.functions";
 
 export interface PreOrder {
   id: string;
@@ -30,7 +31,9 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
   if (!input.deliveryLocation.trim()) throw new Error("Tafadhali weka eneo la delivery.");
   if (!input.message.trim()) throw new Error("Tafadhali andika ujumbe wa booking.");
 
+  const id = crypto.randomUUID();
   const { error } = await supabase.from("msosi_pre_orders").insert({
+    id,
     item_id: input.itemId && UUID_RE.test(input.itemId) ? input.itemId : null,
     item_name: input.itemName,
     customer_name: input.customerName.trim(),
@@ -39,6 +42,7 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
     message: input.message.trim(),
   });
   if (error) throw new Error(error.message);
+  notifyAdminInBackground("pre_order", id);
 }
 
 /** Admin listing of every booking request, newest first. */

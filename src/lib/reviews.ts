@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { notifyAdminInBackground } from "./admin-notify.functions";
 
 export type OrderReview = {
   id: string;
@@ -27,16 +28,21 @@ export async function submitReview(input: {
   rating: number;
   comment: string;
 }): Promise<void> {
-  const { error } = await supabase.from("order_reviews").upsert(
-    {
-      order_id: input.orderId,
-      user_id: input.userId,
-      rating: input.rating,
-      comment: input.comment,
-    },
-    { onConflict: "order_id" },
-  );
+  const { data, error } = await supabase
+    .from("order_reviews")
+    .upsert(
+      {
+        order_id: input.orderId,
+        user_id: input.userId,
+        rating: input.rating,
+        comment: input.comment,
+      },
+      { onConflict: "order_id" },
+    )
+    .select("id")
+    .maybeSingle();
   if (error) throw error;
+  if (data?.id) notifyAdminInBackground("review", data.id);
 }
 
 export type AdminReview = OrderReview & {
