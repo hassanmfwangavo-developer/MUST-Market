@@ -63,7 +63,7 @@ export function BooksStoreBanner() {
               &ldquo;The more you read, the more you realize how little you know&rdquo;
             </p>
 
-            <Button asChild className="mt-5 h-11 w-fit rounded-md bg-accent px-6 font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90">
+            <Button asChild className="mt-4 h-10 w-fit rounded-md bg-accent px-4 text-sm font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90 sm:mt-5 sm:h-11 sm:px-6">
               <a href={BOOKS24_URL} target="_blank" rel="noopener noreferrer">
                 Explore Books
                 <ArrowUpRight aria-hidden="true" />
