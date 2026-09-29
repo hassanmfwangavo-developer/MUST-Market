@@ -55,14 +55,15 @@ export function BooksStoreBanner() {
           />
         ))}
         <div className="absolute inset-0 bg-[image:var(--banner-shade)]" aria-hidden="true" />
-        <div className="relative flex h-full items-center px-4 pb-10 pt-4 sm:px-8 lg:px-12">
-          <div className="w-full max-w-md rounded-2xl border border-banner-foreground/15 bg-banner-glass p-5 shadow-lift backdrop-blur-md sm:p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-banner-foreground/85 sm:text-xs">Official Book Partner</p>
-            <h2 className="mt-2 text-2xl font-semibold text-banner-foreground sm:text-3xl lg:text-4xl">MUST Books Store</h2>
-            <p className="mt-2 text-sm italic leading-relaxed text-banner-foreground/85">
+        <div className="relative flex h-full items-end px-4 pb-12 pt-4 sm:items-center sm:px-8 sm:pb-10 lg:px-12">
+          <div className="w-full max-w-[16.5rem] rounded-2xl border border-banner-foreground/15 bg-banner-glass p-4 shadow-lift backdrop-blur-md sm:max-w-md sm:p-6">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-banner-foreground/85 sm:text-xs">Official Book Partner</p>
+            <h2 className="mt-1.5 text-xl font-semibold text-banner-foreground sm:mt-2 sm:text-3xl lg:text-4xl">MUST Books Store</h2>
+            <p className="mt-1.5 text-[11px] italic leading-snug text-banner-foreground/85 sm:mt-2 sm:text-sm sm:leading-relaxed">
               &ldquo;The more you read, the more you realize how little you know&rdquo;
             </p>
-            <Button asChild className="mt-5 h-11 w-fit rounded-md bg-accent px-6 font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90">
+
+            <Button asChild className="mt-4 h-10 w-fit rounded-md bg-accent px-4 text-sm font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90 sm:mt-5 sm:h-11 sm:px-6">
               <a href={BOOKS24_URL} target="_blank" rel="noopener noreferrer">
                 Explore Books
                 <ArrowUpRight aria-hidden="true" />
