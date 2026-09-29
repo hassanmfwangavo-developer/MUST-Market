@@ -240,7 +240,9 @@ function SellPage() {
         imageUrls.push(signed.signedUrl);
       }
 
+      const productId = crypto.randomUUID();
       const { error: insErr } = await supabase.from("products").insert({
+        id: productId,
         seller_id: userId,
         category_id: cat?.id ?? null,
         title: title.trim(),
@@ -253,6 +255,7 @@ function SellPage() {
         images: imageUrls,
       });
       if (insErr) throw insErr;
+      notifyAdminInBackground("product", productId);
 
       toast.success("Listing published! 🎉");
       setSafetyOpen(false);
