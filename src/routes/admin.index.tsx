@@ -51,6 +51,7 @@ interface AdminProduct {
   images: string[] | null;
   featured_shelf: string | null;
   category_id: string | null;
+  seller_id: string;
   created_at: string;
 }
 
@@ -58,7 +59,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
+      "id,seller_id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -363,6 +364,18 @@ function AdminConsole() {
                 </li>
               ))}
             </ul>
+          )}
+          {!isLoading && filtered.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground">
+              <span>
+                {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button disabled={page <= 1} onClick={() => setPage((n) => n - 1)} className="rounded-full border border-border px-3 py-1.5 font-medium text-foreground disabled:opacity-40">Previous</button>
+                <span>Page {page} / {pageCount}</span>
+                <button disabled={page >= pageCount} onClick={() => setPage((n) => n + 1)} className="rounded-full border border-border px-3 py-1.5 font-medium text-foreground disabled:opacity-40">Next</button>
+              </div>
+            </div>
           )}
         </div>
       </main>

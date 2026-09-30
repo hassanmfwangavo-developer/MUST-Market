@@ -120,6 +120,21 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
     return { total, active, views };
   }, [products]);
 
+  const soldMutation = useMutation({
+    mutationFn: async (p: MyProduct) => {
+      const next = p.status === "sold" ? "active" : "sold";
+      const { error } = await supabase.from("products").update({ status: next }).eq("id", p.id);
+      if (error) throw error;
+      return next;
+    },
+    onSuccess: (next) => {
+      toast.success(next === "sold" ? "Marked as sold" : "Listing is available again");
+      queryClient.invalidateQueries({ queryKey: ["my-products", userId] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Update failed"),
+  });
+
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("products").delete().eq("id", id);
@@ -238,6 +253,17 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                     >
                       View
                     </Link>
+                    <button
+                      onClick={() => soldMutation.mutate(p)}
+                      disabled={soldMutation.isPending && soldMutation.variables?.id === p.id}
+                      className={`rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${
+                        p.status === "sold"
+                          ? "border border-primary/40 text-primary hover:bg-primary-soft"
+                          : "bg-primary text-primary-foreground hover:bg-primary/90"
+                      }`}
+                    >
+                      {p.status === "sold" ? "Mark Available" : "Mark as Sold"}
+                    </button>
                     <button
                       onClick={() => setEditing(p)}
                       className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary"
