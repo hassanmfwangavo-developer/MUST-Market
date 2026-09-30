@@ -25,7 +25,7 @@ import { matchesCategory } from "@/lib/category-match";
 import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
 import { HelpDrawer } from "@/components/help-drawer";
 import { PartnerModal } from "@/components/partner-modal";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { PreOrderWizard } from "@/components/preorder-wizard";
 
 
 export const Route = createFileRoute("/msosi/")({
@@ -270,73 +270,29 @@ function MsosiFasta() {
       </header>
 
       <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4" aria-label="Hostel batch pre-order notice">
-        <button
-          type="button"
-          onClick={() => setPreOrderOpen(true)}
-          className="flex w-full items-center gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-left shadow-sm transition hover:bg-amber-100 active:scale-[0.99] sm:px-5"
-        >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400 text-xl" aria-hidden>
-            🥣
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-extrabold text-slate-900 sm:text-base">Pre-Order System</p>
-            <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
-              Agiza chakula mapema kulingana na Hostel yako kwa delivery ya pamoja!
-            </p>
-            <p className="mt-1 text-xs font-bold text-amber-700">Jinsi inavyofanya kazi →</p>
-          </div>
-        </button>
-      </section>
-
-      <Dialog open={preOrderOpen} onOpenChange={setPreOrderOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>🥣 Hostel Batch Pre-Order</DialogTitle>
-            <DialogDescription>
-              Agiza mapema, chakula kinaletwa kwa pamoja kwenye hostel yako kwa wakati maalum.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 text-sm">
-            <div>
-              <p className="mb-2 font-bold text-slate-900">1. Chagua Batch</p>
-              <div className="space-y-2">
-                <div className="rounded-xl border border-slate-200 p-3">
-                  <p className="font-semibold">☀️ Lunch Batch</p>
-                  <p className="text-xs text-slate-600">Agiza kabla ya 11:30 AM · Delivery 12:30 PM</p>
-                </div>
-                <div className="rounded-xl border border-slate-200 p-3">
-                  <p className="font-semibold">🌙 Dinner Batch</p>
-                  <p className="text-xs text-slate-600">Agiza kabla ya 06:30 PM · Delivery 07:30 PM</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <p className="mb-2 font-bold text-slate-900">2. Chagua Hostel yako</p>
-              <ul className="space-y-1.5 text-xs text-slate-700">
-                <li>👦 Boys Hostels (Block 6A & 6B) — Block 6 Park/Lounge</li>
-                <li>👧 Girls Hostels (Block 8A & 8B) — Karibu na eneo</li>
-                <li>🏢 New Hostels Zone — Karibu na eneo</li>
-              </ul>
-            </div>
-            <div>
-              <p className="mb-1 font-bold text-slate-900">3. Lipa & subiri</p>
-              <p className="text-xs text-slate-700">
-                Chagua chakula, weka batch na hostel wakati wa malipo. Tutakuletea kwenye drop point kwa muda wa batch.
+        <div className="flex flex-col gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:px-5">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400 text-xl" aria-hidden>
+              🥣
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-extrabold text-slate-900 sm:text-base">Pre-Order System</p>
+              <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
+                Agiza chakula mapema kulingana na Hostel yako kwa delivery ya pamoja!
               </p>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setPreOrderOpen(false);
-                setTimeout(() => document.getElementById("todays-menu")?.scrollIntoView({ behavior: "smooth" }), 150);
-              }}
-              className="w-full rounded-xl bg-[#008542] py-3 font-bold text-white hover:bg-[#006e37]"
-            >
-              Anza Kuagiza Sasa
-            </button>
           </div>
-        </DialogContent>
-      </Dialog>
+          <button
+            type="button"
+            onClick={() => setPreOrderOpen(true)}
+            className="h-11 shrink-0 rounded-xl bg-[#008542] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#006e37] active:scale-[0.98]"
+          >
+            Weka Order Sasa
+          </button>
+        </div>
+      </section>
+
+      <PreOrderWizard open={preOrderOpen} onOpenChange={setPreOrderOpen} menu={menu} />
 
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {slide && (
