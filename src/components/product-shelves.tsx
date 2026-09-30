@@ -6,7 +6,7 @@ import { ProductCard } from "./product-card";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { fetchShelves, DEFAULT_SHELVES, type HomepageShelf } from "@/lib/shelves";
+import { fetchShelves, type HomepageShelf } from "@/lib/shelves";
 import { ServiceMallBanner } from "./service-mall-banner";
 
 const FRESHER_KEYWORDS = [
@@ -89,7 +89,7 @@ export function ProductShelves() {
     staleTime: 30_000,
   });
 
-  const { data: shelfConfig = DEFAULT_SHELVES } = useQuery<HomepageShelf[]>({
+  const { data: shelfConfig = [], isLoading: shelvesLoading } = useQuery<HomepageShelf[]>({
     queryKey: ["homepage-shelves"],
     queryFn: fetchShelves,
     staleTime: 30_000,
@@ -182,7 +182,7 @@ export function ProductShelves() {
         </button>
       </div>
 
-      {isLoading ? (
+      {isLoading || shelvesLoading ? (
         <div className="scrollbar-none mt-8 flex gap-3 overflow-hidden px-4 sm:px-6 lg:px-8">
           {Array.from({ length: 6 }).map((_, i) => (
             <div

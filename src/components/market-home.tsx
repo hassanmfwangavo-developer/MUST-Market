@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Search, Zap } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories, categoryEmoji, categoryLabel } from "@/lib/demo-data";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
@@ -27,7 +27,7 @@ function shuffle<T>(arr: T[], seed: number): T[] {
 
 export function MarketHome() {
   const [active, setActive] = useState<string>("All");
-  const [seed, setSeed] = useState(0); useEffect(() => setSeed(Math.floor(Math.random() * 1_000_000) + 1), []);
+  const seed = 724_391;
   const query = useSearchQuery();
   const navigate = useNavigate();
   const { user } = useAuthUser();
@@ -44,7 +44,7 @@ export function MarketHome() {
     staleTime: 30_000,
   });
 
-  const { data: bannerRows = [] } = useQuery<MarketBanner[]>({
+  const { data: bannerRows = [], isLoading: bannersLoading } = useQuery<MarketBanner[]>({
     queryKey: ["market-banners"],
     queryFn: fetchMarketBanners,
     staleTime: 60_000,
@@ -88,7 +88,11 @@ export function MarketHome() {
   return (
     <section id="browse" className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
       {/* Promotional banner */}
-      {marketBanners.length > 0 ? (
+      {bannersLoading ? (
+        <div className="relative aspect-[16/7] w-full overflow-hidden rounded-2xl border border-border bg-surface-2 sm:aspect-[21/6]" aria-label="Loading marketplace promotions">
+          <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-surface-2 via-surface to-surface-2 motion-reduce:animate-none" />
+        </div>
+      ) : marketBanners.length > 0 ? (
         <div className="relative overflow-hidden rounded-2xl shadow-lift">
           <div className="relative aspect-[16/7] w-full sm:aspect-[21/6]">
             {marketBanners.map((b, i) => (
@@ -120,30 +124,7 @@ export function MarketHome() {
             </div>
           )}
         </div>
-      ) : (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900 to-emerald-800 p-6 text-white shadow-lift sm:p-8">
-          <div className="relative z-10 max-w-xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-50 backdrop-blur">
-              <Zap className="h-3.5 w-3.5 fill-current" />
-              {t.marketHome?.banner.tag}
-            </span>
-            <h2 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-              {t.marketHome?.banner.title}
-            </h2>
-            <p className="mt-2 text-sm text-emerald-100/80">{t.marketHome?.banner.subtitle}</p>
-            <Link
-              to="/browse"
-              search={{ category: undefined, shelf: undefined }}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-emerald-900 shadow-soft transition-transform hover:-translate-y-0.5"
-            >
-              {t.marketHome?.banner.cta}
-              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-            </Link>
-          </div>
-          <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-emerald-700/30 blur-2xl sm:h-56 sm:w-56" />
-          <div className="pointer-events-none absolute bottom-0 right-12 h-24 w-24 rounded-full bg-amber-400/20 blur-xl" />
-        </div>
-      )}
+      ) : null}
 
 
       {/* Search + Post */}
