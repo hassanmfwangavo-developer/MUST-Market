@@ -51,6 +51,7 @@ interface AdminProduct {
   images: string[] | null;
   featured_shelf: string | null;
   category_id: string | null;
+  seller_id: string;
   created_at: string;
 }
 
@@ -58,7 +59,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
+      "id,seller_id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -81,9 +82,31 @@ function AdminConsole() {
   const [term, setTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "sold">("all");
 
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 20;
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["admin-products"],
     queryFn: fetchAllProducts,
+  });
+  const { data: sellerNames = {} } = useQuery({
+    queryKey: ["admin-product-sellers", products.map((p) => p.seller_id).join(",")],
+    enabled: products.length > 0,
+    queryFn: async () => {
+      const ids = Array.from(new Set(products.map((p) => p.seller_id).filter(Boolean)));
+      const { data } = await supabase.from("profiles").select("id,full_name").in("id", ids);
+      const map: Record<string, string> = {};
+      for (const r of data ?? []) map[r.id] = r.full_name ?? "";
+      return map;
+    },
+  });
+  const { data: catNames = {} } = useQuery({
+    queryKey: ["admin-cat-names"],
+    queryFn: async () => {
+      const { data } = await supabase.from("categories").select("id,name");
+      const map: Record<string, string> = {};
+      for (const r of data ?? []) map[r.id] = r.name;
+      return map;
+    },
   });
 
   const kpis = useMemo(() => {
@@ -102,11 +125,17 @@ function AdminConsole() {
       if (!q) return true;
       return (
         p.title.toLowerCase().includes(q) ||
+        p.id.toLowerCase().includes(q) ||
+        (catNames[p.category_id ?? ""] ?? "").toLowerCase().includes(q) ||
+        (sellerNames[p.seller_id] ?? "").toLowerCase().includes(q) ||
         (p.whatsapp_number ?? "").toLowerCase().includes(q) ||
         p.status.toLowerCase().includes(q)
       );
     });
-  }, [products, term, statusFilter]);
+  }, [products, term, statusFilter, catNames, sellerNames]);
+  useEffect(() => setPage(1), [term, statusFilter]);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const toggleStatus = useMutation({
     mutationFn: async (p: AdminProduct) => {
@@ -229,7 +258,7 @@ function AdminConsole() {
             <input
               value={term}
               onChange={(e) => setTerm(e.target.value)}
-              placeholder="Search by title, seller phone or status…"
+              placeholder="Search by title, category, seller name or product ID…"
               className="h-11 w-full rounded-full border border-border bg-surface-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/80 focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
             />
           </div>
@@ -244,7 +273,7 @@ function AdminConsole() {
                     : "bg-surface-2 text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {s}
+                {s === "all" ? "All" : s === "active" ? "Available" : "Sold"}
               </button>
             ))}
           </div>
@@ -259,7 +288,7 @@ function AdminConsole() {
             <p className="py-16 text-center text-sm text-muted-foreground">No listings match.</p>
           ) : (
             <ul className="divide-y divide-border">
-              {filtered.map((p) => (
+              {pageItems.map((p) => (
                 <li key={p.id} className="flex flex-wrap items-center gap-3 p-3 sm:p-4">
                   <SmartImage
                     src={microUrl(p.images?.[0] ?? "")}
@@ -335,6 +364,18 @@ function AdminConsole() {
                 </li>
               ))}
             </ul>
+          )}
+          {!isLoading && filtered.length > PAGE_SIZE && (
+            <div className="flex items-center justify-between border-t border-border px-4 py-3 text-xs text-muted-foreground">
+              <span>
+                {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button disabled={page <= 1} onClick={() => setPage((n) => n - 1)} className="rounded-full border border-border px-3 py-1.5 font-medium text-foreground disabled:opacity-40">Previous</button>
+                <span>Page {page} / {pageCount}</span>
+                <button disabled={page >= pageCount} onClick={() => setPage((n) => n + 1)} className="rounded-full border border-border px-3 py-1.5 font-medium text-foreground disabled:opacity-40">Next</button>
+              </div>
+            </div>
           )}
         </div>
       </main>
