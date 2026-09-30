@@ -14,3 +14,4 @@
 - Store Books Store slider images in three fixed, admin-managed `books_store_banners` slots, reusing protected admin image uploads; this enforces the three-slide limit while keeping public reads separate from marketplace banners.
 - Persist each Msosi checkout's delivery batch and hostel zone on `food_orders`; this keeps kitchen summaries queryable and vendor-scoped by existing order RLS.
 - Hostel batch pre-orders live in standalone `preorder_meals` (admin-managed) and `batch_preorders` (public insert, admin read) tables with no payment; regular `food_orders` checkout stays free of batch/hostel fields so the two flows never mix.
+- Serve HTML documents with no-store headers while leaving hashed assets cacheable; this prevents old page shells from flashing after releases.

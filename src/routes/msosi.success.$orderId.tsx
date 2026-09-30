@@ -105,7 +105,7 @@ function MsosiSuccess() {
     buildReceiptPng({
       orderRef,
       customerName,
-      placedAt: new Date(order?.created_at ?? Date.now()).toLocaleString("en-GB", {
+      placedAt: new Date(order?.created_at ?? 0).toLocaleString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",

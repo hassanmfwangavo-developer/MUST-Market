@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 const fallbackImages = [booksImage, readingImage, libraryImage];
 
 export function BooksStoreBanner() {
-  const { data: banners = [] } = useQuery({
+  const { data: banners = [], isLoading } = useQuery({
     queryKey: BOOKS_BANNER_QUERY_KEY,
     queryFn: fetchBooksBanners,
     staleTime: 30_000,
@@ -27,6 +27,14 @@ export function BooksStoreBanner() {
   }, [images.length, paused]);
 
   const active = slide % images.length;
+
+  if (isLoading) {
+    return (
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Loading Books Store banner">
+        <div className="h-72 animate-pulse rounded-lg border border-border bg-surface-2 motion-reduce:animate-none sm:h-80 lg:h-96" />
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
