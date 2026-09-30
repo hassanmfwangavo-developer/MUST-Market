@@ -104,13 +104,15 @@ const BANNER_CTA: Record<string, string> = {
 };
 
 function useCountdown(endsAt: string | null) {
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     if (!endsAt) return;
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, [endsAt]);
   if (!endsAt) return null;
+  if (!now) return "--:--:--";
   const diff = new Date(endsAt).getTime() - now;
   if (Number.isNaN(diff) || diff <= 0) return null;
   const h = Math.floor(diff / 3_600_000);
@@ -160,7 +162,7 @@ function MsosiFasta() {
 
   const categories = useMemo(() => {
     const active = (dbCategories ?? []).filter((c) => c.is_active).slice(0, 5);
-    return active.length ? active : FALLBACK_CATEGORIES;
+    return active;
   }, [dbCategories]);
 
   const slide = banners[activeSlide] ?? banners[0];

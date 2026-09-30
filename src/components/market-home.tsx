@@ -27,7 +27,7 @@ function shuffle<T>(arr: T[], seed: number): T[] {
 
 export function MarketHome() {
   const [active, setActive] = useState<string>("All");
-  const [seed] = useState(() => Math.floor(Math.random() * 1_000_000) + 1);
+  const [seed, setSeed] = useState(0); useEffect(() => setSeed(Math.floor(Math.random() * 1_000_000) + 1), []);
   const query = useSearchQuery();
   const navigate = useNavigate();
   const { user } = useAuthUser();
