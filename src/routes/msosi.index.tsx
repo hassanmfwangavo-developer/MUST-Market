@@ -25,6 +25,7 @@ import { matchesCategory } from "@/lib/category-match";
 import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
 import { HelpDrawer } from "@/components/help-drawer";
 import { PartnerModal } from "@/components/partner-modal";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 
 export const Route = createFileRoute("/msosi/")({
@@ -135,6 +136,7 @@ function MsosiFasta() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [booking, setBooking] = useState<MenuItem | null>(null);
   const [partnerOpen, setPartnerOpen] = useState(false);
+  const [preOrderOpen, setPreOrderOpen] = useState(false);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
