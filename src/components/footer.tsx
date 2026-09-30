@@ -16,6 +16,7 @@ const MARKETPLACE_LINKS = [
 ];
 
 const MSOSI_LINKS = [
+  { label: "CR's Offer", to: "/cr" as const },
   { label: "Cafeteria Menus", to: "/msosi" as const },
   { label: "Order Food", to: "/msosi" as const },
   { label: "My Orders", to: "/orders" as const },
