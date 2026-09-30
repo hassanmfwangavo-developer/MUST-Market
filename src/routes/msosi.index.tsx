@@ -267,6 +267,20 @@ function MsosiFasta() {
         </div>
       </header>
 
+      <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4" aria-label="Hostel batch pre-order notice">
+        <div className="flex items-start gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 shadow-sm sm:items-center sm:px-5">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400 text-xl" aria-hidden>
+            🥣
+          </span>
+          <div className="min-w-0">
+            <p className="text-sm font-extrabold text-slate-900 sm:text-base">Pre-Order System</p>
+            <p className="mt-0.5 text-xs font-medium leading-relaxed text-slate-700 sm:text-sm">
+              Agiza chakula mapema kulingana na Hostel yako kwa delivery ya pamoja!
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {slide && (
         <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
