@@ -57,6 +57,9 @@ export interface VendorOrder {
   status: string;
   vendor_id: string | null;
   items: VendorOrderItem[];
+  batch_slot: string | null;
+  hostel_zone: string | null;
+  drop_point: string | null;
 }
 
 function mapItems(value: unknown): VendorOrderItem[] {
@@ -72,7 +75,7 @@ export async function fetchVendorOrders(vendorId: string | null): Promise<Vendor
   let query = supabase
     .from("food_orders")
     .select(
-      "id, created_at, customer_name, phone, delivery_area, room, total_tsh, payment_status, status, vendor_id, items",
+      "id, created_at, customer_name, phone, delivery_area, room, total_tsh, payment_status, status, vendor_id, items, batch_slot, hostel_zone, drop_point",
     )
     .order("created_at", { ascending: false });
   if (vendorId) query = query.eq("vendor_id", vendorId);
@@ -91,6 +94,9 @@ export async function fetchVendorOrders(vendorId: string | null): Promise<Vendor
     status: row.status ?? "pending",
     vendor_id: row.vendor_id ?? null,
     items: mapItems(row.items),
+    batch_slot: row.batch_slot ?? null,
+    hostel_zone: row.hostel_zone ?? null,
+    drop_point: row.drop_point ?? null,
   }));
 }
 
@@ -220,6 +226,49 @@ export function summarise(orders: VendorOrder[]) {
       .reduce((sum, o) => sum + o.total_tsh, 0),
     active: orders.filter((o) => ACTIVE.has(o.status)).length,
   };
+}
+
+export interface BatchPreparationSummary {
+  slot: string;
+  orderCount: number;
+  itemTotals: { name: string; quantity: number }[];
+  zoneTotals: { zone: string; orderCount: number }[];
+}
+
+/** Aggregate paid/incoming order quantities so each kitchen can prepare in bulk. */
+export function summariseOrderBatches(orders: VendorOrder[]): BatchPreparationSummary[] {
+  const batches = new Map<
+    string,
+    { orderCount: number; items: Map<string, number>; zones: Map<string, number> }
+  >();
+
+  for (const order of orders) {
+    if (!order.batch_slot || order.status === "cancelled") continue;
+    const current = batches.get(order.batch_slot) ?? {
+      orderCount: 0,
+      items: new Map<string, number>(),
+      zones: new Map<string, number>(),
+    };
+    current.orderCount += 1;
+    for (const item of order.items) {
+      current.items.set(item.name, (current.items.get(item.name) ?? 0) + item.quantity);
+    }
+    const zone = order.hostel_zone ?? "other";
+    current.zones.set(zone, (current.zones.get(zone) ?? 0) + 1);
+    batches.set(order.batch_slot, current);
+  }
+
+  const preferredOrder = ["lunch", "dinner"];
+  return [...batches.entries()]
+    .sort(([a], [b]) => preferredOrder.indexOf(a) - preferredOrder.indexOf(b))
+    .map(([slot, value]) => ({
+      slot,
+      orderCount: value.orderCount,
+      itemTotals: [...value.items.entries()]
+        .map(([name, quantity]) => ({ name, quantity }))
+        .sort((a, b) => b.quantity - a.quantity),
+      zoneTotals: [...value.zones.entries()].map(([zone, orderCount]) => ({ zone, orderCount })),
+    }));
 }
 
 /** Group pre-orders by their scheduled slot (falls back to the booking day). */

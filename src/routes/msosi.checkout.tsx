@@ -6,7 +6,6 @@ import {
   Lock,
   Loader2,
   MapPin,
-  ChevronDown,
   ShoppingBag,
   Phone,
   User,
@@ -32,17 +31,6 @@ import {
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
-
-const DELIVERY_AREAS = [
-  "Hosteli Block 6A",
-  "Hosteli Block 6B",
-  "New Hostels",
-  "Iyunga",
-  "Inyara",
-  "Lupeta",
-  "Hosteli Block 8C",
-  "Hosteli Block 8D",
-];
 
 type CheckoutState = {
   itemId?: string;
@@ -107,7 +95,7 @@ function MsosiCheckout() {
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState(DELIVERY_AREAS[0]);
+  const [area, setArea] = useState("");
   const [room, setRoom] = useState("");
   const [batchSlot, setBatchSlot] = useState<BatchSlot | "">("");
   const [hostelZone, setHostelZone] = useState<HostelZone | "">("");

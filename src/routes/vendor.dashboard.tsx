@@ -31,9 +31,11 @@ import {
   setMenuAvailability,
   statusBadgeClass,
   summarise,
+  summariseOrderBatches,
   updateOrderStatus,
   type OrderStatus,
 } from "@/lib/vendor-portal";
+import { batchSlotLabel, hostelZoneLabel } from "@/lib/order-batches";
 
 export const Route = createFileRoute("/vendor/dashboard")({
   head: () => ({
@@ -150,6 +152,10 @@ function VendorDashboard() {
   });
 
   const stats = useMemo(() => summarise(orders.data ?? []), [orders.data]);
+  const batchSummaries = useMemo(
+    () => summariseOrderBatches(orders.data ?? []),
+    [orders.data],
+  );
   const grouped = useMemo(() => groupPreOrders(preOrders.data ?? []), [preOrders.data]);
 
   if (access.isLoading || role === "none") {
@@ -219,6 +225,65 @@ function VendorDashboard() {
           <StatCard icon={Timer} label="Active / Pending Orders" value={String(stats.active)} />
         </div>
 
+        {batchSummaries.length > 0 && (
+          <section className={`${cardClass} mt-6`} aria-labelledby="batch-summary-title">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <div>
+                <h2 id="batch-summary-title" className="text-lg font-bold text-foreground">
+                  Batch Preparation Summary
+                </h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Jumla ya chakula cha kuandaa kwa kila delivery batch.
+                </p>
+              </div>
+              <span className="rounded-full bg-accent-soft px-3 py-1 text-xs font-bold text-accent-foreground">
+                {batchSummaries.reduce((total, batch) => total + batch.orderCount, 0)} orders
+              </span>
+            </div>
+
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {batchSummaries.map((batch) => (
+                <article key={batch.slot} className="rounded-2xl border border-border bg-surface-2 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">
+                        {batchSlotLabel(batch.slot)}
+                      </h3>
+                      <p className="mt-0.5 text-xs text-muted-foreground">
+                        {batch.orderCount} customer orders
+                      </p>
+                    </div>
+                    <CalendarClock className="h-5 w-5 shrink-0 text-primary" />
+                  </div>
+
+                  <div className="mt-3 grid gap-2">
+                    {batch.itemTotals.map((item) => (
+                      <div
+                        key={item.name}
+                        className="flex items-center justify-between gap-3 rounded-xl bg-surface px-3 py-2"
+                      >
+                        <span className="truncate text-sm font-medium text-foreground">{item.name}</span>
+                        <span className="shrink-0 text-sm font-bold text-primary">Total: {item.quantity}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {batch.zoneTotals.map((zone) => (
+                      <span
+                        key={zone.zone}
+                        className="rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
+                      >
+                        {hostelZoneLabel(zone.zone)} · {zone.orderCount}
+                      </span>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
         <nav className="mt-6 flex flex-wrap gap-1.5 rounded-full border border-border bg-surface-2 p-1.5">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
@@ -264,6 +329,11 @@ function VendorDashboard() {
                         <p className="mt-1 text-xs text-muted-foreground">
                           {o.delivery_area || "—"} · Room {o.room || "—"}
                         </p>
+                        {o.batch_slot && (
+                          <p className="mt-1 text-xs font-semibold text-primary">
+                            {batchSlotLabel(o.batch_slot)} · {hostelZoneLabel(o.hostel_zone)}
+                          </p>
+                        )}
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span
