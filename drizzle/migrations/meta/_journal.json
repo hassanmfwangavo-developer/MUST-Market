@@ -64,6 +64,13 @@
       "when": 1790798964814,
       "tag": "0008_create_batch_preorders",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790802188124,
+      "tag": "0009_fix_preorder_meals_public_read",
+      "breakpoints": true
     }
   ]
 }
