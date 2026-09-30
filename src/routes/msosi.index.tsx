@@ -51,43 +51,7 @@ export const Route = createFileRoute("/msosi/")({
   component: MsosiFasta,
 });
 
-const FALLBACK_CATEGORIES: FoodCategory[] = [
-  {
-    id: "fb-biryani",
-    name: "Rice & Biryani",
-    icon_url: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=200&q=80",
-    display_order: 0,
-    is_active: true,
-  },
-  {
-    id: "fb-chips",
-    name: "Chips & Fast Food",
-    icon_url: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&q=80",
-    display_order: 1,
-    is_active: true,
-  },
-  {
-    id: "fb-swahili",
-    name: "Swahili Dishes",
-    icon_url: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&q=80",
-    display_order: 2,
-    is_active: true,
-  },
-  {
-    id: "fb-snacks",
-    name: "Snacks",
-    icon_url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80",
-    display_order: 3,
-    is_active: true,
-  },
-  {
-    id: "fb-drinks",
-    name: "Drinks & Juices",
-    icon_url: "https://images.unsplash.com/photo-1437418747212-8d9709afab22?w=200&q=80",
-    display_order: 4,
-    is_active: true,
-  },
-];
+
 
 const BANNER_GRADIENTS: Record<string, string> = {
   flash_sale: "from-orange-500 to-amber-500",
