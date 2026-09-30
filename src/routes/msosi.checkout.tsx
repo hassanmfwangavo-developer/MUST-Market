@@ -25,6 +25,8 @@ import { HelpDrawer } from "@/components/help-drawer";
 import {
   BATCH_SLOTS,
   HOSTEL_ZONES,
+  batchSlotLabel,
+  takeCheckoutPrefill,
   type BatchSlot,
   type HostelZone,
 } from "@/lib/order-batches";
