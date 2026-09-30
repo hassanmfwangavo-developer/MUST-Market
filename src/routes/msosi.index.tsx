@@ -484,7 +484,7 @@ function MsosiFasta() {
 
 
       {/* ===================== FOOD GRID FEED ===================== */}
-      <section className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-5">
+      <section id="todays-menu" className="relative z-10 mx-auto max-w-5xl px-4 pb-6 pt-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-bold tracking-tight text-slate-900 sm:text-base">
             {activeVendor ? activeVendor : "Today's Menu"}
