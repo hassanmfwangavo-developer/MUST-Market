@@ -39,6 +39,7 @@ import { Route as MarketElectronicsRouteImport } from './routes/market.electroni
 import { Route as MarketBooksStationeryRouteImport } from './routes/market.books-stationery'
 import { Route as AdminStaffRouteImport } from './routes/admin.staff'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
+import { Route as AdminPreordersRouteImport } from './routes/admin.preorders'
 import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
@@ -195,6 +196,11 @@ const AdminServicesRoute = AdminServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPreordersRoute = AdminPreordersRouteImport.update({
+  id: '/preorders',
+  path: '/preorders',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminFoodRoute = AdminFoodRouteImport.update({
   id: '/food',
   path: '/food',
@@ -241,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
@@ -275,6 +282,7 @@ export interface FileRoutesByTo {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
@@ -313,6 +321,7 @@ export interface FileRoutesById {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/food': typeof AdminFoodRoute
+  '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/staff': typeof AdminStaffRoute
   '/market/books-stationery': typeof MarketBooksStationeryRoute
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/admin/preorders'
     | '/admin/services'
     | '/admin/staff'
     | '/market/books-stationery'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/admin/preorders'
     | '/admin/services'
     | '/admin/staff'
     | '/market/books-stationery'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/food'
+    | '/admin/preorders'
     | '/admin/services'
     | '/admin/staff'
     | '/market/books-stationery'
@@ -676,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminServicesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/preorders': {
+      id: '/admin/preorders'
+      path: '/preorders'
+      fullPath: '/admin/preorders'
+      preLoaderRoute: typeof AdminPreordersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/food': {
       id: '/admin/food'
       path: '/food'
@@ -718,6 +737,7 @@ interface AdminRouteChildren {
   AdminBannersRoute: typeof AdminBannersRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminFoodRoute: typeof AdminFoodRoute
+  AdminPreordersRoute: typeof AdminPreordersRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminStaffRoute: typeof AdminStaffRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -727,6 +747,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBannersRoute: AdminBannersRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminFoodRoute: AdminFoodRoute,
+  AdminPreordersRoute: AdminPreordersRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminStaffRoute: AdminStaffRoute,
   AdminIndexRoute: AdminIndexRoute,
