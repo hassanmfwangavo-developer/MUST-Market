@@ -57,6 +57,13 @@
       "when": 1790796574727,
       "tag": "0007_add_food_order_batch_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790798964814,
+      "tag": "0008_create_batch_preorders",
+      "breakpoints": true
     }
   ]
 }

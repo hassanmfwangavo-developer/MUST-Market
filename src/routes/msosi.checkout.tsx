@@ -6,10 +6,10 @@ import {
   Lock,
   Loader2,
   MapPin,
+  ChevronDown,
   ShoppingBag,
   Phone,
   User,
-  Clock3,
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
@@ -22,17 +22,20 @@ import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 import { fetchActiveVoucher, redeemVoucher, type UserVoucher } from "@/lib/vouchers";
 import { HelpDrawer } from "@/components/help-drawer";
-import {
-  BATCH_SLOTS,
-  HOSTEL_ZONES,
-  batchSlotLabel,
-  takeCheckoutPrefill,
-  type BatchSlot,
-  type HostelZone,
-} from "@/lib/order-batches";
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
+
+const DELIVERY_AREAS = [
+  "Hosteli Block 6A",
+  "Hosteli Block 6B",
+  "New Hostels",
+  "Iyunga",
+  "Inyara",
+  "Lupeta",
+  "Hosteli Block 8C",
+  "Hosteli Block 8D",
+];
 
 type CheckoutState = {
   itemId?: string;
@@ -98,27 +101,12 @@ function MsosiCheckout() {
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState(DELIVERY_AREAS[0]);
   const [room, setRoom] = useState("");
-  const [batchSlot, setBatchSlot] = useState<BatchSlot | "">("");
-  const [hostelZone, setHostelZone] = useState<HostelZone | "">("");
   const [submitting, setSubmitting] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [voucher, setVoucher] = useState<UserVoucher | null>(null);
   const [useSodaVoucher, setUseSodaVoucher] = useState(false);
-
-  // Answers carried over from the "Weka Order Sasa" pre-order wizard.
-  useEffect(() => {
-    const pre = takeCheckoutPrefill();
-    if (!pre) return;
-    setFullName(pre.fullName);
-    setPhone(pre.phone);
-    setBatchSlot(pre.batchSlot);
-    setHostelZone(pre.hostelZone);
-    const zone = HOSTEL_ZONES.find((z) => z.value === pre.hostelZone);
-    if (zone) setArea(zone.title);
-    setRoom(pre.note || "Drop Point");
-  }, []);
 
   // Free-soda voucher available to the signed-in student.
   useEffect(() => {
@@ -181,19 +169,6 @@ function MsosiCheckout() {
       toast.error("Please enter your street name / room number.");
       return;
     }
-    if (!batchSlot) {
-      toast.error("Please select a lunch or dinner delivery batch.");
-      return;
-    }
-    if (!hostelZone) {
-      toast.error("Please select your MUST hostel drop-off zone.");
-      return;
-    }
-    const selectedZone = HOSTEL_ZONES.find((zone) => zone.value === hostelZone);
-    if (!selectedZone) {
-      toast.error("Please select a valid hostel drop-off zone.");
-      return;
-    }
     setSubmitting(true);
     try {
       // Resolve the signed-in user first so we can pass their email to Sonic Pesa.
@@ -244,8 +219,7 @@ function MsosiCheckout() {
                   quantity: order.quantity,
                 },
               ],
-          deliveryLocation: `${selectedZone.title}, ${selectedZone.dropPoint}, ${room.trim()}`,
-          notes: `Batch: ${batchSlotLabel(batchSlot)} | Hostel: ${selectedZone.title}`,
+          deliveryLocation: `${area}, ${room.trim()}`,
         },
       });
       if (!payment.ok) {
@@ -294,9 +268,6 @@ function MsosiCheckout() {
           phone: cleanPhone,
           customerName: cleanName,
           paymentReference: payment.reference,
-          batchSlot,
-          hostelZone,
-          dropPoint: selectedZone.dropPoint,
         });
       }
       // Award streak + reward points (idempotent server-side; non-fatal).
@@ -613,85 +584,32 @@ function MsosiCheckout() {
               Delivery Location
             </h3>
 
-            <fieldset>
-              <legend className="flex items-center gap-1.5 text-xs font-semibold text-slate-600">
-                <Clock3 className="h-3.5 w-3.5 text-[#008542]" /> Batch Delivery Slot
-              </legend>
-              <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                {BATCH_SLOTS.map((slot) => (
-                  <label
-                    key={slot.value}
-                    className={`cursor-pointer rounded-xl border p-3 transition-colors ${
-                      batchSlot === slot.value
-                        ? "border-[#008542] bg-emerald-50 ring-1 ring-[#008542]/20"
-                        : "border-slate-200 bg-white hover:border-[#008542]/40"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="batch-slot"
-                      value={slot.value}
-                      checked={batchSlot === slot.value}
-                      onChange={() => setBatchSlot(slot.value)}
-                      className="sr-only"
-                    />
-                    <span className="block text-sm font-bold text-slate-900">
-                      {slot.icon} {slot.title}
-                    </span>
-                    <span className="mt-1 block text-[11px] leading-relaxed text-slate-500">
-                      Agiza kabla ya {slot.orderBy} · Delivery {slot.deliveryAt}
-                    </span>
-                  </label>
+            <label className="block text-xs font-semibold text-slate-600">
+              Area / Block
+            </label>
+            <div className="relative mt-1.5">
+              <select
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-[#008542]"
+              >
+                {DELIVERY_AREAS.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
                 ))}
-              </div>
-            </fieldset>
-
-            <fieldset className="mt-5">
-              <legend className="text-xs font-semibold text-slate-600">
-                MUST Hostel Drop-off Zone
-              </legend>
-              <div className="mt-2 grid gap-2">
-                {HOSTEL_ZONES.map((zone) => (
-                  <label
-                    key={zone.value}
-                    className={`flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-colors ${
-                      hostelZone === zone.value
-                        ? "border-[#008542] bg-emerald-50 ring-1 ring-[#008542]/20"
-                        : "border-slate-200 bg-white hover:border-[#008542]/40"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="hostel-zone"
-                      value={zone.value}
-                      checked={hostelZone === zone.value}
-                      onChange={() => {
-                        setHostelZone(zone.value);
-                        setArea(zone.title);
-                      }}
-                      className="mt-1 accent-[#008542]"
-                    />
-                    <span className="min-w-0">
-                      <span className="block text-sm font-bold text-slate-900">
-                        {zone.icon} {zone.title}
-                      </span>
-                      <span className="mt-0.5 block text-xs text-slate-500">
-                        Drop Point: {zone.dropPoint}
-                      </span>
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+              </select>
+              <ChevronDown className="pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            </div>
 
             <label className="mt-4 block text-xs font-semibold text-slate-600">
-              Room Number / Landmark
+              Street Name / Room Number
             </label>
             <input
               type="text"
               value={room}
               onChange={(e) => setRoom(e.target.value)}
-              placeholder="e.g. Room 24, east wing"
+              placeholder="e.g. 6A, Ikuti Sokoni"
               maxLength={80}
               className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[#008542]"
             />

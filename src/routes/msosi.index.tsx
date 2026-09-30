@@ -292,7 +292,7 @@ function MsosiFasta() {
         </div>
       </section>
 
-      <PreOrderWizard open={preOrderOpen} onOpenChange={setPreOrderOpen} menu={menu} />
+      <PreOrderWizard open={preOrderOpen} onOpenChange={setPreOrderOpen} />
 
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {slide && (

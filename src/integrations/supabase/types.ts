@@ -67,6 +67,45 @@ export type Database = {
           },
         ]
       }
+      batch_preorders: {
+        Row: {
+          batch_slot: string
+          created_at: string
+          customer_name: string
+          hostel_zone: string
+          id: string
+          items: Json
+          phone: string
+          room: string
+          status: string
+          total_tsh: number
+        }
+        Insert: {
+          batch_slot: string
+          created_at?: string
+          customer_name: string
+          hostel_zone: string
+          id?: string
+          items?: Json
+          phone: string
+          room: string
+          status?: string
+          total_tsh?: number
+        }
+        Update: {
+          batch_slot?: string
+          created_at?: string
+          customer_name?: string
+          hostel_zone?: string
+          id?: string
+          items?: Json
+          phone?: string
+          room?: string
+          status?: string
+          total_tsh?: number
+        }
+        Relationships: []
+      }
       books_store_banners: {
         Row: {
           created_at: string
@@ -531,6 +570,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      preorder_meals: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          name: string
+          price_tsh: number
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name: string
+          price_tsh?: number
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          name?: string
+          price_tsh?: number
+          sort_order?: number
+        }
+        Relationships: []
       }
       products: {
         Row: {

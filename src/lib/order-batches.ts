@@ -48,23 +48,3 @@ export function hostelZoneLabel(value: string | null): string {
   const zone = HOSTEL_ZONES.find((entry) => entry.value === value);
   return zone ? `${zone.icon} ${zone.title}` : "Legacy delivery area";
 }
-export interface CheckoutPrefill {
-  fullName: string;
-  phone: string;
-  note: string;
-  batchSlot: BatchSlot;
-  hostelZone: HostelZone;
-}
-
-let prefill: CheckoutPrefill | null = null;
-
-/** Hand the pre-order wizard's answers to the checkout page (one-shot). */
-export function setCheckoutPrefill(next: CheckoutPrefill) {
-  prefill = next;
-}
-
-export function takeCheckoutPrefill(): CheckoutPrefill | null {
-  const value = prefill;
-  prefill = null;
-  return value;
-}
