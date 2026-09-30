@@ -10,7 +10,7 @@ const ADMIN_EMAIL = "hassani@mustmarket.store";
 const MAX_AGE_MS = 15 * 60 * 1000;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-type Kind = "pre_order" | "product" | "review";
+type Kind = "pre_order" | "product" | "review" | "batch_preorder";
 
 function esc(v: unknown): string {
   return String(v ?? "—")
@@ -59,7 +59,7 @@ async function sendAdminEmail(subject: string, rows: [string, unknown][]) {
 
 export const notifyAdmin = createServerFn({ method: "POST" })
   .inputValidator((data: { kind: Kind; id: string }) => {
-    if (!["pre_order", "product", "review"].includes(data?.kind)) throw new Error("Invalid kind");
+    if (!["pre_order", "product", "review", "batch_preorder"].includes(data?.kind)) throw new Error("Invalid kind");
     if (typeof data?.id !== "string" || !UUID_RE.test(data.id)) throw new Error("Invalid id");
     return { kind: data.kind, id: data.id };
   })
@@ -67,7 +67,38 @@ export const notifyAdmin = createServerFn({ method: "POST" })
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-      if (data.kind === "pre_order") {
+      if (data.kind === "batch_preorder") {
+        const { data: bp } = await supabaseAdmin
+          .from("batch_preorders").select("*").eq("id", data.id).maybeSingle();
+        if (!bp || !isRecent(bp.created_at)) return { ok: false };
+        const { BATCH_SLOTS, HOSTEL_ZONES } = await import("./order-batches");
+        const items = (bp.items as { mealId?: string; name?: string; quantity?: number }[]) ?? [];
+        // Re-price from the admin's meal list so the email never trusts client prices.
+        const ids = items.map((i) => i.mealId).filter((v): v is string => !!v && UUID_RE.test(v));
+        const { data: meals } = await supabaseAdmin
+          .from("preorder_meals").select("id, name, price_tsh").in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+        let total = 0;
+        const lines = items.map((i) => {
+          const m = meals?.find((x) => x.id === i.mealId);
+          const q = Math.max(1, Math.min(20, Number(i.quantity) || 1));
+          const price = m?.price_tsh ?? 0;
+          total += price * q;
+          return `${m?.name ?? i.name} × ${q} — TZS ${price * q}`;
+        });
+        const slot = BATCH_SLOTS.find((b) => b.value === bp.batch_slot);
+        const zone = HOSTEL_ZONES.find((z) => z.value === bp.hostel_zone);
+        await sendAdminEmail(`📅 [NEW BATCH PRE-ORDER] ${slot?.title ?? bp.batch_slot} - TZS ${total}`, [
+          ["Customer", bp.customer_name],
+          ["Phone", bp.phone],
+          ["Meals", lines.join("\n")],
+          ["Batch", slot ? `${slot.title} (Delivery ${slot.deliveryAt})` : bp.batch_slot],
+          ["Hostel Zone", zone ? `${zone.title} — Drop Point: ${zone.dropPoint}` : bp.hostel_zone],
+          ["Room / Landmark", bp.room],
+          ["Total Amount (pay on delivery)", `TZS ${total}`],
+          ["Order ID", bp.id],
+          ["Submitted", bp.created_at],
+        ]);
+      } else if (data.kind === "pre_order") {
         const { data: po } = await supabaseAdmin
           .from("msosi_pre_orders").select("*").eq("id", data.id).maybeSingle();
         if (!po || !isRecent(po.created_at)) return { ok: false };
