@@ -109,12 +109,12 @@ function MsosiFasta() {
     queryFn: fetchMenuItems,
   });
 
-  const { data: banners = [] } = useQuery({
+  const { data: banners = [], isLoading: bannersLoading } = useQuery({
     queryKey: ["active_banners"],
     queryFn: fetchActiveBanners,
   });
 
-  const { data: dbCategories } = useQuery({
+  const { data: dbCategories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["food_categories_public"],
     queryFn: fetchFoodCategories,
   });
@@ -125,8 +125,7 @@ function MsosiFasta() {
   });
 
   const categories = useMemo(() => {
-    const active = (dbCategories ?? []).filter((c) => c.is_active).slice(0, 5);
-    return active;
+    return dbCategories.filter((c) => c.is_active).slice(0, 5);
   }, [dbCategories]);
 
   const slide = banners[activeSlide] ?? banners[0];
@@ -261,7 +260,11 @@ function MsosiFasta() {
       <PreOrderWizard open={preOrderOpen} onOpenChange={setPreOrderOpen} />
 
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
-      {slide && (
+      {bannersLoading ? (
+        <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4" aria-label="Loading offers">
+          <div className="h-36 animate-pulse rounded-3xl border border-slate-200 bg-slate-100 motion-reduce:animate-none sm:h-40" />
+        </section>
+      ) : slide ? (
         <section className="relative z-10 mx-auto max-w-5xl px-4 pt-4">
           {slide.banner_type === "advertising" && slide.image_url ? (
             /* Clean advertising banner: raw image, no overlay, text, badges or countdown */
@@ -357,12 +360,19 @@ function MsosiFasta() {
             </div>
           )}
         </section>
-      )}
+      ) : null}
 
       {/* ===================== TOP 5 CATEGORY CARDS ===================== */}
       <section className="relative z-10 mx-auto max-w-5xl px-4 pt-5">
         <div className="flex items-start justify-between gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {categories.map((cat) => {
+          {categoriesLoading
+            ? Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex shrink-0 basis-0 grow flex-col items-center" aria-hidden="true">
+                  <span className="h-16 w-16 animate-pulse rounded-2xl border border-slate-200 bg-slate-100 motion-reduce:animate-none sm:h-20 sm:w-20" />
+                  <span className="mt-2 h-3 w-14 animate-pulse rounded bg-slate-100 motion-reduce:animate-none" />
+                </div>
+              ))
+            : categories.map((cat) => {
             const active = activeCategory === cat.name;
             return (
               <button
@@ -399,7 +409,7 @@ function MsosiFasta() {
                 </span>
               </button>
             );
-          })}
+              })}
         </div>
       </section>
 
@@ -425,11 +435,15 @@ function MsosiFasta() {
 
         {isLoading ? (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="h-56 animate-pulse rounded-2xl border border-slate-200/80 bg-slate-100"
-              />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white" aria-hidden="true">
+                <div className="aspect-square animate-pulse bg-slate-100 motion-reduce:animate-none" />
+                <div className="space-y-2 p-3">
+                  <div className="h-4 w-4/5 animate-pulse rounded bg-slate-100 motion-reduce:animate-none" />
+                  <div className="h-3 w-3/5 animate-pulse rounded bg-slate-100 motion-reduce:animate-none" />
+                  <div className="h-8 animate-pulse rounded-xl bg-slate-100 motion-reduce:animate-none" />
+                </div>
+              </div>
             ))}
           </div>
         ) : visible.length === 0 ? (
