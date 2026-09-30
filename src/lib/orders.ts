@@ -79,9 +79,9 @@ export async function createOrder(input: {
   phone: string;
   customerName: string;
   paymentReference?: string;
-  batchSlot: "lunch" | "dinner";
-  hostelZone: "boys_6" | "girls_8" | "new_hostels";
-  dropPoint: string;
+  batchSlot?: "lunch" | "dinner";
+  hostelZone?: "boys_6" | "girls_8" | "new_hostels";
+  dropPoint?: string;
 }): Promise<string | null> {
   const { data, error } = await supabase
     .from("food_orders")
@@ -95,9 +95,9 @@ export async function createOrder(input: {
       customer_name: input.customerName,
       payment_status: "pending",
       payment_reference: input.paymentReference ?? null,
-      batch_slot: input.batchSlot,
-      hostel_zone: input.hostelZone,
-      drop_point: input.dropPoint,
+      batch_slot: input.batchSlot ?? null,
+      hostel_zone: input.hostelZone ?? null,
+      drop_point: input.dropPoint ?? null,
       status: "delivered",
     })
     .select("id")
