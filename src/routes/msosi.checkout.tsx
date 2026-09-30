@@ -66,6 +66,7 @@ export const Route = createFileRoute("/msosi/checkout")({
         content: "Fast, frictionless payment. No login required.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MsosiCheckout,

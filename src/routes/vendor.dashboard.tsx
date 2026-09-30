@@ -47,6 +47,13 @@ export const Route = createFileRoute("/vendor/dashboard")({
           "Private restaurant portal for Msosi Fasta vendors: live orders, pre-orders and menu availability.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Vendor Kitchen Portal — MUST Market" },
+      {
+        property: "og:description",
+        content: "Private restaurant order and batch preparation portal for Msosi Fasta vendors.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: VendorDashboard,
