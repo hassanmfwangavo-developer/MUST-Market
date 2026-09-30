@@ -118,6 +118,7 @@ async function notifyAdminPayment(opts: {
   orderRef?: string;
   serviceType?: string;
   reason?: string;
+  details?: SonicPesaPayload["orderDetails"];
 }): Promise<void> {
   try {
     const apiKey = process.env["BREVO_API_KEY"];
@@ -137,7 +138,14 @@ async function notifyAdminPayment(opts: {
       ["Service Type", opts.serviceType ?? "Msosi Fasta"],
       ["Timestamp", new Date().toISOString()],
     ];
+    const items = (opts.details?.items ?? [])
+      .map((it) => `${String(it.name ?? "").slice(0, 80)} x${Number(it.quantity) || 1}`)
+      .join(", ");
+    if (items) rows.push(["Meal(s)", items]);
+    if (opts.details?.notes) rows.push(["Batch / Hostel", String(opts.details.notes).slice(0, 200)]);
+    if (opts.details?.deliveryLocation) rows.push(["Delivery", String(opts.details.deliveryLocation).slice(0, 200)]);
     if (opts.reason) rows.push(["Failure Reason", opts.reason]);
+    const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c);
     const html = `
       <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;background:#ffffff">
         <h2 style="margin:0 0 16px;color:${success ? "#008542" : "#dc2626"}">${subject}</h2>
@@ -145,7 +153,7 @@ async function notifyAdminPayment(opts: {
           ${rows
             .map(
               ([k, v]) =>
-                `<tr><td style="padding:8px 12px;border:1px solid #e2e8f0;font-weight:bold;width:40%">${k}</td><td style="padding:8px 12px;border:1px solid #e2e8f0">${v}</td></tr>`,
+                `<tr><td style="padding:8px 12px;border:1px solid #e2e8f0;font-weight:bold;width:40%">${k}</td><td style="padding:8px 12px;border:1px solid #e2e8f0">${esc(v)}</td></tr>`,
             )
             .join("")}
         </table>
@@ -240,6 +248,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
               amount,
               phone: phoneNumber,
               customerName,
+              details: payload.orderDetails,
               reason:
                 createData?.message ??
                 "Sonic Pesa rejected the payment order request.",
@@ -263,6 +272,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
               amount,
               phone: phoneNumber,
               customerName,
+              details: payload.orderDetails,
               reason: "Sonic Pesa did not return an order ID.",
             });
             return jsonResponse(
@@ -278,6 +288,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
             phone: phoneNumber,
             customerName,
             orderRef: String(orderId),
+            details: payload.orderDetails,
           });
 
           // 2. Poll Order Status every 3 seconds (30 retries x 3s = 90 seconds total)
@@ -308,6 +319,7 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
                 phone: phoneNumber,
                 customerName,
                 orderRef: String(orderId),
+                details: payload.orderDetails,
               });
               // Fire the dual SMS alerts (cook + customer). Awaited via
               // Promise.all inside; failures never break the payment flow.

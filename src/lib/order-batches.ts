@@ -20,19 +20,19 @@ export const HOSTEL_ZONES = [
     value: "boys_6",
     title: "Boys Hostels (Block 6A & 6B)",
     icon: "👦",
-    dropPoint: "Block 6 Park / Lounge",
+    dropPoint: "Nearby Area",
   },
   {
     value: "girls_8",
     title: "Girls Hostels (Block 8A & 8B)",
     icon: "👧",
-    dropPoint: "Nearby designated area",
+    dropPoint: "Nearby Area",
   },
   {
     value: "new_hostels",
     title: "New Hostels Zone",
     icon: "🏢",
-    dropPoint: "Nearby designated area",
+    dropPoint: "Nearby Area",
   },
 ] as const;
 
@@ -47,4 +47,24 @@ export function batchSlotLabel(value: string | null): string {
 export function hostelZoneLabel(value: string | null): string {
   const zone = HOSTEL_ZONES.find((entry) => entry.value === value);
   return zone ? `${zone.icon} ${zone.title}` : "Legacy delivery area";
+}
+export interface CheckoutPrefill {
+  fullName: string;
+  phone: string;
+  note: string;
+  batchSlot: BatchSlot;
+  hostelZone: HostelZone;
+}
+
+let prefill: CheckoutPrefill | null = null;
+
+/** Hand the pre-order wizard's answers to the checkout page (one-shot). */
+export function setCheckoutPrefill(next: CheckoutPrefill) {
+  prefill = next;
+}
+
+export function takeCheckoutPrefill(): CheckoutPrefill | null {
+  const value = prefill;
+  prefill = null;
+  return value;
 }

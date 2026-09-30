@@ -25,6 +25,8 @@ import { HelpDrawer } from "@/components/help-drawer";
 import {
   BATCH_SLOTS,
   HOSTEL_ZONES,
+  batchSlotLabel,
+  takeCheckoutPrefill,
   type BatchSlot,
   type HostelZone,
 } from "@/lib/order-batches";
@@ -104,6 +106,19 @@ function MsosiCheckout() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [voucher, setVoucher] = useState<UserVoucher | null>(null);
   const [useSodaVoucher, setUseSodaVoucher] = useState(false);
+
+  // Answers carried over from the "Weka Order Sasa" pre-order wizard.
+  useEffect(() => {
+    const pre = takeCheckoutPrefill();
+    if (!pre) return;
+    setFullName(pre.fullName);
+    setPhone(pre.phone);
+    setBatchSlot(pre.batchSlot);
+    setHostelZone(pre.hostelZone);
+    const zone = HOSTEL_ZONES.find((z) => z.value === pre.hostelZone);
+    if (zone) setArea(zone.title);
+    setRoom(pre.note || "Drop Point");
+  }, []);
 
   // Free-soda voucher available to the signed-in student.
   useEffect(() => {
@@ -230,6 +245,7 @@ function MsosiCheckout() {
                 },
               ],
           deliveryLocation: `${selectedZone.title}, ${selectedZone.dropPoint}, ${room.trim()}`,
+          notes: `Batch: ${batchSlotLabel(batchSlot)} | Hostel: ${selectedZone.title}`,
         },
       });
       if (!payment.ok) {
