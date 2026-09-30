@@ -9,110 +9,45 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as BrowseRouteImport } from './routes/browse'
-import { Route as CareersRouteImport } from './routes/careers'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as FeedbackRouteImport } from './routes/feedback'
-import { Route as MarketRouteImport } from './routes/market'
-import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
-import { Route as MsosiRouteImport } from './routes/msosi'
-import { Route as OrdersRouteImport } from './routes/orders'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as SellRouteImport } from './routes/sell'
-import { Route as ServicesRouteImport } from './routes/services'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminBannersRouteImport } from './routes/admin.banners'
-import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
-import { Route as AdminFoodRouteImport } from './routes/admin.food'
-import { Route as AdminServicesRouteImport } from './routes/admin.services'
-import { Route as AdminStaffRouteImport } from './routes/admin.staff'
-import { Route as MarketIndexRouteImport } from './routes/market.index'
-import { Route as MarketBooksStationeryRouteImport } from './routes/market.books-stationery'
-import { Route as MarketElectronicsRouteImport } from './routes/market.electronics'
-import { Route as MarketRoomsGhetoRouteImport } from './routes/market.rooms-gheto'
-import { Route as MarketUsedItemsRouteImport } from './routes/market.used-items'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SellRouteImport } from './routes/sell'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as MsosiRouteImport } from './routes/msosi'
+import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
+import { Route as MarketRouteImport } from './routes/market'
+import { Route as FeedbackRouteImport } from './routes/feedback'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as BrowseRouteImport } from './routes/browse'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as MsosiIndexRouteImport } from './routes/msosi.index'
-import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
-import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
-import { Route as ProductIdRouteImport } from './routes/product.$id'
-import { Route as ReportIdRouteImport } from './routes/report.$id'
+import { Route as MarketIndexRouteImport } from './routes/market.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as VendorDashboardRouteImport } from './routes/vendor.dashboard'
-import { Route as ApiPublicSonicPesaPayRouteImport } from './routes/api/public/sonic-pesa-pay'
+import { Route as ReportIdRouteImport } from './routes/report.$id'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
+import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
+import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
+import { Route as MarketUsedItemsRouteImport } from './routes/market.used-items'
+import { Route as MarketRoomsGhetoRouteImport } from './routes/market.rooms-gheto'
+import { Route as MarketElectronicsRouteImport } from './routes/market.electronics'
+import { Route as MarketBooksStationeryRouteImport } from './routes/market.books-stationery'
+import { Route as AdminStaffRouteImport } from './routes/admin.staff'
+import { Route as AdminServicesRouteImport } from './routes/admin.services'
+import { Route as AdminFoodRouteImport } from './routes/admin.food'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as MsosiSuccessOrderIdRouteImport } from './routes/msosi.success.$orderId'
+import { Route as ApiPublicSonicPesaPayRouteImport } from './routes/api/public/sonic-pesa-pay'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrowseRoute = BrowseRouteImport.update({
-  id: '/browse',
-  path: '/browse',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FeedbackRoute = FeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MarketRoute = MarketRouteImport.update({
-  id: '/market',
-  path: '/market',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MeetTheFounderRoute = MeetTheFounderRouteImport.update({
-  id: '/meet-the-founder',
-  path: '/meet-the-founder',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MsosiRoute = MsosiRouteImport.update({
-  id: '/msosi',
-  path: '/msosi',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OrdersRoute = OrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SellRoute = SellRouteImport.update({
-  id: '/sell',
-  path: '/sell',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -120,84 +55,94 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminBannersRoute = AdminBannersRouteImport.update({
-  id: '/banners',
-  path: '/banners',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
-  id: '/categories',
-  path: '/categories',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminFoodRoute = AdminFoodRouteImport.update({
-  id: '/food',
-  path: '/food',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminServicesRoute = AdminServicesRouteImport.update({
+const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
-  getParentRoute: () => AdminRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AdminStaffRoute = AdminStaffRouteImport.update({
-  id: '/staff',
-  path: '/staff',
-  getParentRoute: () => AdminRoute,
+const SellRoute = SellRouteImport.update({
+  id: '/sell',
+  path: '/sell',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const MarketIndexRoute = MarketIndexRouteImport.update({
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MsosiRoute = MsosiRouteImport.update({
+  id: '/msosi',
+  path: '/msosi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetTheFounderRoute = MeetTheFounderRouteImport.update({
+  id: '/meet-the-founder',
+  path: '/meet-the-founder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedbackRoute = FeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseRoute = BrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketBooksStationeryRoute = MarketBooksStationeryRouteImport.update({
-  id: '/books-stationery',
-  path: '/books-stationery',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketElectronicsRoute = MarketElectronicsRouteImport.update({
-  id: '/electronics',
-  path: '/electronics',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketRoomsGhetoRoute = MarketRoomsGhetoRouteImport.update({
-  id: '/rooms-gheto',
-  path: '/rooms-gheto',
-  getParentRoute: () => MarketRoute,
-} as any)
-const MarketUsedItemsRoute = MarketUsedItemsRouteImport.update({
-  id: '/used-items',
-  path: '/used-items',
-  getParentRoute: () => MarketRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MsosiIndexRoute = MsosiIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MsosiRoute,
 } as any)
-const MsosiIdRoute = MsosiIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => MsosiRoute,
+const MarketIndexRoute = MarketIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MarketRoute,
 } as any)
-const MsosiCheckoutRoute = MsosiCheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => MsosiRoute,
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
-const ProductIdRoute = ProductIdRouteImport.update({
-  id: '/product/$id',
-  path: '/product/$id',
+const VendorDashboardRoute = VendorDashboardRouteImport.update({
+  id: '/vendor/dashboard',
+  path: '/vendor/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportIdRoute = ReportIdRouteImport.update({
@@ -205,20 +150,75 @@ const ReportIdRoute = ReportIdRouteImport.update({
   path: '/report/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VendorDashboardRoute = VendorDashboardRouteImport.update({
-  id: '/vendor/dashboard',
-  path: '/vendor/dashboard',
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicSonicPesaPayRoute = ApiPublicSonicPesaPayRouteImport.update({
-  id: '/api/public/sonic-pesa-pay',
-  path: '/api/public/sonic-pesa-pay',
-  getParentRoute: () => rootRouteImport,
+const MsosiCheckoutRoute = MsosiCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => MsosiRoute,
+} as any)
+const MsosiIdRoute = MsosiIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MsosiRoute,
+} as any)
+const MarketUsedItemsRoute = MarketUsedItemsRouteImport.update({
+  id: '/used-items',
+  path: '/used-items',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketRoomsGhetoRoute = MarketRoomsGhetoRouteImport.update({
+  id: '/rooms-gheto',
+  path: '/rooms-gheto',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketElectronicsRoute = MarketElectronicsRouteImport.update({
+  id: '/electronics',
+  path: '/electronics',
+  getParentRoute: () => MarketRoute,
+} as any)
+const MarketBooksStationeryRoute = MarketBooksStationeryRouteImport.update({
+  id: '/books-stationery',
+  path: '/books-stationery',
+  getParentRoute: () => MarketRoute,
+} as any)
+const AdminStaffRoute = AdminStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminServicesRoute = AdminServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFoodRoute = AdminFoodRouteImport.update({
+  id: '/food',
+  path: '/food',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminBannersRoute = AdminBannersRouteImport.update({
+  id: '/banners',
+  path: '/banners',
+  getParentRoute: () => AdminRoute,
 } as any)
 const MsosiSuccessOrderIdRoute = MsosiSuccessOrderIdRouteImport.update({
   id: '/success/$orderId',
   path: '/success/$orderId',
   getParentRoute: () => MsosiRoute,
+} as any)
+const ApiPublicSonicPesaPayRoute = ApiPublicSonicPesaPayRouteImport.update({
+  id: '/api/public/sonic-pesa-pay',
+  path: '/api/public/sonic-pesa-pay',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -466,102 +466,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/browse': {
-      id: '/browse'
-      path: '/browse'
-      fullPath: '/browse'
-      preLoaderRoute: typeof BrowseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feedback': {
-      id: '/feedback'
-      path: '/feedback'
-      fullPath: '/feedback'
-      preLoaderRoute: typeof FeedbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/market': {
-      id: '/market'
-      path: '/market'
-      fullPath: '/market'
-      preLoaderRoute: typeof MarketRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/meet-the-founder': {
-      id: '/meet-the-founder'
-      path: '/meet-the-founder'
-      fullPath: '/meet-the-founder'
-      preLoaderRoute: typeof MeetTheFounderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/msosi': {
-      id: '/msosi'
-      path: '/msosi'
-      fullPath: '/msosi'
-      preLoaderRoute: typeof MsosiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/orders': {
-      id: '/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof OrdersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sell': {
-      id: '/sell'
-      path: '/sell'
-      fullPath: '/sell'
-      preLoaderRoute: typeof SellRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -571,89 +480,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
+    '/sell': {
+      id: '/sell'
+      path: '/sell'
+      fullPath: '/sell'
+      preLoaderRoute: typeof SellRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/msosi': {
+      id: '/msosi'
+      path: '/msosi'
+      fullPath: '/msosi'
+      preLoaderRoute: typeof MsosiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meet-the-founder': {
+      id: '/meet-the-founder'
+      path: '/meet-the-founder'
+      fullPath: '/meet-the-founder'
+      preLoaderRoute: typeof MeetTheFounderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
       path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/banners': {
-      id: '/admin/banners'
-      path: '/banners'
-      fullPath: '/admin/banners'
-      preLoaderRoute: typeof AdminBannersRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/categories': {
-      id: '/admin/categories'
-      path: '/categories'
-      fullPath: '/admin/categories'
-      preLoaderRoute: typeof AdminCategoriesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/food': {
-      id: '/admin/food'
-      path: '/food'
-      fullPath: '/admin/food'
-      preLoaderRoute: typeof AdminFoodRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/services': {
-      id: '/admin/services'
-      path: '/services'
-      fullPath: '/admin/services'
-      preLoaderRoute: typeof AdminServicesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/staff': {
-      id: '/admin/staff'
-      path: '/staff'
-      fullPath: '/admin/staff'
-      preLoaderRoute: typeof AdminStaffRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/market/': {
-      id: '/market/'
-      path: '/'
-      fullPath: '/market/'
-      preLoaderRoute: typeof MarketIndexRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/books-stationery': {
-      id: '/market/books-stationery'
-      path: '/books-stationery'
-      fullPath: '/market/books-stationery'
-      preLoaderRoute: typeof MarketBooksStationeryRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/electronics': {
-      id: '/market/electronics'
-      path: '/electronics'
-      fullPath: '/market/electronics'
-      preLoaderRoute: typeof MarketElectronicsRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/rooms-gheto': {
-      id: '/market/rooms-gheto'
-      path: '/rooms-gheto'
-      fullPath: '/market/rooms-gheto'
-      preLoaderRoute: typeof MarketRoomsGhetoRouteImport
-      parentRoute: typeof MarketRoute
-    }
-    '/market/used-items': {
-      id: '/market/used-items'
-      path: '/used-items'
-      fullPath: '/market/used-items'
-      preLoaderRoute: typeof MarketUsedItemsRouteImport
-      parentRoute: typeof MarketRoute
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/msosi/': {
       id: '/msosi/'
@@ -662,25 +585,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiIndexRouteImport
       parentRoute: typeof MsosiRoute
     }
-    '/msosi/$id': {
-      id: '/msosi/$id'
-      path: '/$id'
-      fullPath: '/msosi/$id'
-      preLoaderRoute: typeof MsosiIdRouteImport
-      parentRoute: typeof MsosiRoute
+    '/market/': {
+      id: '/market/'
+      path: '/'
+      fullPath: '/market/'
+      preLoaderRoute: typeof MarketIndexRouteImport
+      parentRoute: typeof MarketRoute
     }
-    '/msosi/checkout': {
-      id: '/msosi/checkout'
-      path: '/checkout'
-      fullPath: '/msosi/checkout'
-      preLoaderRoute: typeof MsosiCheckoutRouteImport
-      parentRoute: typeof MsosiRoute
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/product/$id': {
-      id: '/product/$id'
-      path: '/product/$id'
-      fullPath: '/product/$id'
-      preLoaderRoute: typeof ProductIdRouteImport
+    '/vendor/dashboard': {
+      id: '/vendor/dashboard'
+      path: '/vendor/dashboard'
+      fullPath: '/vendor/dashboard'
+      preLoaderRoute: typeof VendorDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/report/$id': {
@@ -690,19 +613,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vendor/dashboard': {
-      id: '/vendor/dashboard'
-      path: '/vendor/dashboard'
-      fullPath: '/vendor/dashboard'
-      preLoaderRoute: typeof VendorDashboardRouteImport
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/sonic-pesa-pay': {
-      id: '/api/public/sonic-pesa-pay'
-      path: '/api/public/sonic-pesa-pay'
-      fullPath: '/api/public/sonic-pesa-pay'
-      preLoaderRoute: typeof ApiPublicSonicPesaPayRouteImport
-      parentRoute: typeof rootRouteImport
+    '/msosi/checkout': {
+      id: '/msosi/checkout'
+      path: '/checkout'
+      fullPath: '/msosi/checkout'
+      preLoaderRoute: typeof MsosiCheckoutRouteImport
+      parentRoute: typeof MsosiRoute
+    }
+    '/msosi/$id': {
+      id: '/msosi/$id'
+      path: '/$id'
+      fullPath: '/msosi/$id'
+      preLoaderRoute: typeof MsosiIdRouteImport
+      parentRoute: typeof MsosiRoute
+    }
+    '/market/used-items': {
+      id: '/market/used-items'
+      path: '/used-items'
+      fullPath: '/market/used-items'
+      preLoaderRoute: typeof MarketUsedItemsRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/rooms-gheto': {
+      id: '/market/rooms-gheto'
+      path: '/rooms-gheto'
+      fullPath: '/market/rooms-gheto'
+      preLoaderRoute: typeof MarketRoomsGhetoRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/electronics': {
+      id: '/market/electronics'
+      path: '/electronics'
+      fullPath: '/market/electronics'
+      preLoaderRoute: typeof MarketElectronicsRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/market/books-stationery': {
+      id: '/market/books-stationery'
+      path: '/books-stationery'
+      fullPath: '/market/books-stationery'
+      preLoaderRoute: typeof MarketBooksStationeryRouteImport
+      parentRoute: typeof MarketRoute
+    }
+    '/admin/staff': {
+      id: '/admin/staff'
+      path: '/staff'
+      fullPath: '/admin/staff'
+      preLoaderRoute: typeof AdminStaffRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/services': {
+      id: '/admin/services'
+      path: '/services'
+      fullPath: '/admin/services'
+      preLoaderRoute: typeof AdminServicesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/food': {
+      id: '/admin/food'
+      path: '/food'
+      fullPath: '/admin/food'
+      preLoaderRoute: typeof AdminFoodRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/banners': {
+      id: '/admin/banners'
+      path: '/banners'
+      fullPath: '/admin/banners'
+      preLoaderRoute: typeof AdminBannersRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/msosi/success/$orderId': {
       id: '/msosi/success/$orderId'
@@ -710,6 +703,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/msosi/success/$orderId'
       preLoaderRoute: typeof MsosiSuccessOrderIdRouteImport
       parentRoute: typeof MsosiRoute
+    }
+    '/api/public/sonic-pesa-pay': {
+      id: '/api/public/sonic-pesa-pay'
+      path: '/api/public/sonic-pesa-pay'
+      fullPath: '/api/public/sonic-pesa-pay'
+      preLoaderRoute: typeof ApiPublicSonicPesaPayRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
