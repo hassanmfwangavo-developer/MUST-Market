@@ -213,10 +213,13 @@ export type Database = {
       }
       food_orders: {
         Row: {
+          batch_slot: string | null
           created_at: string
           customer_name: string
           delivery_area: string
+          drop_point: string | null
           eta_minutes: number
+          hostel_zone: string | null
           id: string
           items: Json
           payment_reference: string | null
@@ -231,10 +234,13 @@ export type Database = {
           vendor_id: string | null
         }
         Insert: {
+          batch_slot?: string | null
           created_at?: string
           customer_name?: string
           delivery_area?: string
+          drop_point?: string | null
           eta_minutes?: number
+          hostel_zone?: string | null
           id?: string
           items?: Json
           payment_reference?: string | null
@@ -249,10 +255,13 @@ export type Database = {
           vendor_id?: string | null
         }
         Update: {
+          batch_slot?: string | null
           created_at?: string
           customer_name?: string
           delivery_area?: string
+          drop_point?: string | null
           eta_minutes?: number
+          hostel_zone?: string | null
           id?: string
           items?: Json
           payment_reference?: string | null

@@ -36,7 +36,9 @@ export const Route = createFileRoute("/msosi/$id")({
   component: MsosiDetail,
   errorComponent: ({ error }) => (
     <div className="grid min-h-screen place-items-center p-6 text-center" role="alert">
-      <p className="text-sm text-slate-600">{error.message}</p>
+      <p className="text-sm text-slate-600">
+        {error instanceof Error ? error.message : "This dish could not be loaded."}
+      </p>
     </div>
   ),
   notFoundComponent: () => (

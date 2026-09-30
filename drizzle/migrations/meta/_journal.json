@@ -50,6 +50,13 @@
       "when": 1790565312764,
       "tag": "0006_create_books_store_banners",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790796574727,
+      "tag": "0007_add_food_order_batch_fields",
+      "breakpoints": true
     }
   ]
 }

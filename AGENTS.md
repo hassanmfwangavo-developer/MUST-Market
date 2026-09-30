@@ -12,3 +12,4 @@
 <!-- LOVABLE:END -->
 
 - Store Books Store slider images in three fixed, admin-managed `books_store_banners` slots, reusing protected admin image uploads; this enforces the three-slide limit while keeping public reads separate from marketplace banners.
+- Persist each Msosi checkout's delivery batch and hostel zone on `food_orders`; this keeps kitchen summaries queryable and vendor-scoped by existing order RLS.
