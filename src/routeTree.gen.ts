@@ -21,6 +21,7 @@ import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CrRouteImport } from './routes/cr'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -104,6 +105,11 @@ const FeedbackRoute = FeedbackRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CrRoute = CrRouteImport.update({
+  id: '/cr',
+  path: '/cr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersRoute = CareersRouteImport.update({
@@ -232,6 +238,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/browse': typeof BrowseRoute
   '/careers': typeof CareersRoute
+  '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRouteWithChildren
@@ -269,6 +276,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/browse': typeof BrowseRoute
   '/careers': typeof CareersRoute
+  '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
@@ -306,6 +314,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/browse': typeof BrowseRoute
   '/careers': typeof CareersRoute
+  '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRouteWithChildren
@@ -346,6 +355,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/browse'
     | '/careers'
+    | '/cr'
     | '/dashboard'
     | '/feedback'
     | '/market'
@@ -383,6 +393,7 @@ export interface FileRouteTypes {
     | '/'
     | '/browse'
     | '/careers'
+    | '/cr'
     | '/dashboard'
     | '/feedback'
     | '/meet-the-founder'
@@ -419,6 +430,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/browse'
     | '/careers'
+    | '/cr'
     | '/dashboard'
     | '/feedback'
     | '/market'
@@ -458,6 +470,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   BrowseRoute: typeof BrowseRoute
   CareersRoute: typeof CareersRoute
+  CrRoute: typeof CrRoute
   DashboardRoute: typeof DashboardRoute
   FeedbackRoute: typeof FeedbackRoute
   MarketRoute: typeof MarketRouteWithChildren
@@ -560,6 +573,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cr': {
+      id: '/cr'
+      path: '/cr'
+      fullPath: '/cr'
+      preLoaderRoute: typeof CrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/careers': {
@@ -795,6 +815,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   BrowseRoute: BrowseRoute,
   CareersRoute: CareersRoute,
+  CrRoute: CrRoute,
   DashboardRoute: DashboardRoute,
   FeedbackRoute: FeedbackRoute,
   MarketRoute: MarketRouteWithChildren,
