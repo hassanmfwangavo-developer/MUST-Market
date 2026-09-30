@@ -70,7 +70,10 @@ export const notifyAdmin = createServerFn({ method: "POST" })
       if (data.kind === "batch_preorder") {
         const { data: bp } = await supabaseAdmin
           .from("batch_preorders").select("*").eq("id", data.id).maybeSingle();
-        if (!bp || !isRecent(bp.created_at)) return { ok: false };
+        if (!bp || !isRecent(bp.created_at)) {
+          console.warn("[AdminNotify] batch pre-order not found or too old:", data.id);
+          return { ok: false };
+        }
         const { BATCH_SLOTS, HOSTEL_ZONES } = await import("./order-batches");
         const items = (bp.items as { mealId?: string; name?: string; quantity?: number }[]) ?? [];
         // Re-price from the admin's meal list so the email never trusts client prices.
