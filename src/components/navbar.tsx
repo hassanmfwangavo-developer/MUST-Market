@@ -115,6 +115,13 @@ export function Navbar() {
     navigate({ to: "/" });
   }
 
+  function handleUpdatesClick() {
+    setDrawerOpen(false);
+    setFollowOpen(true);
+    // Opened inside the click gesture so the browser allows the new tab.
+    window.open(INSTAGRAM_URL, "_blank", "noopener,noreferrer");
+  }
+
   const initial =
     (user?.user_metadata?.full_name as string | undefined)?.[0]?.toUpperCase() ??
     user?.email?.[0]?.toUpperCase() ??
@@ -329,8 +336,66 @@ export function Navbar() {
                 Books &amp; E-Books
                 <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
               </a>
+              <button
+                type="button"
+                onClick={handleUpdatesClick}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
+              >
+                <Megaphone className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />
+                Updates
+                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
             </nav>
           </aside>
+        </div>,
+        document.body,
+      )}
+
+      {followOpen && typeof document !== "undefined" && createPortal(
+        <div className="fixed inset-0 z-[60] grid place-items-center p-4">
+          <button
+            type="button"
+            aria-label="Close follow pop-up"
+            onClick={() => setFollowOpen(false)}
+            className="absolute inset-0 bg-foreground/50 backdrop-blur-sm"
+          />
+          <div className="relative w-full max-w-sm rounded-2xl border border-border bg-surface p-6 text-center shadow-lift animate-scale-in">
+            <button
+              type="button"
+              onClick={() => setFollowOpen(false)}
+              aria-label="Close"
+              className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full border border-border bg-surface-2 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary-soft text-primary">
+              <Instagram className="h-7 w-7" />
+            </span>
+            <h3 className="mt-4 text-lg font-semibold tracking-tight text-foreground">
+              Please follow us!
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              The MUST Market Instagram page just opened in a new tab — hit follow so you never miss campus deals and updates.
+            </p>
+            <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
+              >
+                <Instagram className="h-4 w-4" />
+                Follow MUST Market
+              </a>
+              <button
+                type="button"
+                onClick={() => setFollowOpen(false)}
+                className="inline-flex items-center justify-center rounded-full border border-border bg-surface-2 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+              >
+                Maybe later
+              </button>
+            </div>
+          </div>
         </div>,
         document.body,
       )}
