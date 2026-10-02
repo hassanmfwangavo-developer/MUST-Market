@@ -54,3 +54,7 @@ export type MarketCategorySlug = keyof typeof MARKET_CATEGORY_PAGES;
 
 /** Partner bookstore (Books24) — opens in a new tab wherever "Books" is linked. */
 export const BOOKS24_URL = "https://books24.store/mustmarket";
+
+/** Official MUST Market Instagram page — used by the footer icon and the "Updates" drawer link. */
+export const INSTAGRAM_URL =
+  "https://www.instagram.com/mustmarket__01?stkn=dzE0YXVtZDI3eWNo";
