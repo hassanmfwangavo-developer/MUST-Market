@@ -8,8 +8,10 @@ import {
   ChefHat,
   Flame,
   Home,
+  Instagram,
   LayoutDashboard,
   LogOut,
+  Megaphone,
   Menu,
   Search,
   ShieldCheck,
@@ -27,7 +29,7 @@ import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
-import { BOOKS24_URL } from "@/lib/site";
+import { BOOKS24_URL, INSTAGRAM_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
 
 const NAV_LINKS = [
@@ -56,6 +58,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [followOpen, setFollowOpen] = useState(false);
   const [portalRole, setPortalRole] = useState<PortalRole>("none");
   const [rewards, setRewards] = useState({ streak: 0, points: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
