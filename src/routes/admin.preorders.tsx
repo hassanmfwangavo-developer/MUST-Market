@@ -269,6 +269,8 @@ function AdminPreorders() {
         </p>
         <AdminTabs />
 
+        <BatchOperations orders={orders.data ?? []} />
+
         <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold text-foreground">Pre-Order Meals</h2>
