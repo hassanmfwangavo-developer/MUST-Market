@@ -289,3 +289,24 @@
     display: none;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #packing-sheet,
+  #packing-sheet * {
+    visibility: visible;
+  }
+  #packing-sheet {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 0.5in;
+    background: #fff;
+    color: #000;
+  }
+  #packing-sheet table {
+    font-size: 11px;
+  }
+}
