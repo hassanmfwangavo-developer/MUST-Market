@@ -39,6 +39,165 @@ export const Route = createFileRoute("/admin/preorders")({
 type Draft = { id?: string; name: string; description: string; price: string; image_url: string | null; is_active: boolean };
 const EMPTY: Draft = { name: "", description: "", price: "", image_url: null, is_active: true };
 
+function todayLocal(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function BatchOperations({ orders }: { orders: BatchPreorder[] }) {
+  const [slot, setSlot] = useState<string>("lunch");
+  const [date, setDate] = useState<string>(todayLocal());
+  const [printOpen, setPrintOpen] = useState(false);
+
+  const filtered = useMemo(
+    () =>
+      orders.filter((o) => {
+        if (o.batch_slot !== slot) return false;
+        const d = new Date(o.created_at);
+        const local = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+        return local === date;
+      }),
+    [orders, slot, date],
+  );
+
+  const mealTotals = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const o of filtered) for (const i of o.items) map.set(i.name, (map.get(i.name) ?? 0) + i.quantity);
+    return [...map.entries()].sort((a, b) => b[1] - a[1]);
+  }, [filtered]);
+
+  const zoneTotals = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const o of filtered) {
+      const count = o.items.reduce((s, i) => s + i.quantity, 0);
+      map.set(o.hostel_zone, (map.get(o.hostel_zone) ?? 0) + count);
+    }
+    return map;
+  }, [filtered]);
+
+  const totalMeals = mealTotals.reduce((s, [, c]) => s + c, 0);
+  const slotInfo = BATCH_SLOTS.find((b) => b.value === slot);
+  const dateLabel = new Date(`${date}T00:00:00`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+
+  const copyWhatsApp = async () => {
+    const zoneLine = (v: string, label: string) => `• ${label}: ${zoneTotals.get(v) ?? 0} meals`;
+    const text = [
+      "🥣 *MSOSI FASTA BATCH SUMMARY*",
+      `📅 Date: ${dateLabel} | Slot: ${slotInfo?.title ?? slot}`,
+      "",
+      "*TOTAL MEALS TO PREPARE:*",
+      ...(mealTotals.length ? mealTotals.map(([n, c]) => `- ${n}: ${c}`) : ["- (no orders)"]),
+      "",
+      "*HOSTEL DISPATCH BREAKDOWN:*",
+      zoneLine("boys_6", "Boys Hostels (6A & 6B)"),
+      zoneLine("girls_8", "Girls Hostels (8A & 8B)"),
+      zoneLine("new_hostels", "New Hostels Zone"),
+      "",
+      `TOTAL ORDERS: ${filtered.length} (${totalMeals} meals)`,
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Batch summary copied — paste it in WhatsApp");
+    } catch {
+      toast.error("Could not copy to clipboard");
+    }
+  };
+
+  return (
+    <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
+      <h2 className="font-semibold text-foreground">Batch Operations</h2>
+      <p className="mt-1 text-xs text-muted-foreground">Kitchen summary and packing sheet for one delivery batch.</p>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        {BATCH_SLOTS.map((b) => (
+          <button
+            key={b.value}
+            onClick={() => setSlot(b.value)}
+            className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+              slot === b.value ? "border-primary bg-primary text-primary-foreground" : "border-border text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {b.icon} {b.title}
+          </button>
+        ))}
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value || todayLocal())}
+          className="h-10 rounded-lg border border-border bg-background px-3 text-sm"
+          aria-label="Batch date"
+        />
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <div className="rounded-xl border border-border p-3 text-sm">
+          <p className="text-xs text-muted-foreground">Orders</p>
+          <p className="text-lg font-bold text-foreground">{filtered.length}</p>
+        </div>
+        <div className="rounded-xl border border-border p-3 text-sm">
+          <p className="text-xs text-muted-foreground">Total meals</p>
+          <p className="text-lg font-bold text-foreground">{totalMeals}</p>
+        </div>
+        <div className="rounded-xl border border-border p-3 text-sm">
+          <p className="text-xs text-muted-foreground">Meal types</p>
+          <p className="text-lg font-bold text-foreground">{mealTotals.length}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button onClick={copyWhatsApp} disabled={filtered.length === 0}>
+          <ClipboardCopy className="h-4 w-4" /> 📋 Copy WhatsApp Batch Summary
+        </Button>
+        <Button variant="outline" onClick={() => setPrintOpen(true)} disabled={filtered.length === 0}>
+          <Printer className="h-4 w-4" /> Print Packing Sheet
+        </Button>
+      </div>
+
+      <Dialog open={printOpen} onOpenChange={setPrintOpen}>
+        <DialogContent className="max-w-3xl print:max-w-none print:shadow-none print:border-0">
+          <DialogHeader className="print:hidden">
+            <DialogTitle>Packing Sheet — {slotInfo?.title} · {dateLabel}</DialogTitle>
+            <DialogDescription>Use your browser's print dialog. Only the sheet below will print.</DialogDescription>
+          </DialogHeader>
+          <div id="packing-sheet" className="text-sm">
+            <h3 className="text-lg font-bold">MSOSI FASTA — PACKING SHEET</h3>
+            <p className="text-xs text-muted-foreground">{slotInfo?.icon} {slotInfo?.title} (deliver {slotInfo?.deliveryAt}) · {dateLabel} · {filtered.length} orders / {totalMeals} meals</p>
+            <table className="mt-3 w-full border-collapse text-left text-xs">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="py-1 pr-2">✓</th>
+                  <th className="py-1 pr-2">Order</th>
+                  <th className="py-1 pr-2">Customer</th>
+                  <th className="py-1 pr-2">Phone</th>
+                  <th className="py-1 pr-2">Meals</th>
+                  <th className="py-1 pr-2">Hostel Zone</th>
+                  <th className="py-1">Room</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((o) => (
+                  <tr key={o.id} className="border-b border-border/60 align-top">
+                    <td className="py-1.5 pr-2"><span className="inline-block h-3.5 w-3.5 rounded-sm border border-foreground" /></td>
+                    <td className="py-1.5 pr-2 font-mono">{o.id.slice(0, 8)}</td>
+                    <td className="py-1.5 pr-2">{o.customer_name}</td>
+                    <td className="py-1.5 pr-2">{o.phone}</td>
+                    <td className="py-1.5 pr-2">{o.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")}</td>
+                    <td className="py-1.5 pr-2">{HOSTEL_ZONES.find((z) => z.value === o.hostel_zone)?.title ?? o.hostel_zone}</td>
+                    <td className="py-1.5">{o.room}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Button className="print:hidden" onClick={() => window.print()}>
+            <Printer className="h-4 w-4" /> Print
+          </Button>
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
+}
+
 function AdminPreorders() {
   const qc = useQueryClient();
   const meals = useQuery({ queryKey: PREORDER_MEALS_KEY, queryFn: fetchPreorderMeals });
