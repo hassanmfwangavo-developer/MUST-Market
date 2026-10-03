@@ -18,6 +18,7 @@ import {
   fetchBatchPreorders,
   fetchPreorderMeals,
   PREORDER_MEALS_KEY,
+  type BatchPreorder,
   type PreorderMeal,
 } from "@/lib/batch-preorders";
 
