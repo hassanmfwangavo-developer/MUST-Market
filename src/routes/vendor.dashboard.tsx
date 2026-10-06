@@ -26,15 +26,11 @@ import {
   fetchVendorOrders,
   fetchVendorPreOrders,
   groupPreOrders,
-  ORDER_STATUS_LABEL,
-  paymentBadgeClass,
   setMenuAvailability,
-  statusBadgeClass,
   summarise,
   summariseOrderBatches,
-  updateOrderStatus,
-  type OrderStatus,
 } from "@/lib/vendor-portal";
+
 import { batchSlotLabel, hostelZoneLabel } from "@/lib/order-batches";
 
 export const Route = createFileRoute("/vendor/dashboard")({
@@ -68,12 +64,6 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
-const NEXT_ACTIONS: { status: OrderStatus; label: string }[] = [
-  { status: "preparing", label: "Mark as Preparing" },
-  { status: "delivering", label: "Mark as Delivering" },
-  { status: "completed", label: "Mark as Completed" },
-  { status: "cancelled", label: "Cancel" },
-];
 
 function VendorDashboard() {
   const navigate = useNavigate();
@@ -138,17 +128,8 @@ function VendorDashboard() {
     };
   }, [enabled, queryClient]);
 
-  const statusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
-      updateOrderStatus(id, status),
-    onSuccess: (_d, vars) => {
-      toast.success(`Order marked as ${ORDER_STATUS_LABEL[vars.status]}`);
-      void queryClient.invalidateQueries({ queryKey: ["vendor-orders"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
   const availabilityMutation = useMutation({
+
     mutationFn: ({ id, next }: { id: string; next: boolean }) => setMenuAvailability(id, next),
     onSuccess: (_d, vars) => {
       toast.success(vars.next ? "In Stock" : "Chakula kwa sasa Kimeisha");
