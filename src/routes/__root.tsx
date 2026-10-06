@@ -17,6 +17,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { registerAppServiceWorker } from "@/lib/pwa";
 
 function NotFoundComponent() {
   return (
@@ -133,7 +134,10 @@ function RootShell({ children }: { children: ReactNode }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#00875A" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="MUST Market" />
         <HeadContent />
       </head>
       <body>
@@ -148,6 +152,9 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useEffect(() => {
+    registerAppServiceWorker();
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

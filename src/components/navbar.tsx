@@ -31,6 +31,7 @@ import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
 import { BOOKS24_URL, INSTAGRAM_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
+import { InstallAppButton } from "@/components/install-app-button";
 
 const NAV_LINKS = [
   { label: "Marketplace", to: "/market" as const },
@@ -192,6 +193,7 @@ export function Navbar() {
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
+          <InstallAppButton />
           <LanguageToggle />
           {user ? (
             <div ref={menuRef} className="relative">
