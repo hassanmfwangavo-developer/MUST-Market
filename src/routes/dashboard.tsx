@@ -29,6 +29,13 @@ export const Route = createFileRoute("/dashboard")({
         name: "description",
         content: "Manage your MUST Market listings, edit prices, and delete sold items.",
       },
+      { property: "og:title", content: "Seller Dashboard — MUST Market" },
+      {
+        property: "og:description",
+        content: "Manage your MUST Market listings, edit prices, and delete sold items.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -171,7 +178,7 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
           </button>
         </header>
 
-        <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <section className="mt-7 grid grid-cols-3 gap-2.5 sm:mt-8 sm:gap-4">
           <StatCard
             label="Total posted items"
             value={stats.total}
@@ -204,13 +211,13 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
               </button>
             </div>
           ) : (
-            <ul className="mt-4 space-y-3">
+            <ul className="mt-4 space-y-4">
               {products.map((p) => (
                 <li
                   key={p.id}
-                  className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-4 rounded-2xl border border-border bg-surface p-3 shadow-soft sm:grid-cols-[80px_minmax(0,1fr)_auto] sm:p-4"
+                  className="grid grid-cols-[76px_minmax(0,1fr)] gap-x-3 gap-y-4 rounded-2xl border border-border bg-surface p-3 shadow-soft sm:grid-cols-[80px_minmax(0,1fr)_auto] sm:items-center sm:gap-4 sm:p-4"
                 >
-                  <div className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2 sm:h-20 sm:w-20">
+                  <div className="grid h-[76px] w-[76px] shrink-0 place-items-center overflow-hidden rounded-xl bg-surface-2 sm:h-20 sm:w-20">
                     {p.images?.[0] ? (
                       <img
                         src={microUrl(p.images[0])}
@@ -224,12 +231,14 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                       <PackageOpen className="h-6 w-6 text-muted-foreground" />
                     )}
                   </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-foreground sm:text-base">
+                  <div className="min-w-0 self-center">
+                    <div className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:truncate sm:text-base">
                       {p.title}
                     </div>
-                    <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                      <span>TSh {p.price_tsh.toLocaleString("en-US")}</span>
+                    <div className="mt-1 text-sm font-semibold text-foreground">
+                      TSh {p.price_tsh.toLocaleString("en-US")}
+                    </div>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         <Eye className="h-3 w-3" />
                         {p.view_count}
@@ -245,18 +254,18 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                       </span>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-center gap-2">
+                  <div className="col-span-2 grid grid-cols-2 gap-2 border-t border-border pt-3 sm:col-span-1 sm:flex sm:shrink-0 sm:border-0 sm:pt-0">
                     <Link
                       to="/product/$id"
                       params={{ id: p.id }}
-                      className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:border-primary/40 hover:text-primary"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-border px-3 py-2 text-xs font-semibold text-muted-foreground hover:border-primary/40 hover:text-primary sm:min-h-0 sm:rounded-full sm:py-1.5"
                     >
                       View
                     </Link>
                     <button
                       onClick={() => soldMutation.mutate(p)}
                       disabled={soldMutation.isPending && soldMutation.variables?.id === p.id}
-                      className={`rounded-full px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${
+                      className={`min-h-11 rounded-xl px-3 py-2 text-xs font-semibold disabled:opacity-50 sm:min-h-0 sm:rounded-full sm:py-1.5 ${
                         p.status === "sold"
                           ? "border border-primary/40 text-primary hover:bg-primary-soft"
                           : "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -266,13 +275,13 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                     </button>
                     <button
                       onClick={() => setEditing(p)}
-                      className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary"
+                      className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-border px-3 py-2 text-xs font-semibold text-foreground hover:border-primary/40 hover:text-primary sm:min-h-0 sm:rounded-full sm:py-1.5"
                     >
                       <Pencil className="h-3 w-3" /> Edit
                     </button>
                     <button
                       onClick={() => setDeleting(p)}
-                      className="inline-flex items-center gap-1 rounded-full border border-destructive/30 px-3 py-1.5 text-xs font-semibold text-destructive hover:bg-destructive/10"
+                      className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-destructive/30 px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10 sm:min-h-0 sm:rounded-full sm:py-1.5"
                     >
                       <Trash2 className="h-3 w-3" /> Delete
                     </button>
@@ -314,14 +323,14 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
 
 function StatCard({ label, value, icon }: { label: string; value: number; icon: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-border bg-surface p-5 shadow-soft">
-      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-        <span className="grid h-7 w-7 place-items-center rounded-lg bg-primary-soft text-primary">
+    <div className="min-w-0 rounded-2xl border border-border bg-surface p-3 shadow-soft sm:rounded-3xl sm:p-5">
+      <div className="flex min-w-0 items-center gap-1.5 text-[9px] font-semibold uppercase leading-tight tracking-wider text-muted-foreground sm:gap-2 sm:text-xs sm:tracking-widest">
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-primary-soft text-primary">
           {icon}
         </span>
-        {label}
+        <span className="line-clamp-2">{label}</span>
       </div>
-      <div className="mt-3 text-3xl font-semibold tracking-tight text-foreground">
+      <div className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
         {value.toLocaleString("en-US")}
       </div>
     </div>
