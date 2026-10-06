@@ -342,18 +342,6 @@ function VendorDashboard() {
                           </p>
                         )}
                       </div>
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span
-                          className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${statusBadgeClass(o.status)}`}
-                        >
-                          {ORDER_STATUS_LABEL[o.status] ?? o.status}
-                        </span>
-                        <span
-                          className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${paymentBadgeClass(o.payment_status)}`}
-                        >
-                          {o.payment_status}
-                        </span>
-                      </div>
                     </div>
 
                     <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -367,28 +355,10 @@ function VendorDashboard() {
                       ))}
                     </ul>
 
-                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                      <p className="text-base font-bold text-primary">
-                        {formatTsh(o.total_tsh, "TSh")}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {NEXT_ACTIONS.filter((a) => a.status !== o.status).map((a) => (
-                          <button
-                            key={a.status}
-                            type="button"
-                            disabled={statusMutation.isPending}
-                            onClick={() => statusMutation.mutate({ id: o.id, status: a.status })}
-                            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-transform hover:-translate-y-0.5 ${
-                              a.status === "cancelled"
-                                ? "bg-destructive/10 text-destructive"
-                                : "bg-primary-soft text-primary"
-                            }`}
-                          >
-                            {a.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+                    <p className="mt-3 text-base font-bold text-primary">
+                      {formatTsh(o.total_tsh, "TSh")}
+                    </p>
+
                   </article>
                 ))}
               </div>
