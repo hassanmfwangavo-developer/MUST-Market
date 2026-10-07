@@ -23,7 +23,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { categories, categoryLabel } from "@/lib/demo-data";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
