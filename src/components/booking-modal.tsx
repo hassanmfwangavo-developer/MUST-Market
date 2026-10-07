@@ -91,7 +91,7 @@ export function BookingModal({
               ))}
             </div>
           )}
-          {!quickReservation && <div>
+          <div>
             <label className={labelClass}>Full Name</label>
             <input
               required
@@ -100,7 +100,7 @@ export function BookingModal({
               placeholder="Hassani Mfwangavo"
               className={inputClass}
             />
-          </div>}
+          </div>
           {quickReservation && <div>
             <label className={labelClass}>Estimated Time of Arrival</label>
             <input required type="datetime-local" value={arrivalTime} onChange={(e) => setArrivalTime(e.target.value)} className={inputClass} />
@@ -116,7 +116,7 @@ export function BookingModal({
               className={inputClass}
             />
           </div>
-          <div>
+          {!quickReservation && <div>
             <label className={labelClass}>Delivery Location</label>
             <input
               required
@@ -125,7 +125,7 @@ export function BookingModal({
               placeholder="Ikuti, Block C, Room 12"
               className={inputClass}
             />
-          </div>
+          </div>}
           <div>
             <label className={labelClass}>Message / Notes {quickReservation ? "(optional)" : "(required)"}</label>
             <textarea

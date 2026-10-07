@@ -45,7 +45,7 @@ export function VendorPreorderDialog({ meal, vendorId, open, onOpenChange }: { m
   if (!meal) return null;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92vh] overflow-y-auto rounded-lg sm:max-w-lg">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] overflow-y-auto rounded-lg sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Pre-Order (Delivery)</DialogTitle>
           <DialogDescription>{meal.name} · {formatTsh(meal.price, "TSh")}</DialogDescription>
