@@ -17,6 +17,8 @@ export const Route = createFileRoute("/")({
           "The MUST Market portal — buy & sell student gear in the marketplace, or order food fast with Msosi Fasta.",
       },
       { property: "og:url", content: "https://mustmarket.store/" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/" }],
     scripts: [
