@@ -20,6 +20,7 @@ import { Route as MarketRouteImport } from './routes/market'
 import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
 import { Route as MsosiRouteImport } from './routes/msosi'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as PreorderRouteImport } from './routes/preorder'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as SellRouteImport } from './routes/sell'
@@ -41,6 +42,7 @@ import { Route as MarketUsedItemsRouteImport } from './routes/market.used-items'
 import { Route as MsosiIndexRouteImport } from './routes/msosi.index'
 import { Route as MsosiIdRouteImport } from './routes/msosi.$id'
 import { Route as MsosiCheckoutRouteImport } from './routes/msosi.checkout'
+import { Route as MsosiPreorderRouteImport } from './routes/msosi.preorder'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as ReportIdRouteImport } from './routes/report.$id'
 import { Route as VendorDashboardRouteImport } from './routes/vendor.dashboard'
@@ -100,6 +102,11 @@ const MsosiRoute = MsosiRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreorderRoute = PreorderRouteImport.update({
+  id: '/preorder',
+  path: '/preorder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -207,6 +214,11 @@ const MsosiCheckoutRoute = MsosiCheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => MsosiRoute,
 } as any)
+const MsosiPreorderRoute = MsosiPreorderRouteImport.update({
+  id: '/preorder',
+  path: '/preorder',
+  getParentRoute: () => MsosiRoute,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -245,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/orders': typeof OrdersRoute
+  '/preorder': typeof PreorderRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
@@ -263,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
+  '/msosi/preorder': typeof MsosiPreorderRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/vendor/dashboard': typeof VendorDashboardRoute
@@ -281,6 +295,7 @@ export interface FileRoutesByTo {
   '/feedback': typeof FeedbackRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/orders': typeof OrdersRoute
+  '/preorder': typeof PreorderRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
@@ -299,6 +314,7 @@ export interface FileRoutesByTo {
   '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
+  '/msosi/preorder': typeof MsosiPreorderRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/vendor/dashboard': typeof VendorDashboardRoute
@@ -321,6 +337,7 @@ export interface FileRoutesById {
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/msosi': typeof MsosiRouteWithChildren
   '/orders': typeof OrdersRoute
+  '/preorder': typeof PreorderRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/sell': typeof SellRoute
@@ -339,6 +356,7 @@ export interface FileRoutesById {
   '/market/used-items': typeof MarketUsedItemsRoute
   '/msosi/$id': typeof MsosiIdRoute
   '/msosi/checkout': typeof MsosiCheckoutRoute
+  '/msosi/preorder': typeof MsosiPreorderRoute
   '/product/$id': typeof ProductIdRoute
   '/report/$id': typeof ReportIdRoute
   '/vendor/dashboard': typeof VendorDashboardRoute
@@ -362,6 +380,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/msosi'
     | '/orders'
+    | '/preorder'
     | '/privacy'
     | '/profile'
     | '/sell'
@@ -380,6 +399,7 @@ export interface FileRouteTypes {
     | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
+    | '/msosi/preorder'
     | '/product/$id'
     | '/report/$id'
     | '/vendor/dashboard'
@@ -398,6 +418,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/meet-the-founder'
     | '/orders'
+    | '/preorder'
     | '/privacy'
     | '/profile'
     | '/sell'
@@ -416,6 +437,7 @@ export interface FileRouteTypes {
     | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
+    | '/msosi/preorder'
     | '/product/$id'
     | '/report/$id'
     | '/vendor/dashboard'
@@ -437,6 +459,7 @@ export interface FileRouteTypes {
     | '/meet-the-founder'
     | '/msosi'
     | '/orders'
+    | '/preorder'
     | '/privacy'
     | '/profile'
     | '/sell'
@@ -455,6 +478,7 @@ export interface FileRouteTypes {
     | '/market/used-items'
     | '/msosi/$id'
     | '/msosi/checkout'
+    | '/msosi/preorder'
     | '/product/$id'
     | '/report/$id'
     | '/vendor/dashboard'
@@ -477,6 +501,7 @@ export interface RootRouteChildren {
   MeetTheFounderRoute: typeof MeetTheFounderRoute
   MsosiRoute: typeof MsosiRouteWithChildren
   OrdersRoute: typeof OrdersRoute
+  PreorderRoute: typeof PreorderRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   SellRoute: typeof SellRoute
@@ -566,6 +591,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preorder': {
+      id: '/preorder'
+      path: '/preorder'
+      fullPath: '/preorder'
+      preLoaderRoute: typeof PreorderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -715,6 +747,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MsosiCheckoutRouteImport
       parentRoute: typeof MsosiRoute
     }
+    '/msosi/preorder': {
+      id: '/msosi/preorder'
+      path: '/preorder'
+      fullPath: '/msosi/preorder'
+      preLoaderRoute: typeof MsosiPreorderRouteImport
+      parentRoute: typeof MsosiRoute
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -797,6 +836,7 @@ const MarketRouteWithChildren =
 interface MsosiRouteChildren {
   MsosiIdRoute: typeof MsosiIdRoute
   MsosiCheckoutRoute: typeof MsosiCheckoutRoute
+  MsosiPreorderRoute: typeof MsosiPreorderRoute
   MsosiIndexRoute: typeof MsosiIndexRoute
   MsosiSuccessOrderIdRoute: typeof MsosiSuccessOrderIdRoute
 }
@@ -804,6 +844,7 @@ interface MsosiRouteChildren {
 const MsosiRouteChildren: MsosiRouteChildren = {
   MsosiIdRoute: MsosiIdRoute,
   MsosiCheckoutRoute: MsosiCheckoutRoute,
+  MsosiPreorderRoute: MsosiPreorderRoute,
   MsosiIndexRoute: MsosiIndexRoute,
   MsosiSuccessOrderIdRoute: MsosiSuccessOrderIdRoute,
 }
@@ -822,6 +863,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeetTheFounderRoute: MeetTheFounderRoute,
   MsosiRoute: MsosiRouteWithChildren,
   OrdersRoute: OrdersRoute,
+  PreorderRoute: PreorderRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   SellRoute: SellRoute,

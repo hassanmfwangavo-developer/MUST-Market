@@ -25,7 +25,6 @@ import { matchesCategory } from "@/lib/category-match";
 import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
 import { HelpDrawer } from "@/components/help-drawer";
 import { PartnerModal } from "@/components/partner-modal";
-import { PreOrderWizard } from "@/components/preorder-wizard";
 
 
 export const Route = createFileRoute("/msosi/")({
@@ -102,7 +101,6 @@ function MsosiFasta() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [booking, setBooking] = useState<MenuItem | null>(null);
   const [partnerOpen, setPartnerOpen] = useState(false);
-  const [preOrderOpen, setPreOrderOpen] = useState(false);
 
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
@@ -247,17 +245,14 @@ function MsosiFasta() {
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setPreOrderOpen(true)}
-            className="h-11 shrink-0 rounded-xl bg-[#008542] px-5 text-sm font-bold text-white shadow-sm transition hover:bg-[#006e37] active:scale-[0.98]"
+          <Link
+            to="/preorder"
+            className="inline-flex h-11 shrink-0 items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground shadow-sm transition hover:bg-primary/90 active:scale-[0.98]"
           >
             Weka Order Sasa
-          </button>
+          </Link>
         </div>
       </section>
-
-      <PreOrderWizard open={preOrderOpen} onOpenChange={setPreOrderOpen} />
 
       {/* ===================== PROMO BANNER CAROUSEL ===================== */}
       {bannersLoading ? (
