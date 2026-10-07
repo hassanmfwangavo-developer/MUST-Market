@@ -13,7 +13,6 @@ import {
   LogOut,
   Megaphone,
   Menu,
-  Search,
   ShieldCheck,
   ShoppingBag,
   Smartphone,
@@ -25,7 +24,6 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { categories, categoryLabel } from "@/lib/demo-data";
-import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
@@ -53,7 +51,6 @@ const DRAWER_LINKS = [
 ];
 
 export function Navbar() {
-  const query = useSearchQuery();
   const { user } = useAuthUser();
   const { t } = useLanguage();
   const navigate = useNavigate();
