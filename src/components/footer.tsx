@@ -34,22 +34,22 @@ const COMPANY_LINKS = [
 const SOCIAL_LINKS = [
   {
     label: "Instagram",
-    href: INSTAGRAM_URL,
+    href: MSOSI_INSTAGRAM_URL,
     icon: Instagram,
   },
   {
     label: "WhatsApp",
-    href: "https://wa.me/255674044676",
+    href: WHATSAPP_COMMUNITY_URL,
     icon: WhatsAppIcon,
   },
   {
     label: "Facebook",
-    href: "https://www.facebook.com/share/196sZmikW4/",
+    href: MSOSI_INSTAGRAM_URL,
     icon: Facebook,
   },
   {
     label: "Twitter",
-    href: "https://x.com/must_market01",
+    href: MSOSI_INSTAGRAM_URL,
     icon: TwitterIcon,
   },
 ];
