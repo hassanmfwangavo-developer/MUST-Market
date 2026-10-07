@@ -11,6 +11,9 @@ import {
   Minus,
   Plus,
   ReceiptText,
+  Moon,
+  Soup,
+  Sun,
   Utensils,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -95,6 +98,7 @@ export function PreorderPage() {
         phone: normalizedPhone,
         room,
       });
+      toast.dismiss();
       setReceipt({
         id,
         batch,
@@ -135,8 +139,8 @@ export function PreorderPage() {
 
       <div className="mx-auto max-w-3xl px-4 py-7 sm:px-6 sm:py-10">
         <section className="border-b border-border pb-7 text-center sm:pb-9">
-          <span className="mx-auto grid h-14 w-14 place-items-center rounded-lg bg-accent-soft text-3xl" aria-hidden>
-            🥣
+          <span className="mx-auto grid h-14 w-14 place-items-center rounded-lg bg-accent-soft text-accent-foreground" aria-hidden>
+            <Soup className="h-7 w-7" />
           </span>
           <h1 className="mt-4 text-2xl font-extrabold text-foreground sm:text-3xl">
             MSOSI FASTA BATCH PRE-ORDER
@@ -159,9 +163,11 @@ export function PreorderPage() {
                     role="radio"
                     aria-checked={active}
                     onClick={() => setBatch(slot.value)}
-                    className={`h-auto min-h-28 justify-start whitespace-normal rounded-lg p-4 text-left ${active ? "border-primary bg-primary-soft ring-2 ring-primary/20" : "bg-surface"}`}
+                    className={`h-auto min-h-28 justify-start whitespace-normal rounded-lg p-4 text-left ${active ? "border-primary bg-primary-soft ring-2 ring-primary/20 hover:bg-primary-soft" : "bg-surface"}`}
                   >
-                    <span className="text-2xl" aria-hidden>{slot.icon}</span>
+                    <span className="text-primary" aria-hidden>
+                      {slot.value === "lunch" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+                    </span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-base font-bold text-foreground">{slot.title}</span>
                       <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
@@ -235,7 +241,7 @@ export function PreorderPage() {
                     role="radio"
                     aria-checked={active}
                     onClick={() => setZone(hostel.value)}
-                    className={`h-auto min-h-16 justify-start whitespace-normal rounded-lg px-4 py-3 text-left ${active ? "border-primary bg-primary-soft ring-2 ring-primary/20" : "bg-surface"}`}
+                    className={`h-auto min-h-16 justify-start whitespace-normal rounded-lg px-4 py-3 text-left ${active ? "border-primary bg-primary-soft ring-2 ring-primary/20 hover:bg-primary-soft" : "bg-surface"}`}
                   >
                     <MapPin className="text-primary" />
                     <span className="min-w-0 flex-1">
