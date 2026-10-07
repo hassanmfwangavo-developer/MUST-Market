@@ -13,7 +13,6 @@ import {
   LogOut,
   Megaphone,
   Menu,
-  Search,
   ShieldCheck,
   ShoppingBag,
   Smartphone,
@@ -24,8 +23,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { categories, categoryLabel } from "@/lib/demo-data";
-import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
@@ -53,7 +50,6 @@ const DRAWER_LINKS = [
 ];
 
 export function Navbar() {
-  const query = useSearchQuery();
   const { user } = useAuthUser();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -131,7 +127,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8 lg:max-xl:gap-2 lg:max-xl:px-4">
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
@@ -154,30 +150,12 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="relative hidden min-w-0 max-w-xl flex-1 lg:block">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
-            aria-label="Search listings"
-            value={query}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              if (typeof window !== "undefined" && !window.location.hash.includes("browse")) {
-                const el = document.getElementById("browse");
-                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }}
-            placeholder={t.search.placeholder}
-            className="h-11 w-full rounded-full border border-border bg-surface-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/80 shadow-soft transition-all focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
-          />
-        </div>
-
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1 lg:flex lg:max-xl:gap-0.5 xl:gap-1">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+              className="whitespace-nowrap rounded-full px-1.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:px-2 sm:text-sm lg:max-xl:px-1.5 lg:max-xl:text-[13px] xl:px-3 xl:text-sm"
             >
               {l.label}
             </Link>
@@ -186,7 +164,7 @@ export function Navbar() {
             href={BOOKS24_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-1.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:px-2 sm:text-sm lg:max-xl:px-1.5 lg:max-xl:text-[13px] xl:px-3 xl:text-sm"
           >
             Books <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
@@ -274,7 +252,7 @@ export function Navbar() {
           ) : (
             <button
               onClick={() => openAuthModal()}
-              className="inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform sm:px-4 sm:text-sm"
+              className="inline-flex h-10 items-center gap-1.5 whitespace-nowrap rounded-full bg-primary px-2.5 py-2 text-xs font-semibold text-primary-foreground shadow-soft hover:-translate-y-0.5 transition-transform sm:px-4 sm:text-sm lg:max-xl:px-3 lg:max-xl:text-xs"
             >
               <UserIcon className="h-4 w-4" />
               {t.nav.login}
