@@ -127,7 +127,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8 lg:max-xl:gap-2 lg:max-xl:px-4">
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
@@ -150,7 +150,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav className="ml-auto hidden items-center gap-1 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1 lg:flex lg:max-xl:gap-0.5 xl:gap-1">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.to}
