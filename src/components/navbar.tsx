@@ -53,6 +53,10 @@ export function Navbar() {
   const { user } = useAuthUser();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Rewards (streak & points) are a Msosi Fasta feature — hide them on the
+  // marketplace pages so the dropdown there stays lean.
+  const showRewards = !pathname.startsWith("/market") && !pathname.startsWith("/product") && !pathname.startsWith("/sell") && !pathname.startsWith("/browse");
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [followOpen, setFollowOpen] = useState(false);
