@@ -89,9 +89,13 @@ export function Navbar() {
       setRewards({ streak: 0, points: 0 });
       return;
     }
+    if (!showRewards) {
+      setRewards({ streak: 0, points: 0 });
+    }
     void fetchPortalAccess().then((access) => {
       if (!cancelled) setPortalRole(access.role);
     });
+    if (!showRewards) return () => { cancelled = true; };
     void supabase
       .from("profiles")
       .select("current_streak, reward_points")
@@ -107,7 +111,7 @@ export function Navbar() {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, showRewards]);
 
   async function handleSignOut() {
     setMenuOpen(false);
