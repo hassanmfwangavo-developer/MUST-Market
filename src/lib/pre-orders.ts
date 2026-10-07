@@ -9,6 +9,7 @@ export interface PreOrder {
   phone_number: string;
   delivery_location: string;
   message: string;
+  scheduledFor?: string;
   status: string;
   created_at: string;
 }
@@ -40,6 +41,7 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
     phone_number: input.phoneNumber.trim(),
     delivery_location: input.deliveryLocation.trim(),
     message: input.message.trim(),
+    scheduled_for: input.scheduledFor?.trim() || null,
   });
   if (error) throw new Error(error.message);
   notifyAdminInBackground("pre_order", id);
