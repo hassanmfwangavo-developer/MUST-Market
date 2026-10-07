@@ -9,6 +9,7 @@ export interface PreOrder {
   phone_number: string;
   delivery_location: string;
   message: string;
+  scheduled_for?: string | null;
   status: string;
   created_at: string;
 }
@@ -20,6 +21,7 @@ export interface PreOrderInput {
   phoneNumber: string;
   deliveryLocation: string;
   message: string;
+  scheduledFor?: string;
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -40,6 +42,7 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
     phone_number: input.phoneNumber.trim(),
     delivery_location: input.deliveryLocation.trim(),
     message: input.message.trim(),
+    scheduled_for: input.scheduledFor?.trim() || null,
   });
   if (error) throw new Error(error.message);
   notifyAdminInBackground("pre_order", id);

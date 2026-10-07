@@ -56,6 +56,7 @@ export async function submitBatchPreorder(input: {
   customerName: string;
   phone: string;
   room: string;
+  vendorId?: string | null;
 }): Promise<string> {
   const id = crypto.randomUUID();
   const { error } = await supabase.from("batch_preorders").insert({
@@ -67,6 +68,7 @@ export async function submitBatchPreorder(input: {
     customer_name: input.customerName.trim(),
     phone: input.phone.trim(),
     room: input.room.trim(),
+    vendor_id: input.vendorId ?? null,
   });
   if (error) throw new Error(error.message);
   // Wait for the admin alert (max 8s) so it isn't dropped if the visitor closes the page.

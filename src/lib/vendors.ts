@@ -6,6 +6,10 @@ export interface Vendor {
   logo_url: string | null;
   is_featured: boolean;
   display_order: number;
+  location: string | null;
+  operating_hours: string | null;
+  support_phone: string | null;
+  dropoff_zones: string[];
 }
 
 export interface MenuAddon {
@@ -47,11 +51,21 @@ export interface AdminFoodOrder {
 export async function fetchVendors(): Promise<Vendor[]> {
   const { data, error } = await supabase
     .from("vendors")
-    .select("id, name, logo_url, is_featured, display_order")
+    .select("id, name, logo_url, is_featured, display_order, location, operating_hours, support_phone, dropoff_zones")
     .order("display_order", { ascending: true })
     .order("name", { ascending: true });
   if (error) throw new Error(error.message);
   return (data ?? []) as Vendor[];
+}
+
+export async function fetchVendor(id: string): Promise<Vendor | null> {
+  const { data, error } = await supabase
+    .from("vendors")
+    .select("id, name, logo_url, is_featured, display_order, location, operating_hours, support_phone, dropoff_zones")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data as Vendor | null;
 }
 
 function parseAddons(value: unknown): MenuAddon[] {

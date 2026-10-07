@@ -5,6 +5,7 @@ export interface MenuItem {
   name: string;
   price: number;
   vendor_name: string;
+  vendor_id: string | null;
   rating: number;
   image_url: string | null;
   category: string;
@@ -29,6 +30,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     name: String(row.name ?? ""),
     price: Number(row.price ?? 0),
     vendor_name: String(row.vendor_name ?? ""),
+    vendor_id: (row.vendor_id as string) ?? null,
     rating: Number(row.rating ?? 4.5),
     image_url: (row.image_url as string) ?? null,
     category: String(row.category ?? "All"),
@@ -39,6 +41,17 @@ function normalize(row: Record<string, unknown>): MenuItem {
     is_available: row.is_available === false ? false : true,
     day_badge: (row.day_badge as string) ?? null,
   };
+}
+
+export async function fetchVendorMenuItems(vendorId: string): Promise<MenuItem[]> {
+  const { data, error } = await supabase
+    .from("menu_items")
+    .select("*")
+    .eq("vendor_id", vendorId)
+    .order("category")
+    .order("name");
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => normalize(row as Record<string, unknown>));
 }
 
 /** Fetch the live menu without substituting legacy sample dishes. */

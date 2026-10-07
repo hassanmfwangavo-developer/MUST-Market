@@ -779,7 +779,14 @@ function VendorsTab() {
       patch,
     }: {
       id: string;
-      patch: { name?: string; is_featured?: boolean };
+      patch: {
+        name?: string;
+        is_featured?: boolean;
+        location?: string | null;
+        operating_hours?: string | null;
+        support_phone?: string | null;
+        dropoff_zones?: string[];
+      };
     }) => {
       const { error } = await supabase.from("vendors").update(patch).eq("id", id);
       if (error) throw new Error(error.message);
@@ -869,40 +876,13 @@ function VendorsTab() {
         ) : (
           <ul className="mt-4 space-y-3">
             {vendors.map((v) => (
-              <li key={v.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface-2 p-3">
-                <SmartImage
-                  src={microUrl(v.logo_url ?? "")}
-                  alt={v.name}
-                  className="h-12 w-12 shrink-0 rounded-xl object-cover"
-                />
-                <input
-                  defaultValue={v.name}
-                  onBlur={(e) => {
-                    const value = e.target.value.trim();
-                    if (value && value !== v.name) update.mutate({ id: v.id, patch: { name: value } });
-                  }}
-                  className={`${inputClass} min-w-[160px] flex-1`}
-                />
-                <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-                  <input
-                    type="checkbox"
-                    checked={v.is_featured}
-                    onChange={(e) => update.mutate({ id: v.id, patch: { is_featured: e.target.checked } })}
-                    className="h-4 w-4 accent-[hsl(var(--primary))]"
-                  />
-                  Logo Marquee
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (confirm(`Futa "${v.name}"?`)) remove.mutate(v.id);
-                  }}
-                  className="grid h-10 w-10 place-items-center rounded-xl border border-border text-destructive hover:bg-destructive/10"
-                  aria-label={`Delete ${v.name}`}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </li>
+              <VendorDetailsEditor
+                key={v.id}
+                vendor={v}
+                saving={update.isPending}
+                onSave={(patch) => update.mutate({ id: v.id, patch })}
+                onDelete={() => { if (confirm(`Futa "${v.name}"?`)) remove.mutate(v.id); }}
+              />
             ))}
             {vendors.length === 0 && (
               <p className="py-10 text-center text-sm text-muted-foreground">Hakuna migahawa bado.</p>
@@ -939,6 +919,36 @@ function VendorsTab() {
         </ul>
       </section>
     </div>
+  );
+}
+
+function VendorDetailsEditor({ vendor, saving, onSave, onDelete }: { vendor: Vendor; saving: boolean; onSave: (patch: { name: string; is_featured: boolean; location: string | null; operating_hours: string | null; support_phone: string | null; dropoff_zones: string[] }) => void; onDelete: () => void }) {
+  const [draft, setDraft] = useState({
+    name: vendor.name,
+    location: vendor.location ?? "",
+    operatingHours: vendor.operating_hours ?? "",
+    supportPhone: vendor.support_phone ?? "",
+    dropoffZones: vendor.dropoff_zones.join(", "),
+    featured: vendor.is_featured,
+  });
+  return (
+    <li className="rounded-2xl border border-border bg-surface-2 p-4">
+      <div className="flex items-center gap-3">
+        <SmartImage src={microUrl(vendor.logo_url ?? "")} alt={vendor.name} className="h-12 w-12 shrink-0 rounded-xl object-cover" />
+        <input value={draft.name} onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))} className={`${inputClass} flex-1`} aria-label="Restaurant name" />
+        <button type="button" onClick={onDelete} className="grid h-10 w-10 place-items-center rounded-xl border border-border text-destructive hover:bg-destructive/10" aria-label={`Delete ${vendor.name}`}><Trash2 className="h-4 w-4" /></button>
+      </div>
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <input value={draft.location} onChange={(event) => setDraft((current) => ({ ...current, location: event.target.value }))} placeholder="Location / Hall" className={inputClass} />
+        <input value={draft.operatingHours} onChange={(event) => setDraft((current) => ({ ...current, operatingHours: event.target.value }))} placeholder="Operating hours" className={inputClass} />
+        <input value={draft.supportPhone} onChange={(event) => setDraft((current) => ({ ...current, supportPhone: event.target.value }))} placeholder="Support phone" className={inputClass} />
+        <input value={draft.dropoffZones} onChange={(event) => setDraft((current) => ({ ...current, dropoffZones: event.target.value }))} placeholder="Drop-off zones, comma separated" className={inputClass} />
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <label className="flex items-center gap-2 text-xs font-semibold text-muted-foreground"><input type="checkbox" checked={draft.featured} onChange={(event) => setDraft((current) => ({ ...current, featured: event.target.checked }))} className="h-4 w-4" />Featured restaurant</label>
+        <button type="button" disabled={saving || !draft.name.trim()} onClick={() => onSave({ name: draft.name.trim(), is_featured: draft.featured, location: draft.location.trim() || null, operating_hours: draft.operatingHours.trim() || null, support_phone: draft.supportPhone.trim() || null, dropoff_zones: draft.dropoffZones.split(",").map((zone) => zone.trim()).filter(Boolean) })} className="h-10 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-60">Hifadhi Details</button>
+      </div>
+    </li>
   );
 }
 
