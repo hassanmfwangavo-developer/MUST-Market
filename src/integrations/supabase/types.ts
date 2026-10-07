@@ -79,6 +79,7 @@ export type Database = {
           room: string
           status: string
           total_tsh: number
+          vendor_id: string | null
         }
         Insert: {
           batch_slot: string
@@ -91,6 +92,7 @@ export type Database = {
           room: string
           status?: string
           total_tsh?: number
+          vendor_id?: string | null
         }
         Update: {
           batch_slot?: string
@@ -103,8 +105,17 @@ export type Database = {
           room?: string
           status?: string
           total_tsh?: number
+          vendor_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "batch_preorders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       books_store_banners: {
         Row: {
@@ -919,28 +930,40 @@ export type Database = {
         Row: {
           created_at: string
           display_order: number
+          dropoff_zones: string[]
           id: string
           is_featured: boolean
+          location: string | null
           logo_url: string | null
           name: string
+          operating_hours: string | null
+          support_phone: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           display_order?: number
+          dropoff_zones?: string[]
           id?: string
           is_featured?: boolean
+          location?: string | null
           logo_url?: string | null
           name: string
+          operating_hours?: string | null
+          support_phone?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           display_order?: number
+          dropoff_zones?: string[]
           id?: string
           is_featured?: boolean
+          location?: string | null
           logo_url?: string | null
           name?: string
+          operating_hours?: string | null
+          support_phone?: string | null
           updated_at?: string
         }
         Relationships: []

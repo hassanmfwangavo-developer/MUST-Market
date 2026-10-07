@@ -71,6 +71,13 @@
       "when": 1790802188124,
       "tag": "0009_fix_preorder_meals_public_read",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791400448661,
+      "tag": "0010_add_vendor_public_details_and_batch_preorder_ownership",
+      "breakpoints": true
     }
   ]
 }
