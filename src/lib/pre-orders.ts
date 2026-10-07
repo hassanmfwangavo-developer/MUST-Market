@@ -9,7 +9,7 @@ export interface PreOrder {
   phone_number: string;
   delivery_location: string;
   message: string;
-  scheduledFor?: string;
+  scheduled_for?: string | null;
   status: string;
   created_at: string;
 }
@@ -21,6 +21,7 @@ export interface PreOrderInput {
   phoneNumber: string;
   deliveryLocation: string;
   message: string;
+  scheduledFor?: string;
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
