@@ -155,7 +155,7 @@ export function Navbar() {
             <Link
               key={l.to}
               to={l.to}
-              className="rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+              className="whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary xl:px-3"
             >
               {l.label}
             </Link>
@@ -164,7 +164,7 @@ export function Navbar() {
             href={BOOKS24_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary"
+            className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary xl:px-3"
           >
             Books <ArrowUpRight className="h-3.5 w-3.5" />
           </a>

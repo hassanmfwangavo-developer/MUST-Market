@@ -56,7 +56,9 @@ export function InstallAppButton() {
         className="h-10 w-10 shrink-0 gap-1 rounded-full border-primary/30 bg-primary-soft p-0 text-[11px] font-bold text-primary shadow-soft hover:bg-primary-soft min-[420px]:w-auto min-[420px]:px-2.5 sm:text-xs"
       >
         <Download aria-hidden="true" />
-        <span className="hidden min-[420px]:inline">{language === "sw" ? "Pakua App" : "Install App"}</span>
+        <span className="hidden min-[420px]:inline min-[1024px]:max-[1279px]:hidden">
+          {language === "sw" ? "Pakua App" : "Install App"}
+        </span>
       </Button>
       </DialogTrigger>
       <DialogContent className="w-[calc(100%-2rem)] max-w-sm rounded-lg">
