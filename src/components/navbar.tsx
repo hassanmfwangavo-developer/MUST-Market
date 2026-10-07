@@ -201,24 +201,28 @@ export function Navbar() {
                       {(user.user_metadata?.full_name as string | undefined) ?? "Signed in"}
                     </div>
                     <div className="text-xs text-muted-foreground truncate">{user.email}</div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
-                        <Flame className="h-3 w-3" />
-                        {rewards.streak} Day Streak
-                      </span>
-                      <span className="inline-flex items-center rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">
-                        {rewards.points} pts
-                      </span>
-                    </div>
+                    {showRewards && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-bold text-amber-700">
+                          <Flame className="h-3 w-3" />
+                          {rewards.streak} Day Streak
+                        </span>
+                        <span className="inline-flex items-center rounded-full bg-primary-soft px-2 py-0.5 text-[11px] font-bold text-primary">
+                          {rewards.points} pts
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <Link
-                    to="/profile"
-                    onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
-                  >
-                    <UserIcon className="h-4 w-4 text-muted-foreground" />
-                    My Account &amp; Rewards
-                  </Link>
+                  {showRewards && (
+                    <Link
+                      to="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground hover:bg-surface-2"
+                    >
+                      <UserIcon className="h-4 w-4 text-muted-foreground" />
+                      My Account &amp; Rewards
+                    </Link>
+                  )}
                   <Link
                     to="/dashboard"
                     onClick={() => setMenuOpen(false)}
