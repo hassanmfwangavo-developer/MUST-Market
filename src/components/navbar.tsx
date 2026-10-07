@@ -154,25 +154,7 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="relative hidden min-w-0 max-w-xl flex-1 lg:block">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="search"
-            aria-label="Search listings"
-            value={query}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              if (typeof window !== "undefined" && !window.location.hash.includes("browse")) {
-                const el = document.getElementById("browse");
-                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }}
-            placeholder={t.search.placeholder}
-            className="h-11 w-full rounded-full border border-border bg-surface-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/80 shadow-soft transition-all focus:border-primary focus:bg-surface focus:outline-none focus:ring-4 focus:ring-primary/10"
-          />
-        </div>
-
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="ml-auto hidden items-center gap-1 lg:flex">
           {NAV_LINKS.map((l) => (
             <Link
               key={l.to}
