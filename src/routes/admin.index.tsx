@@ -15,11 +15,8 @@ import {
   LayoutList,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
-import { AdminTabs } from "@/components/admin-tabs";
 import { AdminMarketBanners } from "@/components/admin-market-banners";
 import { AdminBooksBanners } from "@/components/admin-books-banners";
 import { fetchShelves, SHELF_OPTIONS, type HomepageShelf } from "@/lib/shelves";
@@ -215,8 +212,7 @@ function AdminConsole() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
+    <div className="flex flex-col bg-background">
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2.5">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-soft">
@@ -230,7 +226,6 @@ function AdminConsole() {
           </div>
         </div>
 
-        <AdminTabs />
 
         <AdminMarketBanners />
         <AdminBooksBanners />
@@ -375,7 +370,6 @@ function AdminConsole() {
           )}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

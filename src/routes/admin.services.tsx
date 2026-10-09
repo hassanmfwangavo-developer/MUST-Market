@@ -4,9 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Loader2, Pencil, Plus, Trash2, Upload, Wrench } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { AdminTabs } from "@/components/admin-tabs";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -210,8 +207,7 @@ function AdminServicesPage() {
   });
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
+    <div className="flex flex-col bg-background">
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <Wrench className="h-5 w-5 text-primary" />
@@ -220,7 +216,6 @@ function AdminServicesPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           Manage the campus service providers shown on the public Service Mall page.
         </p>
-        <AdminTabs />
 
         <div className="mt-6 flex justify-end">
           <Button type="button" onClick={openCreate} className="h-11 rounded-xl">
@@ -297,7 +292,6 @@ function AdminServicesPage() {
           </div>
         )}
       </main>
-      <Footer />
 
       <Dialog open={modalOpen} onOpenChange={(open) => !open && setModalOpen(false)}>
         <DialogContent className="max-h-[92vh] max-w-2xl overflow-y-auto rounded-2xl border-border bg-surface">

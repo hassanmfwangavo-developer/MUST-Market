@@ -46,6 +46,8 @@ export const Route = createFileRoute("/admin/food")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { tab?: string } =>
+    typeof s.tab === "string" ? { tab: s.tab } : {},
   component: AdminFoodManager,
 });
 
@@ -75,7 +77,11 @@ const TABS = [
 type TabKey = (typeof TABS)[number]["key"];
 
 function AdminFoodManager() {
-  const [tab, setTab] = useState<TabKey>("food");
+  const search = Route.useSearch() as { tab?: string };
+  const navigate = Route.useNavigate();
+  const tab: TabKey = (TABS.some((t) => t.key === search.tab) ? search.tab : "food") as TabKey;
+  const setTab = (k: TabKey) => navigate({ search: { tab: k } as never, replace: true });
+
 
   return (
     <div className="min-h-screen bg-background">
