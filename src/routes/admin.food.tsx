@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  ClipboardList,
   Loader2,
   Pencil,
   Plus,
@@ -27,8 +26,6 @@ import { fetchPreOrders } from "@/lib/pre-orders";
 import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import { uploadAdminImage } from "@/lib/admin-media";
 import {
-  PAYMENT_STATUSES,
-  fetchAdminFoodOrders,
   fetchAdminMenuItems,
   fetchVendors,
   orderRef,
@@ -69,7 +66,6 @@ const DAY_BADGES = [
 ];
 
 const TABS = [
-  { key: "orders", label: "Maagizo & Hali ya Malipo", icon: ClipboardList },
   { key: "food", label: "Vyakula & Menus", icon: UtensilsCrossed },
   { key: "vendors", label: "Migahawa & Logos", icon: Store },
   { key: "reviews", label: "Testimonials & Reviews", icon: Star },
@@ -79,7 +75,7 @@ const TABS = [
 type TabKey = (typeof TABS)[number]["key"];
 
 function AdminFoodManager() {
-  const [tab, setTab] = useState<TabKey>("orders");
+  const [tab, setTab] = useState<TabKey>("food");
 
   return (
     <div className="min-h-screen bg-background">
@@ -114,7 +110,6 @@ function AdminFoodManager() {
         </nav>
 
         <div className="mt-6">
-          {tab === "orders" && <OrdersTab />}
           {tab === "food" && <FoodTab />}
           {tab === "vendors" && <VendorsTab />}
           {tab === "reviews" && <ReviewsTab />}
