@@ -41,7 +41,7 @@ export const Route = createFileRoute("/admin/food")({
       {
         name: "description",
         content:
-          "Monitor Msosi Fasta orders and payment outcomes, manage dishes with add-ons and ratings, and curate campus restaurant logos.",
+          "Manage Msosi Fasta dishes with add-ons and ratings, and curate campus restaurant logos.",
       },
       { name: "robots", content: "noindex, nofollow" },
     ],
