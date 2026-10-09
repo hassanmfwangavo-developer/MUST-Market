@@ -25,6 +25,7 @@ import {
   fetchVendorMenu,
   fetchVendorOrders,
   fetchVendorPreOrders,
+  fetchVendorBatchPreorders,
   groupPreOrders,
   setMenuAvailability,
   summarise,
@@ -106,6 +107,11 @@ function VendorDashboard() {
   const preOrders = useQuery({
     queryKey: ["vendor-pre-orders", activeVendorId ?? "all"],
     queryFn: () => fetchVendorPreOrders(activeVendorId),
+    enabled,
+  });
+  const batchPreorders = useQuery({
+    queryKey: ["vendor-batch-preorders", activeVendorId ?? "all"],
+    queryFn: () => fetchVendorBatchPreorders(activeVendorId),
     enabled,
   });
   const menu = useQuery({
@@ -348,7 +354,36 @@ function VendorDashboard() {
         )}
 
         {tab === "preorders" && (
+          <>
           <section className={`${cardClass} mt-5`}>
+            <h3 className="text-sm font-bold text-foreground">
+              Delivery Pre-Orders{" "}
+              <span className="font-medium text-muted-foreground">({batchPreorders.data?.length ?? 0})</span>
+            </h3>
+            {batchPreorders.isLoading ? (
+              <Spinner />
+            ) : (batchPreorders.data ?? []).length === 0 ? (
+              <Empty text="Hakuna delivery pre-order bado." />
+            ) : (
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {(batchPreorders.data ?? []).map((b) => (
+                  <article key={b.id} className="rounded-2xl border border-border bg-surface-2 p-3">
+                    <p className="text-sm font-semibold text-foreground">
+                      {(b.items ?? []).map((i) => `${i.name ?? "Meal"} × ${i.quantity ?? 1}`).join(", ")}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{b.customer_name} · {b.phone}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {b.batch_slot === "lunch" ? "☀️ Lunch" : b.batch_slot === "dinner" ? "🌙 Dinner" : b.batch_slot} · {b.hostel_zone} · {b.room}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{new Date(b.created_at).toLocaleString()}</p>
+                    <p className="mt-1 text-sm font-bold text-primary">{formatTsh(b.total_tsh, "TSh")}</p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+          <section className={`${cardClass} mt-5`}>
+            <h3 className="mb-2 text-sm font-bold text-foreground">Bookings (Dine-In / Pickup)</h3>
             {preOrders.isLoading ? (
               <Spinner />
             ) : grouped.length === 0 ? (
