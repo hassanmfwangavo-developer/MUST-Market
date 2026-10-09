@@ -4,9 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ChefHat, Loader2, Trash2, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { AdminTabs } from "@/components/admin-tabs";
 import { fetchVendors } from "@/lib/vendors";
 
 export const Route = createFileRoute("/admin/staff")({
@@ -101,8 +98,7 @@ function VendorAccessManager() {
   const vendorName = (id: string) => vendors.data?.find((v) => v.id === id)?.name ?? "Restaurant";
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="bg-background">
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           Vendor Access
@@ -111,7 +107,6 @@ function VendorAccessManager() {
           Link a restaurant owner's account to their cafeteria. They then see only their own orders,
           revenue and menu.
         </p>
-        <AdminTabs />
 
         <section className="mt-6 rounded-3xl border border-border bg-surface p-5 shadow-soft">
           <h2 className="flex items-center gap-2 text-sm font-bold text-foreground">
@@ -190,7 +185,6 @@ function VendorAccessManager() {
           )}
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

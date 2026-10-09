@@ -15,9 +15,6 @@ import {
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { AdminTabs } from "@/components/admin-tabs";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { formatTsh } from "@/lib/menu";
@@ -46,6 +43,8 @@ export const Route = createFileRoute("/admin/food")({
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
+  validateSearch: (s: Record<string, unknown>): { tab?: string } =>
+    typeof s.tab === "string" ? { tab: s.tab } : {},
   component: AdminFoodManager,
 });
 
@@ -75,12 +74,15 @@ const TABS = [
 type TabKey = (typeof TABS)[number]["key"];
 
 function AdminFoodManager() {
-  const [tab, setTab] = useState<TabKey>("food");
+  const search = Route.useSearch() as { tab?: string };
+  const navigate = Route.useNavigate();
+  const tab: TabKey = (TABS.some((t) => t.key === search.tab) ? search.tab : "food") as TabKey;
+  const setTab = (k: TabKey) => navigate({ search: { tab: k } as never, replace: true });
+
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-20 pt-24 sm:px-6">
+    <div className="bg-background">
+      <main className="mx-auto w-full max-w-6xl px-4 pb-10 pt-6 sm:px-6">
         <header>
           <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             Food &amp; Vendor Manager
@@ -89,7 +91,6 @@ function AdminFoodManager() {
             Msosi Fasta orders, dish catalogue and campus restaurant branding in one console.
           </p>
         </header>
-        <AdminTabs />
 
         <nav className="mt-6 flex flex-wrap gap-1.5 rounded-2xl border border-border bg-surface-2 p-1.5">
           {TABS.map(({ key, label, icon: Icon }) => (
@@ -116,7 +117,6 @@ function AdminFoodManager() {
           {tab === "preorders" && <PreOrdersTab />}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

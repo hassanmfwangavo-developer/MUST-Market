@@ -4,9 +4,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ClipboardCopy, Loader2, Pencil, Plus, Printer, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { AdminTabs } from "@/components/admin-tabs";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -261,14 +258,12 @@ function AdminPreorders() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
+    <div className="flex flex-col bg-background">
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Pre-Order System</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Only the meals listed here appear in the "Weka Order Sasa" form on Msosi Fasta.
         </p>
-        <AdminTabs />
 
         <BatchOperations orders={orders.data ?? []} />
 
@@ -339,7 +334,6 @@ function AdminPreorders() {
           )}
         </section>
       </main>
-      <Footer />
 
       <Dialog open={!!draft} onOpenChange={(v) => !v && setDraft(null)}>
         <DialogContent>

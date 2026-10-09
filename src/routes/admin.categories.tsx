@@ -4,9 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ArrowDown, ArrowUp, LayoutGrid, Loader2, Trash2, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
-import { AdminTabs } from "@/components/admin-tabs";
 import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import {
   MAX_ACTIVE_CATEGORIES,
@@ -139,8 +136,7 @@ function AdminCategoriesPage() {
   const canSubmit = name.trim().length > 1 && !atLimit && !create.isPending;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      <Navbar />
+    <div className="flex flex-col bg-background">
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2.5">
           <span className="grid h-10 w-10 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-soft">
@@ -156,7 +152,6 @@ function AdminCategoriesPage() {
           </div>
         </div>
 
-        <AdminTabs />
 
         {/* Frontend preview */}
         <section className="mt-6 rounded-3xl border border-border bg-surface p-5 shadow-soft">
@@ -361,7 +356,6 @@ function AdminCategoriesPage() {
           </section>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
