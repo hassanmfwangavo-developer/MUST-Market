@@ -1,10 +1,10 @@
 import { openAuthModal } from "@/lib/auth-store";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
-import { fetchProduct, whatsappUrl, recordProductView, recordWhatsappClick, type MarketProduct } from "@/lib/products";
+import { fetchProduct, whatsappUrl, recordWhatsappClick, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
 
@@ -99,13 +99,6 @@ function NotFoundPage() {
 
 function ProductPage() {
   const { product } = Route.useLoaderData();
-  const counted = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (counted.current === product.id) return;
-    counted.current = product.id;
-    void recordProductView(product.id);
-  }, [product.id]);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

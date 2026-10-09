@@ -7,7 +7,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   BarChart3,
-  Eye,
   Loader2,
   PackageOpen,
   Pencil,
@@ -49,14 +48,13 @@ interface MyProduct {
   price_tsh: number;
   images: string[] | null;
   status: string;
-  view_count: number;
   created_at: string;
 }
 
 async function fetchMyProducts(userId: string): Promise<MyProduct[]> {
   const { data, error } = await supabase
     .from("products")
-    .select("id,title,description,price_tsh,images,status,view_count,created_at")
+    .select("id,title,description,price_tsh,images,status,created_at")
     .eq("seller_id", userId)
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -123,8 +121,7 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
   const stats = useMemo(() => {
     const total = products.length;
     const active = products.filter((p) => p.status === "active").length;
-    const views = products.reduce((s, p) => s + (p.view_count || 0), 0);
-    return { total, active, views };
+    return { total, active };
   }, [products]);
 
   const soldMutation = useMutation({
@@ -178,7 +175,7 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
           </button>
         </header>
 
-        <section className="mt-7 grid grid-cols-3 gap-2.5 sm:mt-8 sm:gap-4">
+        <section className="mt-7 grid grid-cols-2 gap-2.5 sm:mt-8 sm:gap-4">
           <StatCard
             label="Total posted items"
             value={stats.total}
@@ -189,7 +186,6 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
             value={stats.active}
             icon={<BarChart3 className="h-4 w-4" />}
           />
-          <StatCard label="Total views" value={stats.views} icon={<Eye className="h-4 w-4" />} />
         </section>
 
         <section className="mt-10">
@@ -239,10 +235,6 @@ function DashboardContent({ userId, onGoSell }: { userId: string; onGoSell: () =
                       TSh {p.price_tsh.toLocaleString("en-US")}
                     </div>
                     <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        <Eye className="h-3 w-3" />
-                        {p.view_count}
-                      </span>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${
                           p.status === "active"
