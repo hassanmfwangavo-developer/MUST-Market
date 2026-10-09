@@ -981,10 +981,6 @@ export type Database = {
         }
         Returns: boolean
       }
-      increment_product_view: {
-        Args: { _product_id: string }
-        Returns: undefined
-      }
       increment_whatsapp_click: {
         Args: { _product_id: string }
         Returns: undefined
