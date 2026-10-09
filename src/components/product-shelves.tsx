@@ -134,11 +134,10 @@ export function ProductShelves() {
         }
         case "trending": {
           const tech = products.filter((p) => p.category === "Electronics");
-          return (tech.length > 0 ? tech : products).slice().sort((a, b) => {
-            const v = (b.viewCount ?? 0) - (a.viewCount ?? 0);
-            if (v !== 0) return v;
-            return (b.createdAt ?? "").localeCompare(a.createdAt ?? "");
-          });
+          // Page-view tracking was removed, so "trending" falls back to newest first.
+          return (tech.length > 0 ? tech : products)
+            .slice()
+            .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
         }
         default:
           return products;
