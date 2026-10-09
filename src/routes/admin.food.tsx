@@ -926,6 +926,7 @@ function ReviewsTab() {
 /* ------------------------------- Tab 5 --------------------------------- */
 
 function PreOrdersTab() {
+  const qc = useQueryClient();
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["msosi-pre-orders"],
     queryFn: fetchPreOrders,
@@ -962,6 +963,7 @@ function PreOrdersTab() {
                 <th className="py-2 pr-3">Location</th>
                 <th className="py-2 pr-3">Message</th>
                 <th className="py-2 pr-3">Status</th>
+                <th className="py-2 pr-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -979,6 +981,23 @@ function PreOrdersTab() {
                     <span className="inline-flex rounded-full bg-accent/15 px-2.5 py-1 text-xs font-semibold text-accent-foreground">
                       {b.status}
                     </span>
+                  </td>
+                  <td className="py-3 pr-3">
+                    <button
+                      type="button"
+                      aria-label={`Delete booking from ${b.customer_name}`}
+                      onClick={async () => {
+                        if (!window.confirm("Are you sure you want to delete this order? This cannot be undone.")) return;
+                        const { data, error } = await supabase.from("msosi_pre_orders").delete().eq("id", b.id).select("id");
+                        if (error || !data?.length) return toast.error(error?.message ?? "Could not delete this order");
+                        toast.success("Order deleted");
+                        qc.invalidateQueries({ queryKey: ["msosi-pre-orders"] });
+                        qc.invalidateQueries({ queryKey: ["admin-top-metrics"] });
+                      }}
+                      className="flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-semibold text-destructive hover:bg-destructive/20"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" /> Delete
+                    </button>
                   </td>
                 </tr>
               ))}

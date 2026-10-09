@@ -93,6 +93,8 @@ function AdminLayout() {
 
   const { data: metrics } = useQuery({
     queryKey: ["admin-top-metrics"],
+    refetchInterval: 30_000,
+    refetchOnWindowFocus: true,
     enabled: allowed === true,
     queryFn: async () => {
       const start = new Date();

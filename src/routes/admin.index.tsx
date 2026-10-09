@@ -143,6 +143,7 @@ function AdminConsole() {
     },
     onSuccess: (next) => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success(next === "sold" ? "Marked as SOLD OUT 🔥" : "Listing is live again");
     },
@@ -160,6 +161,7 @@ function AdminConsole() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Listing deleted permanently");
     },
@@ -188,6 +190,7 @@ function AdminConsole() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success("Category updated successfully");
     },
@@ -205,6 +208,7 @@ function AdminConsole() {
     },
     onSuccess: (shelf) => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success(shelf ? "Shelf updated" : "Removed from shelf");
     },
