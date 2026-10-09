@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-rout
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
+  BadgeCheck,
   CalendarClock,
   ChefHat,
   ExternalLink,
@@ -9,8 +10,8 @@ import {
   LayoutGrid,
   Loader2,
   Menu,
-  MessageCircle,
   PackageOpen,
+  PackageX,
   ShieldCheck,
   Star,
   Store,
@@ -100,8 +101,16 @@ function AdminLayout() {
       const start = new Date();
       start.setHours(0, 0, 0, 0);
       const iso = start.toISOString();
-      const [active, batch, msosi, pending, clicks] = await Promise.all([
-        countOf(supabase.from("products").select("id", { count: "exact", head: true }).eq("status", "active")),
+      const [sold, removed, batch, msosi, pending] = await Promise.all([
+        countOf(
+          supabase.from("products").select("id", { count: "exact", head: true }).eq("status", "sold"),
+        ),
+        countOf(
+          supabase
+            .from("products")
+            .select("id", { count: "exact", head: true })
+            .eq("status" as never, "deleted" as never),
+        ),
         countOf(supabase.from("batch_preorders").select("id", { count: "exact", head: true }).gte("created_at", iso)),
         countOf(supabase.from("msosi_pre_orders").select("id", { count: "exact", head: true }).gte("created_at", iso)),
         countOf(
@@ -110,10 +119,8 @@ function AdminLayout() {
             .select("id", { count: "exact", head: true })
             .eq("status" as never, "pending" as never),
         ),
-        supabase.from("products").select("whatsapp_clicks_count"),
       ]);
-      const totalClicks = (clicks.data ?? []).reduce((s, r) => s + (r.whatsapp_clicks_count ?? 0), 0);
-      return { active, today: batch + msosi, pending, clicks: totalClicks };
+      return { sold, removed, today: batch + msosi, pending };
     },
   });
 
@@ -126,10 +133,10 @@ function AdminLayout() {
   }
 
   const cards = [
-    { label: "Active Listings", value: metrics?.active, icon: PackageOpen },
+    { label: "Sold Items", value: metrics?.sold, icon: BadgeCheck },
+    { label: "Removed Listings", value: metrics?.removed, icon: PackageX },
     { label: "Today's Pre-Orders", value: metrics?.today, icon: CalendarClock },
     { label: "Pending Vendor Approvals", value: metrics?.pending, icon: Hourglass },
-    { label: "WhatsApp Clicks", value: metrics?.clicks, icon: MessageCircle },
   ];
 
   const sidebar = (

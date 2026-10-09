@@ -3,10 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  BadgeCheck,
   Loader2,
-  MessageCircle,
-  PackageOpen,
   Search,
   ShieldCheck,
   Trash2,
@@ -75,7 +72,7 @@ const tsh = (n: number) => `TSh ${n.toLocaleString("en-US")}`;
 function AdminConsole() {
   const queryClient = useQueryClient();
   const [term, setTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "sold">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "sold" | "removed">("all");
 
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 20;
@@ -104,18 +101,13 @@ function AdminConsole() {
     },
   });
 
-  const kpis = useMemo(() => {
-    return {
-      active: products.filter((p) => p.status === "active").length,
-      sold: products.filter((p) => p.status === "sold").length,
-      clicks: products.reduce((s, p) => s + (p.whatsapp_clicks_count ?? 0), 0),
-    };
-  }, [products]);
-
   const filtered = useMemo(() => {
     const q = term.trim().toLowerCase();
     return products.filter((p) => {
-      if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (statusFilter !== "all") {
+        const target = statusFilter === "removed" ? "deleted" : statusFilter;
+        if (p.status !== target) return false;
+      }
       if (!q) return true;
       return (
         p.title.toLowerCase().includes(q) ||
@@ -152,18 +144,29 @@ function AdminConsole() {
 
   const remove = useMutation({
     mutationFn: async (p: AdminProduct) => {
-      const paths = (p.images ?? []).map(storagePath).filter((v): v is string => Boolean(v));
-      if (paths.length) {
-        await supabase.storage.from("product-images").remove(paths);
+      if (p.status === "deleted") {
+        const paths = (p.images ?? []).map(storagePath).filter((v): v is string => Boolean(v));
+        if (paths.length) {
+          await supabase.storage.from("product-images").remove(paths);
+        }
+        const { error } = await supabase.from("products").delete().eq("id", p.id);
+        if (error) throw error;
+        return "purged" as const;
       }
-      const { error } = await supabase.from("products").delete().eq("id", p.id);
+      const { error } = await supabase
+        .from("products")
+        .update({ status: "deleted" as never })
+        .eq("id", p.id);
       if (error) throw error;
+      return "removed" as const;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast.success("Listing deleted permanently");
+      toast.success(
+        result === "purged" ? "Listing permanently deleted" : "Listing removed from the marketplace",
+      );
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -237,16 +240,6 @@ function AdminConsole() {
         <ShelfManager />
 
 
-        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
-          <KpiCard label="Active listings" value={kpis.active} icon={<PackageOpen className="h-4 w-4" />} />
-          <KpiCard label="Sold items" value={kpis.sold} icon={<BadgeCheck className="h-4 w-4" />} />
-          <KpiCard
-            label="WhatsApp clicks"
-            value={kpis.clicks}
-            icon={<MessageCircle className="h-4 w-4" />}
-          />
-        </div>
-
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -258,17 +251,17 @@ function AdminConsole() {
             />
           </div>
           <div className="flex gap-1.5">
-            {(["all", "active", "sold"] as const).map((s) => (
+            {(["all", "active", "sold", "removed"] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => setStatusFilter(s)}
-                className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   statusFilter === s
                     ? "bg-primary text-primary-foreground"
                     : "bg-surface-2 text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {s === "all" ? "All" : s === "active" ? "Available" : "Sold"}
+                {s === "all" ? "All" : s === "active" ? "Available" : s === "sold" ? "Sold" : "Removed"}
               </button>
             ))}
           </div>
@@ -305,10 +298,12 @@ function AdminConsole() {
                     className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase ${
                       p.status === "active"
                         ? "bg-primary-soft text-primary"
-                        : "bg-destructive/10 text-destructive"
+                        : p.status === "deleted"
+                          ? "bg-surface-2 text-muted-foreground"
+                          : "bg-destructive/10 text-destructive"
                     }`}
                   >
-                    {p.status}
+                    {p.status === "deleted" ? "removed" : p.status}
                   </span>
                   <select
                     value={p.category_id ?? ""}
@@ -341,11 +336,21 @@ function AdminConsole() {
                       disabled={toggleStatus.isPending}
                       className="rounded-full border border-border bg-surface-2 px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary disabled:opacity-50"
                     >
-                      {p.status === "active" ? "Mark sold" : "Reactivate"}
+                      {p.status === "active"
+                        ? "Mark sold"
+                        : p.status === "deleted"
+                          ? "Restore"
+                          : "Reactivate"}
                     </button>
                     <button
                       onClick={() => {
-                        if (window.confirm(`Permanently delete "${p.title}"? This cannot be undone.`)) {
+                        if (
+                          window.confirm(
+                            p.status === "deleted"
+                              ? `Permanently delete "${p.title}"? This cannot be undone.`
+                              : `Remove "${p.title}" from the marketplace? You can restore it later.`,
+                          )
+                        ) {
                           remove.mutate(p);
                         }
                       }}
@@ -374,28 +379,6 @@ function AdminConsole() {
           )}
         </div>
       </main>
-    </div>
-  );
-}
-
-function KpiCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-border bg-surface p-4 shadow-soft">
-      <div className="flex items-center gap-2 text-muted-foreground">
-        {icon}
-        <span className="text-xs font-medium">{label}</span>
-      </div>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-        {value.toLocaleString("en-US")}
-      </p>
     </div>
   );
 }

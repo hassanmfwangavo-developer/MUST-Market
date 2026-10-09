@@ -86,6 +86,8 @@ export async function fetchProduct(id: string): Promise<MarketProduct | null> {
     .from("products")
     .select(await selectColumns())
     .eq("id", id)
+    // Admin-removed listings (status 'deleted') no longer render, even by direct link.
+    .neq("status" as never, "deleted" as never)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
