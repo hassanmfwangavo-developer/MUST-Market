@@ -36,18 +36,6 @@ export interface AdminMenuItem {
   day_badge: string | null;
 }
 
-export interface AdminFoodOrder {
-  id: string;
-  created_at: string;
-  customer_name: string;
-  phone: string;
-  delivery_area: string;
-  room: string;
-  total_tsh: number;
-  payment_status: string;
-  items: { name: string; quantity: number }[];
-}
-
 export async function fetchVendors(): Promise<Vendor[]> {
   const { data, error } = await supabase
     .from("vendors")
@@ -101,38 +89,8 @@ export async function fetchAdminMenuItems(): Promise<AdminMenuItem[]> {
   }));
 }
 
-export async function fetchAdminFoodOrders(): Promise<AdminFoodOrder[]> {
-  const { data, error } = await supabase
-    .from("food_orders")
-    .select("id, created_at, customer_name, phone, delivery_area, room, total_tsh, payment_status, items")
-    .order("created_at", { ascending: false });
-  if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => ({
-    id: row.id,
-    created_at: row.created_at,
-    customer_name: row.customer_name ?? "",
-    phone: row.phone ?? "",
-    delivery_area: row.delivery_area ?? "",
-    room: row.room ?? "",
-    total_tsh: row.total_tsh ?? 0,
-    payment_status: row.payment_status ?? "pending",
-    items: Array.isArray(row.items)
-      ? (row.items as Record<string, unknown>[]).map((i) => ({
-          name: String(i?.name ?? "Item"),
-          quantity: Number(i?.quantity ?? 1),
-        }))
-      : [],
-  }));
-}
-
 /** Short human-friendly order reference, e.g. #MF-8821. */
 export function orderRef(id: string): string {
   const digits = id.replace(/\D/g, "").slice(-4).padStart(4, "0");
   return `#MF-${digits}`;
 }
-
-export const PAYMENT_STATUSES = [
-  { value: "success", label: "Imefanikiwa", en: "Success" },
-  { value: "failed", label: "Imefeli", en: "Failed" },
-  { value: "pending", label: "Inasubiri", en: "Pending" },
-] as const;
