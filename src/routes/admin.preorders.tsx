@@ -317,9 +317,26 @@ function AdminPreorders() {
             <ul className="mt-4 space-y-3">
               {(orders.data ?? []).map((o) => (
                 <li key={o.id} className="rounded-xl border border-border p-3 text-sm">
-                  <div className="flex flex-wrap justify-between gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-semibold text-foreground">{o.customer_name} · {o.phone}</span>
-                    <span className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString()}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">{new Date(o.created_at).toLocaleString()}</span>
+                      <button
+                        type="button"
+                        aria-label={`Delete order from ${o.customer_name}`}
+                        onClick={async () => {
+                          if (!window.confirm("Are you sure you want to delete this order? This cannot be undone.")) return;
+                          const { data, error } = await supabase.from("batch_preorders").delete().eq("id", o.id).select("id");
+                          if (error || !data?.length) return toast.error(error?.message ?? "Could not delete this order");
+                          toast.success("Order deleted");
+                          qc.invalidateQueries({ queryKey: ["batch-preorders"] });
+                          qc.invalidateQueries({ queryKey: ["admin-top-metrics"] });
+                        }}
+                        className="flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-semibold text-destructive hover:bg-destructive/20"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Delete
+                      </button>
+                    </span>
                   </div>
                   <p className="mt-1 text-muted-foreground">
                     {o.items.map((i) => `${i.name} × ${i.quantity}`).join(", ")} — {formatTsh(o.total_tsh, "TSh")}
