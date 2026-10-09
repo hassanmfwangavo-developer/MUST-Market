@@ -80,17 +80,27 @@ export const notifyAdmin = createServerFn({ method: "POST" })
         const ids = items.map((i) => i.mealId).filter((v): v is string => !!v && UUID_RE.test(v));
         const { data: meals } = await supabaseAdmin
           .from("preorder_meals").select("id, name, price_tsh").in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+        // Restaurant (vendor page) pre-orders reference menu_items instead.
+        const { data: menuMeals } = await supabaseAdmin
+          .from("menu_items").select("id, name, price").in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
+        let vendorName = "—";
+        if (bp.vendor_id) {
+          const { data: v } = await supabaseAdmin.from("vendors").select("name").eq("id", bp.vendor_id).maybeSingle();
+          if (v) vendorName = v.name;
+        }
         let total = 0;
         const lines = items.map((i) => {
           const m = meals?.find((x) => x.id === i.mealId);
           const q = Math.max(1, Math.min(20, Number(i.quantity) || 1));
-          const price = m?.price_tsh ?? 0;
+          const mm = menuMeals?.find((x) => x.id === i.mealId);
+          const price = m?.price_tsh ?? mm?.price ?? 0;
           total += price * q;
-          return `${m?.name ?? i.name} × ${q} — TZS ${price * q}`;
+          return `${m?.name ?? mm?.name ?? i.name} × ${q} — TZS ${price * q}`;
         });
         const slot = BATCH_SLOTS.find((b) => b.value === bp.batch_slot);
         const zone = HOSTEL_ZONES.find((z) => z.value === bp.hostel_zone);
         await sendAdminEmail(`📅 [NEW BATCH PRE-ORDER] ${slot?.title ?? bp.batch_slot} - TZS ${total}`, [
+          ["Restaurant", vendorName],
           ["Customer", bp.customer_name],
           ["Phone", bp.phone],
           ["Meals", lines.join("\n")],

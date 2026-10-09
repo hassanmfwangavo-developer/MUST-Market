@@ -127,6 +127,33 @@ export async function fetchVendorPreOrders(vendorId: string | null): Promise<Ven
   return (data ?? []) as VendorPreOrder[];
 }
 
+export interface VendorBatchPreorder {
+  id: string;
+  created_at: string;
+  items: { name?: string; quantity?: number }[];
+  total_tsh: number;
+  batch_slot: string;
+  hostel_zone: string;
+  customer_name: string;
+  phone: string;
+  room: string;
+  status: string;
+}
+
+/** Delivery pre-orders placed from a restaurant's menu page (RLS scopes vendors to their own). */
+export async function fetchVendorBatchPreorders(vendorId: string | null): Promise<VendorBatchPreorder[]> {
+  let query = supabase
+    .from("batch_preorders")
+    .select("id, created_at, items, total_tsh, batch_slot, hostel_zone, customer_name, phone, room, status")
+    .not("vendor_id", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (vendorId) query = query.eq("vendor_id", vendorId);
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as VendorBatchPreorder[];
+}
+
 export interface VendorMenuItem {
   id: string;
   name: string;
