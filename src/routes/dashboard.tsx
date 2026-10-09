@@ -56,6 +56,8 @@ async function fetchMyProducts(userId: string): Promise<MyProduct[]> {
     .from("products")
     .select("id,title,description,price_tsh,images,status,created_at")
     .eq("seller_id", userId)
+    // Admin-removed listings (status 'deleted') stay out of the seller's own list.
+    .neq("status" as never, "deleted" as never)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as MyProduct[];

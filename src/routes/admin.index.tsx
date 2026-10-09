@@ -240,16 +240,6 @@ function AdminConsole() {
         <ShelfManager />
 
 
-        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
-          <KpiCard label="Active listings" value={kpis.active} icon={<PackageOpen className="h-4 w-4" />} />
-          <KpiCard label="Sold items" value={kpis.sold} icon={<BadgeCheck className="h-4 w-4" />} />
-          <KpiCard
-            label="WhatsApp clicks"
-            value={kpis.clicks}
-            icon={<MessageCircle className="h-4 w-4" />}
-          />
-        </div>
-
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -261,17 +251,17 @@ function AdminConsole() {
             />
           </div>
           <div className="flex gap-1.5">
-            {(["all", "active", "sold"] as const).map((s) => (
+            {(["all", "active", "sold", "removed"] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => setStatusFilter(s)}
-                className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors ${
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   statusFilter === s
                     ? "bg-primary text-primary-foreground"
                     : "bg-surface-2 text-muted-foreground hover:text-foreground"
                 }`}
               >
-                {s === "all" ? "All" : s === "active" ? "Available" : "Sold"}
+                {s === "all" ? "All" : s === "active" ? "Available" : s === "sold" ? "Sold" : "Removed"}
               </button>
             ))}
           </div>
@@ -308,10 +298,12 @@ function AdminConsole() {
                     className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase ${
                       p.status === "active"
                         ? "bg-primary-soft text-primary"
-                        : "bg-destructive/10 text-destructive"
+                        : p.status === "deleted"
+                          ? "bg-surface-2 text-muted-foreground"
+                          : "bg-destructive/10 text-destructive"
                     }`}
                   >
-                    {p.status}
+                    {p.status === "deleted" ? "removed" : p.status}
                   </span>
                   <select
                     value={p.category_id ?? ""}
@@ -344,11 +336,21 @@ function AdminConsole() {
                       disabled={toggleStatus.isPending}
                       className="rounded-full border border-border bg-surface-2 px-3 py-1.5 text-xs font-semibold text-foreground hover:border-primary hover:text-primary disabled:opacity-50"
                     >
-                      {p.status === "active" ? "Mark sold" : "Reactivate"}
+                      {p.status === "active"
+                        ? "Mark sold"
+                        : p.status === "deleted"
+                          ? "Restore"
+                          : "Reactivate"}
                     </button>
                     <button
                       onClick={() => {
-                        if (window.confirm(`Permanently delete "${p.title}"? This cannot be undone.`)) {
+                        if (
+                          window.confirm(
+                            p.status === "deleted"
+                              ? `Permanently delete "${p.title}"? This cannot be undone.`
+                              : `Remove "${p.title}" from the marketplace? You can restore it later.`,
+                          )
+                        ) {
                           remove.mutate(p);
                         }
                       }}
