@@ -3,10 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
-  BadgeCheck,
   Loader2,
-  MessageCircle,
-  PackageOpen,
   Search,
   ShieldCheck,
   Trash2,
@@ -75,7 +72,7 @@ const tsh = (n: number) => `TSh ${n.toLocaleString("en-US")}`;
 function AdminConsole() {
   const queryClient = useQueryClient();
   const [term, setTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "sold">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "sold" | "removed">("all");
 
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 20;
@@ -104,18 +101,13 @@ function AdminConsole() {
     },
   });
 
-  const kpis = useMemo(() => {
-    return {
-      active: products.filter((p) => p.status === "active").length,
-      sold: products.filter((p) => p.status === "sold").length,
-      clicks: products.reduce((s, p) => s + (p.whatsapp_clicks_count ?? 0), 0),
-    };
-  }, [products]);
-
   const filtered = useMemo(() => {
     const q = term.trim().toLowerCase();
     return products.filter((p) => {
-      if (statusFilter !== "all" && p.status !== statusFilter) return false;
+      if (statusFilter !== "all") {
+        const target = statusFilter === "removed" ? "deleted" : statusFilter;
+        if (p.status !== target) return false;
+      }
       if (!q) return true;
       return (
         p.title.toLowerCase().includes(q) ||
@@ -152,18 +144,29 @@ function AdminConsole() {
 
   const remove = useMutation({
     mutationFn: async (p: AdminProduct) => {
-      const paths = (p.images ?? []).map(storagePath).filter((v): v is string => Boolean(v));
-      if (paths.length) {
-        await supabase.storage.from("product-images").remove(paths);
+      if (p.status === "deleted") {
+        const paths = (p.images ?? []).map(storagePath).filter((v): v is string => Boolean(v));
+        if (paths.length) {
+          await supabase.storage.from("product-images").remove(paths);
+        }
+        const { error } = await supabase.from("products").delete().eq("id", p.id);
+        if (error) throw error;
+        return "purged" as const;
       }
-      const { error } = await supabase.from("products").delete().eq("id", p.id);
+      const { error } = await supabase
+        .from("products")
+        .update({ status: "deleted" as never })
+        .eq("id", p.id);
       if (error) throw error;
+      return "removed" as const;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast.success("Listing deleted permanently");
+      toast.success(
+        result === "purged" ? "Listing permanently deleted" : "Listing removed from the marketplace",
+      );
     },
     onError: (e: Error) => toast.error(e.message),
   });
