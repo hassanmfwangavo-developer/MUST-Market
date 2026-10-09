@@ -421,6 +421,7 @@ function VendorDashboard() {
               </div>
             )}
           </section>
+          </>
         )}
 
         {tab === "menu" && (
