@@ -383,28 +383,6 @@ function AdminConsole() {
   );
 }
 
-function KpiCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl border border-border bg-surface p-4 shadow-soft">
-      <div className="flex items-center gap-2 text-muted-foreground">
-        {icon}
-        <span className="text-xs font-medium">{label}</span>
-      </div>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-        {value.toLocaleString("en-US")}
-      </p>
-    </div>
-  );
-}
-
 function ShelfManager() {
   const queryClient = useQueryClient();
   const { data: shelves = [], isLoading } = useQuery<HomepageShelf[]>({
