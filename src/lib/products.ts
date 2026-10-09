@@ -14,7 +14,6 @@ export interface MarketProduct extends DemoProduct {
   whatsapp?: string;
   deliveryTimeframe?: string;
   createdAt?: string;
-  viewCount?: number;
   featuredShelf?: string | null;
   isDemo?: boolean;
 }
@@ -29,7 +28,6 @@ interface DbProductRow {
   images: string[] | null;
   whatsapp_number?: string | null;
   delivery_timeframe: string | null;
-  view_count?: number | null;
   featured_shelf?: string | null;
   status?: "active" | "sold" | "hidden" | null;
   created_at: string;
@@ -54,7 +52,6 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     whatsapp: row.whatsapp_number ?? undefined,
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
     createdAt: row.created_at,
-    viewCount: row.view_count ?? 0,
     featuredShelf: row.featured_shelf ?? null,
     isDemo: false,
   };
@@ -64,7 +61,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
 // database with column-level grants), so we only request the column when a
 // session exists.
 const BASE_COLUMNS =
-  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,view_count,featured_shelf,status,created_at,categories(name,slug)";
+  "id,title,price_tsh,condition,location,description,images,delivery_timeframe,featured_shelf,status,created_at,categories(name,slug)";
 
 async function selectColumns(): Promise<string> {
   const { data } = await supabase.auth.getSession();
@@ -101,15 +98,6 @@ export function whatsappUrl(number: string | undefined, message: string) {
   const digits = sanitizeTzPhone(number ?? "");
   const base = digits ? `https://wa.me/${digits}` : "https://wa.me/";
   return `${base}?text=${encodeURIComponent(message)}`;
-}
-
-// Atomically records one view for a listing. Safe to call from any visitor.
-export async function recordProductView(id: string) {
-  try {
-    await supabase.rpc("increment_product_view", { _product_id: id });
-  } catch {
-    // View tracking must never break the page.
-  }
 }
 
 // Records one "Order via WhatsApp" click. Signed-in visitors only (contact
