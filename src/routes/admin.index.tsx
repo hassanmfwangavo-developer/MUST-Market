@@ -45,7 +45,6 @@ interface AdminProduct {
   title: string;
   price_tsh: number;
   status: string;
-  view_count: number;
   whatsapp_clicks_count: number;
   whatsapp_number: string | null;
   images: string[] | null;
@@ -59,7 +58,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,seller_id,title,price_tsh,status,view_count,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
+      "id,seller_id,title,price_tsh,status,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -113,7 +112,6 @@ function AdminConsole() {
     return {
       active: products.filter((p) => p.status === "active").length,
       sold: products.filter((p) => p.status === "sold").length,
-      views: products.reduce((s, p) => s + (p.view_count ?? 0), 0),
       clicks: products.reduce((s, p) => s + (p.whatsapp_clicks_count ?? 0), 0),
     };
   }, [products]);
@@ -241,10 +239,9 @@ function AdminConsole() {
         <ShelfManager />
 
 
-        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-3">
           <KpiCard label="Active listings" value={kpis.active} icon={<PackageOpen className="h-4 w-4" />} />
           <KpiCard label="Sold items" value={kpis.sold} icon={<BadgeCheck className="h-4 w-4" />} />
-          <KpiCard label="Total page views" value={kpis.views} icon={<Eye className="h-4 w-4" />} />
           <KpiCard
             label="WhatsApp clicks"
             value={kpis.clicks}
@@ -302,7 +299,7 @@ function AdminConsole() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-foreground">{p.title}</p>
                     <p className="text-xs text-muted-foreground">
-                      {tsh(p.price_tsh)} · {p.whatsapp_number ?? "no phone"} · {p.view_count} views ·{" "}
+                      {tsh(p.price_tsh)} · {p.whatsapp_number ?? "no phone"} ·{" "}
                       {p.whatsapp_clicks_count} clicks
                     </p>
                   </div>
