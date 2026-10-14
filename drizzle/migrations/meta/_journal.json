@@ -92,6 +92,13 @@
       "when": 1791524828881,
       "tag": "0012_add_deleted_product_status",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791957331662,
+      "tag": "0013_create_campus_events",
+      "breakpoints": true
     }
   ]
 }
