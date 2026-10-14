@@ -15,6 +15,7 @@ import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as CrRouteImport } from './routes/cr'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as FeedbackRouteImport } from './routes/feedback'
 import { Route as MarketRouteImport } from './routes/market'
 import { Route as MeetTheFounderRouteImport } from './routes/meet-the-founder'
@@ -30,6 +31,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminBannersRouteImport } from './routes/admin.banners'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
 import { Route as AdminFoodRouteImport } from './routes/admin.food'
 import { Route as AdminPreordersRouteImport } from './routes/admin.preorders'
 import { Route as AdminServicesRouteImport } from './routes/admin.services'
@@ -78,6 +80,11 @@ const CrRoute = CrRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedbackRoute = FeedbackRouteImport.update({
@@ -153,6 +160,11 @@ const AdminBannersRoute = AdminBannersRouteImport.update({
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminFoodRoute = AdminFoodRouteImport.update({
@@ -258,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/careers': typeof CareersRoute
   '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
+  '/events': typeof EventsRoute
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRouteWithChildren
   '/meet-the-founder': typeof MeetTheFounderRoute
@@ -272,6 +285,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/events': typeof AdminEventsRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
@@ -299,6 +313,7 @@ export interface FileRoutesByTo {
   '/careers': typeof CareersRoute
   '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
+  '/events': typeof EventsRoute
   '/feedback': typeof FeedbackRoute
   '/meet-the-founder': typeof MeetTheFounderRoute
   '/orders': typeof OrdersRoute
@@ -311,6 +326,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/events': typeof AdminEventsRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
@@ -340,6 +356,7 @@ export interface FileRoutesById {
   '/careers': typeof CareersRoute
   '/cr': typeof CrRoute
   '/dashboard': typeof DashboardRoute
+  '/events': typeof EventsRoute
   '/feedback': typeof FeedbackRoute
   '/market': typeof MarketRouteWithChildren
   '/meet-the-founder': typeof MeetTheFounderRoute
@@ -354,6 +371,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/events': typeof AdminEventsRoute
   '/admin/food': typeof AdminFoodRoute
   '/admin/preorders': typeof AdminPreordersRoute
   '/admin/services': typeof AdminServicesRoute
@@ -384,6 +402,7 @@ export interface FileRouteTypes {
     | '/careers'
     | '/cr'
     | '/dashboard'
+    | '/events'
     | '/feedback'
     | '/market'
     | '/meet-the-founder'
@@ -398,6 +417,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/events'
     | '/admin/food'
     | '/admin/preorders'
     | '/admin/services'
@@ -425,6 +445,7 @@ export interface FileRouteTypes {
     | '/careers'
     | '/cr'
     | '/dashboard'
+    | '/events'
     | '/feedback'
     | '/meet-the-founder'
     | '/orders'
@@ -437,6 +458,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/events'
     | '/admin/food'
     | '/admin/preorders'
     | '/admin/services'
@@ -465,6 +487,7 @@ export interface FileRouteTypes {
     | '/careers'
     | '/cr'
     | '/dashboard'
+    | '/events'
     | '/feedback'
     | '/market'
     | '/meet-the-founder'
@@ -479,6 +502,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
+    | '/admin/events'
     | '/admin/food'
     | '/admin/preorders'
     | '/admin/services'
@@ -508,6 +532,7 @@ export interface RootRouteChildren {
   CareersRoute: typeof CareersRoute
   CrRoute: typeof CrRoute
   DashboardRoute: typeof DashboardRoute
+  EventsRoute: typeof EventsRoute
   FeedbackRoute: typeof FeedbackRoute
   MarketRoute: typeof MarketRouteWithChildren
   MeetTheFounderRoute: typeof MeetTheFounderRoute
@@ -568,6 +593,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feedback': {
@@ -673,6 +705,13 @@ declare module '@tanstack/react-router' {
       path: '/categories'
       fullPath: '/admin/categories'
       preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/food': {
@@ -814,6 +853,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminBannersRoute: typeof AdminBannersRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminEventsRoute: typeof AdminEventsRoute
   AdminFoodRoute: typeof AdminFoodRoute
   AdminPreordersRoute: typeof AdminPreordersRoute
   AdminServicesRoute: typeof AdminServicesRoute
@@ -824,6 +864,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBannersRoute: AdminBannersRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminEventsRoute: AdminEventsRoute,
   AdminFoodRoute: AdminFoodRoute,
   AdminPreordersRoute: AdminPreordersRoute,
   AdminServicesRoute: AdminServicesRoute,
@@ -879,6 +920,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareersRoute: CareersRoute,
   CrRoute: CrRoute,
   DashboardRoute: DashboardRoute,
+  EventsRoute: EventsRoute,
   FeedbackRoute: FeedbackRoute,
   MarketRoute: MarketRouteWithChildren,
   MeetTheFounderRoute: MeetTheFounderRoute,
