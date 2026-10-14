@@ -141,6 +141,57 @@ export type Database = {
         }
         Relationships: []
       }
+      campus_events: {
+        Row: {
+          category: string
+          contact_phone: string | null
+          content: string
+          created_at: string
+          event_date: string | null
+          id: string
+          image_url: string | null
+          is_pinned: boolean
+          kind: string
+          organizer_name: string
+          status: string
+          submitted_by: string | null
+          title: string
+          venue: string | null
+        }
+        Insert: {
+          category?: string
+          contact_phone?: string | null
+          content?: string
+          created_at?: string
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_pinned?: boolean
+          kind?: string
+          organizer_name?: string
+          status?: string
+          submitted_by?: string | null
+          title: string
+          venue?: string | null
+        }
+        Update: {
+          category?: string
+          contact_phone?: string | null
+          content?: string
+          created_at?: string
+          event_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_pinned?: boolean
+          kind?: string
+          organizer_name?: string
+          status?: string
+          submitted_by?: string | null
+          title?: string
+          venue?: string | null
+        }
+        Relationships: []
+      }
       campus_services: {
         Row: {
           category: string
