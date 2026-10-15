@@ -36,6 +36,7 @@ const NAV_LINKS = [
   { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
   { label: "Msosi Fasta", to: "/msosi" as const },
   { label: "Service Mall", to: "/services" as const },
+  { label: "News & Events", to: "/events" as const },
   { label: "Founder", to: "/meet-the-founder" as const },
 ];
 
@@ -46,6 +47,7 @@ const DRAWER_LINKS = [
   { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const, icon: BedDouble },
   { label: "Msosi Fasta", to: "/msosi" as const, icon: UtensilsCrossed },
   { label: "Service Mall", to: "/services" as const, icon: Wrench },
+  { label: "News & Events", to: "/events" as const, icon: Megaphone },
   { label: "Meet the Founder", to: "/meet-the-founder" as const, icon: UserIcon },
 ];
 
