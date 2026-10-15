@@ -30,14 +30,13 @@ import { BOOKS24_URL, INSTAGRAM_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
 import { InstallAppButton } from "@/components/install-app-button";
 
+// Desktop header shows only the four main sections so the account icon
+// always fits; Electronics, Rooms & Gheto and Founder stay in the drawer.
 const NAV_LINKS = [
   { label: "Marketplace", to: "/market" as const },
-  { label: "Electronics", to: "/market/electronics" as const },
-  { label: "Rooms & Gheto", to: "/market/rooms-gheto" as const },
   { label: "Msosi Fasta", to: "/msosi" as const },
   { label: "Service Mall", to: "/services" as const },
   { label: "News & Events", to: "/events" as const },
-  { label: "Founder", to: "/meet-the-founder" as const },
 ];
 
 const DRAWER_LINKS = [
