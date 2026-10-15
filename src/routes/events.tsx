@@ -2,7 +2,8 @@ import { useMemo, useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CalendarDays, Loader2, MapPin, Megaphone, Phone, Pin, Plus, User as UserIcon } from "lucide-react";
+import { CalendarDays, ChevronDown, Loader2, MapPin, Megaphone, Phone, Pin, Plus, User as UserIcon } from "lucide-react";
+import { imageSrcSet, thumbUrl } from "@/lib/images";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
@@ -175,9 +176,22 @@ function Meta({ e }: { e: CampusEvent }) {
 function EventCard({ e }: { e: CampusEvent }) {
   const c = categoryMeta(e.category);
   const d = e.event_date ? new Date(e.event_date) : null;
+  const [expanded, setExpanded] = useState(false);
+  const isLong = e.content.length > 220;
+
   return (
-    <article className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      {e.image_url && <img src={e.image_url} alt={e.title} loading="lazy" className="aspect-video w-full object-cover" />}
+    <article className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      {e.image_url && (
+        <img
+          src={thumbUrl(e.image_url)}
+          srcSet={imageSrcSet(e.image_url, [400, 800, 1200], 80)}
+          sizes="(min-width: 640px) 50vw, 100vw"
+          alt={e.title}
+          loading="lazy"
+          decoding="async"
+          className="aspect-video w-full object-cover"
+        />
+      )}
       <div className="flex gap-4 p-4">
         {d && (
           <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -191,7 +205,20 @@ function EventCard({ e }: { e: CampusEvent }) {
             <span className="rounded-full bg-secondary px-2 py-0.5 text-secondary-foreground">{e.kind === "news" ? "News" : "Event"}</span>
           </div>
           <h3 className="mt-1.5 font-bold leading-snug">{e.title}</h3>
-          <p className="mt-1 line-clamp-4 whitespace-pre-line text-sm text-muted-foreground">{e.content}</p>
+          <p className={`mt-1 whitespace-pre-line text-sm text-muted-foreground ${expanded ? "" : "line-clamp-4"}`}>
+            {e.content}
+          </p>
+          {isLong && (
+            <button
+              type="button"
+              onClick={() => setExpanded((v) => !v)}
+              className="mt-1.5 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+              aria-expanded={expanded}
+            >
+              {expanded ? "Show Less" : "See More"}
+              <ChevronDown className={`h-4 w-4 transition-transform ${expanded ? "rotate-180" : ""}`} />
+            </button>
+          )}
           <Meta e={e} />
         </div>
       </div>
