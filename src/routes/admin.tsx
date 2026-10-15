@@ -20,6 +20,7 @@ import {
   X,
   ClipboardList,
   Hourglass,
+  Megaphone,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,6 +59,7 @@ const SECTIONS: { title: string; items: NavItem[] }[] = [
     ],
   },
   { title: "Services & Books", items: [{ to: "/admin/services", label: "Service Mall", icon: Wrench }] },
+  { title: "Campus Hub", items: [{ to: "/admin/events", label: "News & Events", icon: Megaphone }] },
   { title: "Vendor & Access", items: [{ to: "/admin/staff", label: "Vendor Access", icon: ChefHat }] },
 ];
 
