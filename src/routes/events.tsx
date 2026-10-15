@@ -40,7 +40,7 @@ export const Route = createFileRoute("/events")({
   loader: ({ context }) => context.queryClient.ensureQueryData(eventsQuery),
   component: EventsPage,
   errorComponent: ({ error }) => (
-    <div className="p-8 text-center text-destructive" role="alert">{error.message}</div>
+    <div className="p-8 text-center text-destructive" role="alert">{error instanceof Error ? error.message : "Something went wrong"}</div>
   ),
   notFoundComponent: () => <div className="p-8 text-center">Not found.</div>,
 });

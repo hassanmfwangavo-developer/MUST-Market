@@ -18,6 +18,7 @@ const STATIC_ROUTES: SitemapEntry[] = [
   { path: "/msosi", changefreq: "daily", priority: "0.9" },
   { path: "/market", changefreq: "daily", priority: "0.9" },
   { path: "/services", changefreq: "weekly", priority: "0.8" },
+  { path: "/events", changefreq: "daily", priority: "0.8" },
   { path: "/sell", changefreq: "weekly", priority: "0.8" },
   { path: "/careers", changefreq: "monthly", priority: "0.7" },
   { path: "/meet-the-founder", changefreq: "monthly", priority: "0.7" },
