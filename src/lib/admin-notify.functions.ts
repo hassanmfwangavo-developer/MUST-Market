@@ -54,7 +54,12 @@ async function sendAdminEmail(subject: string, rows: [string, unknown][]) {
       htmlContent: html,
     }),
   });
-  if (!res.ok) console.error(`[AdminNotify] Brevo failed [${res.status}]: ${await res.text()}`);
+  const body = await res.text();
+  if (!res.ok) {
+    console.error(`[AdminNotify] Brevo failed [${res.status}] for "${subject}": ${body}`);
+    throw new Error(`Brevo ${res.status}: ${body}`);
+  }
+  console.log(`[AdminNotify] Brevo sent [${res.status}] "${subject}": ${body}`);
 }
 
 export const notifyAdmin = createServerFn({ method: "POST" })
@@ -137,20 +142,30 @@ export const notifyAdmin = createServerFn({ method: "POST" })
           ["Notes", po.message],
         ]);
       } else if (data.kind === "product") {
-        const { data: p } = await supabaseAdmin
+        console.log("[AdminNotify] product upload alert requested:", data.id);
+        const { data: p, error: pErr } = await supabaseAdmin
           .from("products").select("*, categories(name)").eq("id", data.id).maybeSingle();
-        if (!p || !isRecent(p.created_at)) return { ok: false };
+        if (pErr) console.error("[AdminNotify] product lookup error:", pErr);
+        if (!p || !isRecent(p.created_at)) {
+          console.warn("[AdminNotify] product not found or too old:", data.id);
+          return { ok: false };
+        }
         const { data: seller } = await supabaseAdmin
           .from("profiles").select("full_name, email").eq("id", p.seller_id).maybeSingle();
         const cat = (p as unknown as { categories: { name: string } | null }).categories;
+        const site = "https://mustmarket.store";
         await sendAdminEmail(`📦 [NEW ITEM LISTED] ${p.title}`, [
-          ["Seller", `${seller?.full_name || seller?.email || "Student"} (${p.whatsapp_number})`],
           ["Item Title", p.title],
           ["Price", `TZS ${p.price_tsh}`],
           ["Category", cat?.name ?? "—"],
+          ["Seller", seller?.full_name || "Student"],
+          ["Seller Email", seller?.email ?? "—"],
+          ["Seller WhatsApp", p.whatsapp_number],
           ["Condition", p.condition],
           ["Location / Hostel", p.location],
           ["Description", p.description],
+          ["View Listing", `${site}/product/${p.id}`],
+          ["Review in Admin", `${site}/admin`],
         ]);
       } else {
         const { data: r } = await supabaseAdmin

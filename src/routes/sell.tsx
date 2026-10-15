@@ -11,7 +11,7 @@ import { MUST_LOCATIONS } from "@/lib/locations";
 import { Navbar } from "@/components/navbar";
 import { SafetyModal } from "@/components/safety-modal";
 import { sanitizeTzPhone } from "@/lib/phone";
-import { notifyAdminInBackground } from "@/lib/admin-notify.functions";
+import { notifyAdmin } from "@/lib/admin-notify.functions";
 
 const CONDITIONS = ["Like New", "Good", "Fair"] as const;
 type Condition = (typeof CONDITIONS)[number];
@@ -256,7 +256,15 @@ function SellPage() {
         images: imageUrls,
       });
       if (insErr) throw insErr;
-      notifyAdminInBackground("product", productId);
+      // Wait briefly (max 8s) so the email request isn't dropped by navigation,
+      // but never block or fail the upload on it.
+      console.log("[Sell] Listing saved, sending admin email…", productId);
+      await Promise.race([
+        notifyAdmin({ data: { kind: "product", id: productId } })
+          .then((r) => console.log("[Sell] Admin email result:", r))
+          .catch((e) => console.error("[Sell] Admin email failed:", e)),
+        new Promise((r) => setTimeout(r, 8000)),
+      ]);
 
       toast.success("Listing published! 🎉");
       setSafetyOpen(false);
