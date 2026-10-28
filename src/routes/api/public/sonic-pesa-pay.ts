@@ -82,7 +82,7 @@ async function dispatchOrderSms(opts: {
 }): Promise<void> {
   try {
     const cookPhone =
-      formatTzPhone(opts.cookPhone) ?? "255674044676";
+      formatTzPhone(opts.cookPhone) ?? "255797248831";
 
     const cookMessage =
       `[MUST MARKET] ODA MPYA! #${opts.orderRef}: ${opts.itemSummary}. ` +
