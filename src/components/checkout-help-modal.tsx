@@ -23,7 +23,7 @@ const FAQS = [
 ];
 
 const WHATSAPP_LINK =
-  "https://wa.me/255674044676?text=Habari%20MUST%20Market,%20ninachangamoto%20kwenye%20malipo%20ya%20oda%20yangu";
+  "https://wa.me/255797248831?text=Habari%20MUST%20Market,%20ninachangamoto%20kwenye%20malipo%20ya%20oda%20yangu";
 
 export function CheckoutHelpModal({
   open,
