@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 
-const ADMIN_WHATSAPP = "255674044676";
+const ADMIN_WHATSAPP = "255797248831";
 
 export const Route = createFileRoute("/cr")({
   head: () => ({
