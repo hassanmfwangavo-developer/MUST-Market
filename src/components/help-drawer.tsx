@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { X, LifeBuoy, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const SUPPORT_WHATSAPP = "255674044676";
+const SUPPORT_WHATSAPP = "255797248831";
 
 const QUICK_ISSUES = [
   "My order is delayed (Oda imechelewa)",
