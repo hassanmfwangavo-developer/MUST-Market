@@ -63,7 +63,7 @@ function MeetTheFounder() {
       {/* Sehemu ya Picha Kubwa ya Juu (Kama ya Benji kwenye 1000160359_2.png) */}
       <div className="relative w-full h-[480px] md:h-[550px] overflow-hidden">
         <img
-          src="https://i.ibb.co/YF6Bm1t8/IMG-20251111-WA0067-1.jpg"
+          src="https://kommodo.ai/i/5FguDhQOwnjLs9R9zmGw"
           alt="Hassani Mfwangavo"
           className="w-full h-full object-cover object-center"
         />
