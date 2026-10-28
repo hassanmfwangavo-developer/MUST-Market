@@ -213,7 +213,7 @@ function MeetTheFounder() {
 
           <div className="pt-2">
             <a
-              href="https://wa.me/255674044676"
+              href="https://wa.me/255797248831"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center bg-white text-[#042f2e] font-bold text-sm py-3.5 rounded-2xl hover:bg-teal-50 transition-colors shadow-lg"
