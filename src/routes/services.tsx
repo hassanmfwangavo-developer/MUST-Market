@@ -38,7 +38,7 @@ import {
   type CampusService,
 } from "@/lib/campus-services";
 
-const SUPPORT_NUMBER = "255674044676";
+const SUPPORT_NUMBER = "255797248831";
 
 const FILTERS = [
   { value: "all", label: "All Services", icon: "✦" },
