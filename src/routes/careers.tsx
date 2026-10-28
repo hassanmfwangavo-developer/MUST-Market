@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { canonical } from "@/lib/site";
 
-const ADMIN_WHATSAPP = "255674044676";
+const ADMIN_WHATSAPP = "255797248831";
 const FOUNDER_EMAIL = "hassani@mustmarket.store";
 
 export const Route = createFileRoute("/careers")({
@@ -304,7 +304,7 @@ function CareersPage() {
             <Input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="Phone number (e.g. 0674044676)"
+              placeholder="Phone number (e.g. 0797248831)"
               aria-label="Phone number"
               inputMode="tel"
             />
