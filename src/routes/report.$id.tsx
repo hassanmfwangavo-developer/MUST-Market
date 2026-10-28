@@ -6,7 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { sanitizeTzPhone } from "@/lib/phone";
 
-const ADMIN_PHONE = "0674044676";
+const ADMIN_PHONE = "0797248831";
 
 const REASONS = [
   { value: "Scam", desc: "Fake seller, fraudulent listing, phishing" },
