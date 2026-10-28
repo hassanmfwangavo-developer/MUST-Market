@@ -6,7 +6,7 @@ const inputClass =
   "h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#008542] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#008542]/10";
 const labelClass = "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500";
 
-const WHATSAPP_NUMBER = "255674044676";
+const WHATSAPP_NUMBER = "255797248831";
 
 type PartnerType = "vendor" | "rider";
 
