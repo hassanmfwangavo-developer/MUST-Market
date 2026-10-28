@@ -55,7 +55,7 @@ export const Route = createFileRoute("/msosi/success/$orderId")({
   component: MsosiSuccess,
 });
 
-const KITCHEN_WHATSAPP = "255674044676";
+const KITCHEN_WHATSAPP = "255797248831";
 
 function MsosiSuccess() {
   const { orderId } = Route.useParams();
