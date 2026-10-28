@@ -93,7 +93,7 @@ async function dispatchOrderSms(opts: {
     const customerMessage =
       `Asante kwa kutumia MUST Market! Oda yako #${opts.orderRef} ` +
       `(${opts.itemSummary}) imepokelewa. Namba ya Mpishi: ${cookPhone}. ` +
-      `Msaada: 0674044676.`;
+      `Msaada: 0797248831.`;
 
     await Promise.all([
       sendSms(cookPhone, cookMessage, opts.orderRef),
