@@ -69,7 +69,8 @@ export function ProductCard({ product }: { product: DemoProduct & { isVerified?:
 
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
-        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground 
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-[15px]">
+          {product.title}
           {product.isVerified && <BlueTick className="ml-1 h-4 w-4" />}
         </h3>
         <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
