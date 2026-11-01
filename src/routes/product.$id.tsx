@@ -205,7 +205,8 @@ function ProductDetails({ product }: { product: MarketProduct }) {
         )}
       </div>
 
-      <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground 
+      <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl">
+        {product.title}
         {product.isVerified && <BlueTick className="ml-1.5 h-6 w-6 sm:h-7 sm:w-7" />}
       </h1>
 
