@@ -175,7 +175,7 @@ export function Footer() {
 </p>
 
             <h2 className="mt-3 text-2xl font-bold tracking-tight text-black">
-              Sign up for our newsletter.
+              Join Our Whatsapp Group.
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-slate-400">
               Get campus deals, Msosi Fasta drops, and marketplace highlights straight to your inbox.
