@@ -144,6 +144,21 @@ function AdminConsole() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const toggleTick = useMutation({
+    mutationFn: async (p: AdminProduct) => {
+      const next = !p.is_verified;
+      const { error } = await supabase.from("products").update({ is_verified: next }).eq("id", p.id);
+      if (error) throw error;
+      return next;
+    },
+    onSuccess: (next) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(next ? "Blue tick added ✔" : "Blue tick removed");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const remove = useMutation({
     mutationFn: async (p: AdminProduct) => {
       if (p.status === "deleted") {
