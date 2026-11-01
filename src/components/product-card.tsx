@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { type DemoProduct, formatTsh } from "@/lib/demo-data";
 import { SmartImage } from "@/components/smart-image";
 import { thumbUrl, imageSrcSet } from "@/lib/images";
+import { BlueTick } from "@/components/blue-tick";
 
 const conditionStyle: Record<DemoProduct["condition"], string> = {
   "Like New": "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
@@ -10,7 +11,7 @@ const conditionStyle: Record<DemoProduct["condition"], string> = {
   Fair: "bg-amber-50 text-amber-800 ring-amber-600/20",
 };
 
-export function ProductCard({ product }: { product: DemoProduct }) {
+export function ProductCard({ product }: { product: DemoProduct & { isVerified?: boolean } }) {
   const isSold = product.status === "sold";
 
   return (
@@ -68,8 +69,8 @@ export function ProductCard({ product }: { product: DemoProduct }) {
 
 
       <div className="flex flex-1 flex-col gap-2 p-3.5">
-        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-[15px]">
-          {product.title}
+        <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-foreground 
+          {product.isVerified && <BlueTick className="ml-1 h-4 w-4" />}
         </h3>
         <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="inline-flex min-w-0 items-center gap-1">
