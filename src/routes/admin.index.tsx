@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { BlueTick } from "@/components/blue-tick";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ interface AdminProduct {
   whatsapp_number: string | null;
   images: string[] | null;
   featured_shelf: string | null;
+  is_verified: boolean;
   category_id: string | null;
   seller_id: string;
   created_at: string;
@@ -51,7 +53,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,seller_id,title,price_tsh,status,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,category_id,created_at",
+      "id,seller_id,title,price_tsh,status,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,is_verified,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -288,7 +290,7 @@ function AdminConsole() {
                     }
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-foreground">{p.title}</p>
+                    <p className="truncate text-sm font-semibold text-foreground">{p.title}{p.is_verified && <BlueTick className="ml-1 h-3.5 w-3.5" />}</p>
                     <p className="text-xs text-muted-foreground">
                       {tsh(p.price_tsh)} · {p.whatsapp_number ?? "no phone"} ·{" "}
                       {p.whatsapp_clicks_count} clicks
@@ -331,6 +333,13 @@ function AdminConsole() {
                     ))}
                   </select>
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => toggleTick.mutate(p)}
+                      disabled={toggleTick.isPending}
+                      className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${p.is_verified ? "border-primary bg-primary-soft text-primary" : "border-border bg-surface-2 text-foreground hover:border-primary"}`}
+                    >
+                      <BlueTick className="h-3.5 w-3.5" /> {p.is_verified ? "Remove tick" : "Give tick"}
+                    </button>
                     <button
                       onClick={() => toggleStatus.mutate(p)}
                       disabled={toggleStatus.isPending}
