@@ -36,10 +36,10 @@ export function InstallAppButton() {
         await deferred.prompt();
         await deferred.userChoice;
       } catch {
-        setTip(true);
+        // Android: never show manual instructions
       }
       setDeferred(null);
-    } else {
+    } else if (isIOS) {
       setTip(true);
     }
   };
@@ -67,7 +67,7 @@ export function InstallAppButton() {
           <DialogDescription>{language === "sw" ? "Ongeza MUST Market kwenye skrini yako ya nyumbani." : "Add MUST Market to your home screen."}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 text-sm leading-relaxed text-foreground">
-          {(isIOS ? ["ios", "android"] : ["android", "ios"]).map((platform) => (
+          {["ios"].map((platform) => (
             <section key={platform} className="space-y-1">
               <h3 className="flex items-center gap-2 font-semibold">
                 {platform === "ios" ? <Share className="h-4 w-4 text-primary" /> : <MoreVertical className="h-4 w-4 text-primary" />}
