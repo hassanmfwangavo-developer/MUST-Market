@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
 import { fetchProduct, whatsappUrl, recordWhatsappClick, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
+import { BlueTick } from "@/components/blue-tick";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
 
 
@@ -206,6 +207,7 @@ function ProductDetails({ product }: { product: MarketProduct }) {
 
       <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl">
         {product.title}
+        {product.isVerified && <BlueTick className="ml-1.5 h-6 w-6 sm:h-7 sm:w-7" />}
       </h1>
 
       <div className="text-3xl font-bold tracking-tight text-foreground">

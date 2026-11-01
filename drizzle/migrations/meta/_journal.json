@@ -99,6 +99,13 @@
       "when": 1791957331662,
       "tag": "0013_create_campus_events",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793562655333,
+      "tag": "0014_product_blue_tick",
+      "breakpoints": true
     }
   ]
 }

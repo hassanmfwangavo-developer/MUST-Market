@@ -676,6 +676,7 @@ export type Database = {
           featured_shelf: string | null
           id: string
           images: string[]
+          is_verified: boolean
           location: string
           price_tsh: number
           seller_id: string
@@ -695,6 +696,7 @@ export type Database = {
           featured_shelf?: string | null
           id?: string
           images?: string[]
+          is_verified?: boolean
           location: string
           price_tsh: number
           seller_id: string
@@ -714,6 +716,7 @@ export type Database = {
           featured_shelf?: string | null
           id?: string
           images?: string[]
+          is_verified?: boolean
           location?: string
           price_tsh?: number
           seller_id?: string
