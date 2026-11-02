@@ -153,7 +153,7 @@ function AdminConsole() {
       return next;
     },
     onSuccess: (next) => {
-      qc.invalidateQueries();
+      queryClient.invalidateQueries();
       toast.success(next ? "Pinned to top" : "Unpinned");
     },
     onError: (e: Error) => toast.error(e.message),
