@@ -338,9 +338,27 @@ function VendorDashboard() {
                           className="rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-foreground"
                         >
                           {it.quantity}× {it.name}
+                          {it.addSoda && (
+                            <span className="ml-1 font-bold text-primary">🥤 + Soda</span>
+                          )}
                         </li>
                       ))}
                     </ul>
+
+                    {o.items.some((it) => it.notes) && (
+                      <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-3">
+                        <p className="text-[11px] font-bold uppercase tracking-wide text-amber-800">
+                          Maelekezo ya Mteja
+                        </p>
+                        {o.items
+                          .filter((it) => it.notes)
+                          .map((it, i) => (
+                            <p key={i} className="mt-1 text-sm font-medium text-amber-900">
+                              “{it.notes}”
+                            </p>
+                          ))}
+                      </div>
+                    )}
 
                     <p className="mt-3 text-base font-bold text-primary">
                       {formatTsh(o.total_tsh, "TSh")}

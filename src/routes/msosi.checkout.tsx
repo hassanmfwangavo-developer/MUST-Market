@@ -48,6 +48,8 @@ type CheckoutState = {
   vendorName?: string;
   quantity?: number;
   addSoda?: boolean;
+  /** Customer's special instructions for the kitchen. */
+  notes?: string;
   deliveryFee?: number;
   /** Only set when the customer arrived by clicking a discount banner. */
   discountPercent?: number;
@@ -95,6 +97,7 @@ function MsosiCheckout() {
       vendorName: locationState?.vendorName ?? "",
       quantity: locationState?.quantity ?? 1,
       addSoda: locationState?.addSoda ?? false,
+      notes: locationState?.notes ?? "",
       deliveryFee: locationState?.deliveryFee ?? DEFAULT_DELIVERY_FEE,
       discountPercent: locationState?.discountPercent ?? 0,
       promoCode: locationState?.promoCode ?? "",
@@ -212,17 +215,20 @@ function MsosiCheckout() {
           items: cartMode
             ? cartItems.map((i) => ({
                 itemId: i.itemId,
-                name: i.name,
+                name: i.addSoda ? `${i.name} + Soda (Azam/Coca-Cola)` : i.name,
                 quantity: i.quantity,
               }))
             : [
                 {
                   itemId: order.itemId,
-                  name: order.name,
+                  name: order.addSoda
+                    ? `${order.name} + Soda (Azam/Coca-Cola)`
+                    : order.name,
                   quantity: order.quantity,
                 },
               ],
           deliveryLocation: `${area}, ${room.trim()}`,
+          notes: order.notes.trim() || undefined,
         },
       });
       if (!payment.ok) {
@@ -249,6 +255,7 @@ function MsosiCheckout() {
                 imageUrl: order.imageUrl || undefined,
                 vendorName: order.vendorName || undefined,
                 addSoda: order.addSoda,
+                notes: order.notes.trim() || undefined,
                 deliveryFee: order.deliveryFee,
               },
             ];
