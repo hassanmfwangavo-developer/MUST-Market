@@ -54,7 +54,13 @@ export function ProductGrid() {
   }, [active, shuffled, query]);
 
   const FEATURED_LIMIT = 6;
-  const featured = filtered.slice(0, FEATURED_LIMIT);
+  const featured = useMemo(() => {
+    const pinned = filtered
+      .filter((p) => p.pinnedAt)
+      .sort((a, b) => (b.pinnedAt ?? "").localeCompare(a.pinnedAt ?? ""));
+    const rest = filtered.filter((p) => !p.pinnedAt);
+    return [...pinned, ...rest].slice(0, FEATURED_LIMIT);
+  }, [filtered]);
   const hasMore = filtered.length > FEATURED_LIMIT;
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];

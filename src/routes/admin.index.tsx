@@ -44,6 +44,7 @@ interface AdminProduct {
   images: string[] | null;
   featured_shelf: string | null;
   is_verified: boolean;
+  pinned_at: string | null;
   category_id: string | null;
   seller_id: string;
   created_at: string;
@@ -53,7 +54,7 @@ async function fetchAllProducts(): Promise<AdminProduct[]> {
   const { data, error } = await supabase
     .from("products")
     .select(
-      "id,seller_id,title,price_tsh,status,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,is_verified,category_id,created_at",
+      "id,seller_id,title,price_tsh,status,whatsapp_clicks_count,whatsapp_number,images,featured_shelf,is_verified,pinned_at,category_id,created_at",
     )
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -140,6 +141,20 @@ function AdminConsole() {
       queryClient.invalidateQueries({ queryKey: ["admin-top-metrics"] });
       queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success(next === "sold" ? "Marked as SOLD OUT 🔥" : "Listing is live again");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const togglePin = useMutation({
+    mutationFn: async (p: AdminProduct) => {
+      const next = p.pinned_at ? null : new Date().toISOString();
+      const { error } = await supabase.from("products").update({ pinned_at: next }).eq("id", p.id);
+      if (error) throw error;
+      return next;
+    },
+    onSuccess: (next) => {
+      queryClient.invalidateQueries();
+      toast.success(next ? "Pinned to top" : "Unpinned");
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -348,6 +363,13 @@ function AdminConsole() {
                     ))}
                   </select>
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => togglePin.mutate(p)}
+                      disabled={togglePin.isPending}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-semibold disabled:opacity-50 ${p.pinned_at ? "border-primary bg-primary-soft text-primary" : "border-border bg-surface-2 text-foreground hover:border-primary"}`}
+                    >
+                      📌 {p.pinned_at ? "Unpin" : "Pin to top"}
+                    </button>
                     <button
                       onClick={() => toggleTick.mutate(p)}
                       disabled={toggleTick.isPending}
