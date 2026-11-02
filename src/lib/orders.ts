@@ -8,6 +8,8 @@ export type OrderItem = {
   imageUrl?: string;
   vendorName?: string;
   addSoda?: boolean;
+  /** Customer's special instructions for the kitchen. */
+  notes?: string;
   deliveryFee?: number;
 };
 

@@ -309,6 +309,7 @@ function MsosiDetail() {
                 deliveryFee: dish.delivery_fee,
                 quantity,
                 addSoda,
+                notes: notes.trim() || undefined,
               },
             })
           }

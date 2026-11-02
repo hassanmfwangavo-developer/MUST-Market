@@ -43,6 +43,8 @@ export async function fetchPortalAccess(): Promise<PortalAccess> {
 export interface VendorOrderItem {
   name: string;
   quantity: number;
+  addSoda: boolean;
+  notes: string;
 }
 
 export interface VendorOrder {
@@ -67,6 +69,8 @@ function mapItems(value: unknown): VendorOrderItem[] {
   return (value as Record<string, unknown>[]).map((i) => ({
     name: String(i?.name ?? "Item"),
     quantity: Number(i?.quantity ?? 1),
+    addSoda: i?.addSoda === true,
+    notes: typeof i?.notes === "string" ? i.notes.trim() : "",
   }));
 }
 

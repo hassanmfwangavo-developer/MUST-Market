@@ -142,7 +142,7 @@ async function notifyAdminPayment(opts: {
       .map((it) => `${String(it.name ?? "").slice(0, 80)} x${Number(it.quantity) || 1}`)
       .join(", ");
     if (items) rows.push(["Meal(s)", items]);
-    if (opts.details?.notes) rows.push(["Batch / Hostel", String(opts.details.notes).slice(0, 200)]);
+    if (opts.details?.notes) rows.push(["Maelekezo ya Mteja", String(opts.details.notes).slice(0, 200)]);
     if (opts.details?.deliveryLocation) rows.push(["Delivery", String(opts.details.deliveryLocation).slice(0, 200)]);
     if (opts.reason) rows.push(["Failure Reason", opts.reason]);
     const esc = (v: string) => v.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c);
