@@ -678,6 +678,7 @@ export type Database = {
           images: string[]
           is_verified: boolean
           location: string
+          pinned_at: string | null
           price_tsh: number
           seller_id: string
           status: Database["public"]["Enums"]["product_status"]
@@ -698,6 +699,7 @@ export type Database = {
           images?: string[]
           is_verified?: boolean
           location: string
+          pinned_at?: string | null
           price_tsh: number
           seller_id: string
           status?: Database["public"]["Enums"]["product_status"]
@@ -718,6 +720,7 @@ export type Database = {
           images?: string[]
           is_verified?: boolean
           location?: string
+          pinned_at?: string | null
           price_tsh?: number
           seller_id?: string
           status?: Database["public"]["Enums"]["product_status"]
