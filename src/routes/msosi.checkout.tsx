@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { formatTsh, SODA_PRICE } from "@/lib/menu";
 import { sanitizeTzPhoneStrict } from "@/lib/formatters";
 import { supabase } from "@/integrations/supabase/client";
-import { createOrder, type OrderItem } from "@/lib/orders";
+import { type OrderItem } from "@/lib/orders";
 import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
@@ -203,6 +203,33 @@ function MsosiCheckout() {
         /* cook phone lookup is best-effort; the server falls back */
       }
 
+      const orderedItems: OrderItem[] = cartMode
+        ? [...cartItems]
+        : [
+            {
+              itemId: order.itemId,
+              name: order.name,
+              price: order.price,
+              quantity: order.quantity,
+              imageUrl: order.imageUrl || undefined,
+              vendorName: order.vendorName || undefined,
+              addSoda: order.addSoda,
+              notes: order.notes.trim() || undefined,
+              deliveryFee: order.deliveryFee,
+            },
+          ];
+      // Free soda goes on the ticket for the cafeteria at zero cost.
+      if (voucherApplied) {
+        orderedItems.push({
+          itemId: "free-soda-voucher",
+          name: "Soda ya Bure (Free Soda Voucher 🥤)",
+          price: 0,
+          quantity: 1,
+        });
+      }
+
+      const { data: sessionData } = await supabase.auth.getSession();
+
       // 1. Trigger the Sonic Pesa mobile money PIN push.
       const payment = await initiateSonicPesaPayment({
         amount: total,
@@ -211,6 +238,8 @@ function MsosiCheckout() {
         buyerEmail: authUser?.email ?? undefined,
         description: "Msosi Fasta Food Order",
         cookPhone,
+        accessToken: authUser ? sessionData.session?.access_token : undefined,
+        orderRecord: { items: orderedItems, area, room: room.trim() },
         orderDetails: {
           items: cartMode
             ? cartItems.map((i) => ({
@@ -240,46 +269,9 @@ function MsosiCheckout() {
         "Ombi la malipo limetumwa! Angalia simu yako na uweke PIN kuthibitisha.",
       );
 
-      // 2. Save the order once the push was accepted.
+      // 2. The server saved the paid order (guests included).
       const uid = authUser?.id ?? null;
-      let orderId: string | null = null;
-      if (uid) {
-        const orderedItems: OrderItem[] = cartMode
-          ? [...cartItems]
-          : [
-              {
-                itemId: order.itemId,
-                name: order.name,
-                price: order.price,
-                quantity: order.quantity,
-                imageUrl: order.imageUrl || undefined,
-                vendorName: order.vendorName || undefined,
-                addSoda: order.addSoda,
-                notes: order.notes.trim() || undefined,
-                deliveryFee: order.deliveryFee,
-              },
-            ];
-        // Free soda goes on the ticket for the cafeteria at zero cost.
-        if (voucherApplied) {
-          orderedItems.push({
-            itemId: "free-soda-voucher",
-            name: "Soda ya Bure (Free Soda Voucher 🥤)",
-            price: 0,
-            quantity: 1,
-          });
-        }
-
-        orderId = await createOrder({
-          userId: uid,
-          items: orderedItems,
-          total,
-          area,
-          room: room.trim(),
-          phone: cleanPhone,
-          customerName: cleanName,
-          paymentReference: payment.reference,
-        });
-      }
+      const orderId: string | null = payment.orderId ?? null;
       // Award streak + reward points (idempotent server-side; non-fatal).
       if (orderId) {
         try {

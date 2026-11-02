@@ -20,7 +20,54 @@ type SonicPesaPayload = {
     deliveryLocation?: string;
     notes?: string;
   };
+  orderRecord?: { items?: unknown[]; area?: string; room?: string };
 };
+
+// Persist a PAID order with the service client so guests are recorded too.
+async function savePaidOrder(opts: {
+  request: Request;
+  payload: SonicPesaPayload;
+  amount: number;
+  phone: string;
+  customerName: string;
+  reference: string;
+}): Promise<string | null> {
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    let userId: string | null = null;
+    const token = opts.request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+    if (token) {
+      const { data } = await supabaseAdmin.auth.getUser(token);
+      if (data.user && !data.user.is_anonymous) userId = data.user.id;
+    }
+    const rec = opts.payload.orderRecord ?? {};
+    const items = Array.isArray(rec.items) ? rec.items.slice(0, 30) : [];
+    const { data, error } = await supabaseAdmin
+      .from("food_orders")
+      .insert({
+        user_id: userId,
+        items: items as never,
+        total_tsh: opts.amount,
+        delivery_area: String(rec.area ?? "").slice(0, 120),
+        room: String(rec.room ?? "").slice(0, 120),
+        phone: opts.phone,
+        customer_name: opts.customerName.slice(0, 120),
+        payment_status: "success",
+        payment_reference: opts.reference,
+        status: "delivered",
+      })
+      .select("id")
+      .single();
+    if (error) {
+      console.error("[Order] save failed:", error.message);
+      return null;
+    }
+    return data?.id ?? null;
+  } catch (err) {
+    console.error("[Order] save error:", err);
+    return null;
+  }
+}
 
 // Normalize any Tanzanian phone input to 255XXXXXXXXX.
 function formatTzPhone(input: string): string | null {
@@ -342,9 +389,18 @@ export const Route = createFileRoute("/api/public/sonic-pesa-pay")({
                   amount,
                 });
               }
+              const savedOrderId = await savePaidOrder({
+                request,
+                payload,
+                amount,
+                phone: phoneNumber,
+                customerName,
+                reference: String(orderId),
+              });
               return jsonResponse(
                 {
                   ok: true,
+                  orderId: savedOrderId ?? undefined,
                   reference: orderId,
                   message: "Malipo yamekamilika kikamilifu!",
                   data: statusData?.data,

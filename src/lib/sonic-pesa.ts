@@ -25,11 +25,20 @@ export type SonicPesaRequest = {
     deliveryLocation: string;
     notes?: string;
   };
+  /** Full order saved server-side once payment succeeds (works for guests too). */
+  orderRecord?: {
+    items: unknown[];
+    area: string;
+    room: string;
+  };
+  /** Signed-in customer's session token so the order is linked to their history. */
+  accessToken?: string;
 };
 
 export type SonicPesaResult = {
   ok: boolean;
   reference?: string;
+  orderId?: string;
   message?: string;
 };
 
@@ -38,6 +47,7 @@ type SonicPesaPayload = {
   id?: string;
   message?: string;
   error?: string;
+  orderId?: string;
   data?: { reference?: string; id?: string };
 };
 
@@ -58,6 +68,7 @@ export async function initiateSonicPesaPayment(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        ...(input.accessToken ? { Authorization: `Bearer ${input.accessToken}` } : {}),
       },
       body: JSON.stringify({
         amount: Math.round(Number(input.amount)),
@@ -67,6 +78,7 @@ export async function initiateSonicPesaPayment(
         description: input.description ?? "Msosi Fasta Food Order",
         cookPhone: input.cookPhone?.trim() || undefined,
         orderDetails: input.orderDetails,
+        orderRecord: input.orderRecord,
       }),
     });
 
@@ -84,6 +96,7 @@ export async function initiateSonicPesaPayment(
 
     return {
       ok: true,
+      orderId: payload?.orderId,
       reference:
         payload?.reference ?? payload?.id ?? payload?.data?.reference ?? payload?.data?.id,
     };
