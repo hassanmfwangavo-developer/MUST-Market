@@ -1,0 +1,1 @@
+GRANT SELECT (is_verified) ON public.products TO anon;
