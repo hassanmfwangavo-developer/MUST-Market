@@ -103,6 +103,7 @@ function VendorDashboard() {
     queryKey: ["vendor-orders", activeVendorId ?? "all"],
     queryFn: () => fetchVendorOrders(activeVendorId),
     enabled,
+    refetchInterval: 60_000,
   });
   const preOrders = useQuery({
     queryKey: ["vendor-pre-orders", activeVendorId ?? "all"],
@@ -128,6 +129,9 @@ function VendorDashboard() {
       .on("postgres_changes", { event: "*", schema: "public", table: "food_orders" }, () => {
         void queryClient.invalidateQueries({ queryKey: ["vendor-orders"] });
       })
+      .on("postgres_changes", { event: "*", schema: "public", table: "batch_preorders" }, () => {
+        void queryClient.invalidateQueries({ queryKey: ["vendor-batch-preorders"] });
+      })
       .subscribe();
     return () => {
       void supabase.removeChannel(channel);
@@ -146,6 +150,13 @@ function VendorDashboard() {
   });
 
   const stats = useMemo(() => summarise(orders.data ?? []), [orders.data]);
+  const preStats = useMemo(() => {
+    const list = (batchPreorders.data ?? []).filter((b) => b.status !== "cancelled");
+    return {
+      count: list.length + (preOrders.data ?? []).length,
+      revenue: list.reduce((sum, b) => sum + (b.total_tsh ?? 0), 0),
+    };
+  }, [batchPreorders.data, preOrders.data]);
   const batchSummaries = useMemo(
     () => summariseOrderBatches(orders.data ?? []),
     [orders.data],
@@ -209,14 +220,14 @@ function VendorDashboard() {
         )}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={ShoppingBag} label="Total Lifetime Orders" value={String(stats.lifetime)} />
+          <StatCard icon={ShoppingBag} label="Paid Orders (Lifetime)" value={String(stats.lifetime)} />
+          <StatCard icon={ClipboardList} label="Today's Paid Orders" value={String(stats.completedToday)} />
+          <StatCard icon={Coins} label="Direct Orders Revenue" value={formatTsh(stats.revenue, "TSh")} />
           <StatCard
-            icon={ClipboardList}
-            label="Today's Completed Orders"
-            value={String(stats.completedToday)}
+            icon={Timer}
+            label="Pre-Orders"
+            value={`${preStats.count} · ${formatTsh(preStats.revenue, "TSh")}`}
           />
-          <StatCard icon={Coins} label="Total Revenue" value={formatTsh(stats.revenue, "TSh")} />
-          <StatCard icon={Timer} label="Active / Pending Orders" value={String(stats.active)} />
         </div>
 
         {batchSummaries.length > 0 && (
