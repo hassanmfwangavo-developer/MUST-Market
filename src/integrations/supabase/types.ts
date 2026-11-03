@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_order_push_log: {
+        Row: {
+          created_at: string
+          device_id: string
+          error_message: string | null
+          event_key: string
+          id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          error_message?: string | null
+          event_key: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          error_message?: string | null
+          event_key?: string
+          id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_order_push_log_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "admin_push_devices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_push_devices: {
+        Row: {
+          created_at: string
+          id: string
+          token: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       banners: {
         Row: {
           banner_type: string
