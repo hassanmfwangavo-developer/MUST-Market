@@ -25,8 +25,17 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchPortalAccess } from "@/lib/vendor-portal";
+import { AdminPushControl } from "@/components/admin-push-control";
 
 export const Route = createFileRoute("/admin")({
+  head: () => ({ meta: [
+    { title: "MUST Market Admin — Order Management" },
+    { name: "description", content: "Manage MUST Market listings, Msosi Fasta orders and admin notifications." },
+    { property: "og:title", content: "MUST Market Admin — Order Management" },
+    { property: "og:description", content: "MUST Market administration and Msosi Fasta order notifications." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: AdminLayout,
 });
 
@@ -229,6 +238,7 @@ function AdminLayout() {
         </header>
 
         <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+          <AdminPushControl />
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {cards.map((c) => (
               <div key={c.label} className="rounded-2xl border border-border bg-surface p-4 shadow-soft">
