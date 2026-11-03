@@ -242,20 +242,20 @@ export async function updateOrderStatus(id: string, status: OrderStatus): Promis
   if (error) throw new Error(error.message);
 }
 
-const COMPLETED = new Set(["completed", "delivered"]);
-const ACTIVE = new Set(["pending", "preparing", "delivering", "on_the_way"]);
+/** Calendar day in East Africa Time (UTC+3), so "today" resets at local midnight. */
+export function eatDay(iso: string | Date): string {
+  const t = new Date(iso).getTime() + 3 * 60 * 60 * 1000;
+  return new Date(t).toISOString().slice(0, 10);
+}
 
-export function summarise(orders: VendorOrder[]) {
-  const today = new Date().toISOString().slice(0, 10);
+/** Only orders whose payment succeeded (reached the receipt screen) count. */
+export function summarise(orders: VendorOrder[], now: Date = new Date()) {
+  const paid = orders.filter((o) => o.payment_status === "success");
+  const today = eatDay(now);
   return {
-    lifetime: orders.length,
-    completedToday: orders.filter(
-      (o) => COMPLETED.has(o.status) && o.created_at.slice(0, 10) === today,
-    ).length,
-    revenue: orders
-      .filter((o) => o.payment_status === "success" || COMPLETED.has(o.status))
-      .reduce((sum, o) => sum + o.total_tsh, 0),
-    active: orders.filter((o) => ACTIVE.has(o.status)).length,
+    lifetime: paid.length,
+    completedToday: paid.filter((o) => eatDay(o.created_at) === today).length,
+    revenue: paid.reduce((sum, o) => sum + o.total_tsh, 0),
   };
 }
 

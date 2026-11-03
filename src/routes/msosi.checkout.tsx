@@ -270,7 +270,6 @@ function MsosiCheckout() {
       );
 
       // 2. The server saved the paid order (guests included).
-      const uid = authUser?.id ?? null;
       const orderId: string | null = payment.orderId ?? null;
       // Award streak + reward points (idempotent server-side; non-fatal).
       if (orderId) {
