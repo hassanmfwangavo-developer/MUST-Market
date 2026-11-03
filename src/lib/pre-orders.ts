@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { notifyAdminInBackground } from "./admin-notify.functions";
+import { notifyAdmin } from "./admin-notify.functions";
 
 export interface PreOrder {
   id: string;
@@ -45,7 +45,7 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
     scheduled_for: input.scheduledFor?.trim() || null,
   });
   if (error) throw new Error(error.message);
-  notifyAdminInBackground("pre_order", id);
+  await notifyAdmin({ data: { kind: "pre_order", id } }).catch((e) => console.error("[PreOrder] alert failed", e));
 }
 
 /** Admin listing of every booking request, newest first. */

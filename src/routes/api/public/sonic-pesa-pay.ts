@@ -62,6 +62,12 @@ async function savePaidOrder(opts: {
       console.error("[Order] save failed:", error.message);
       return null;
     }
+    if (data?.id) {
+      try {
+        const { sendOrderPush } = await import("@/lib/order-push.server");
+        await sendOrderPush("paid_order", data.id);
+      } catch (error) { console.error("[Order] push failed", error); }
+    }
     return data?.id ?? null;
   } catch (err) {
     console.error("[Order] save error:", err);

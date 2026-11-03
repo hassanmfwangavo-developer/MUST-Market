@@ -69,6 +69,13 @@ export const notifyAdmin = createServerFn({ method: "POST" })
     return { kind: data.kind, id: data.id };
   })
   .handler(async ({ data }) => {
+    // Push is independent of email delivery; failure must not suppress email.
+    if (data.kind === "batch_preorder" || data.kind === "pre_order") {
+      try {
+        const { sendOrderPush } = await import("./order-push.server");
+        await sendOrderPush(data.kind, data.id);
+      } catch (error) { console.error("[AdminNotify] push failed", error); }
+    }
     try {
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
