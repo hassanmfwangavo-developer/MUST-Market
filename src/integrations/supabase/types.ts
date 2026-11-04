@@ -1101,6 +1101,18 @@ export type Database = {
         Args: { _product_id: string }
         Returns: undefined
       }
+      record_paid_food_order: {
+        Args: {
+          _area: string
+          _items: Json
+          _name: string
+          _phone: string
+          _reference: string
+          _room: string
+          _total: number
+        }
+        Returns: string
+      }
       vendor_id_for: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
