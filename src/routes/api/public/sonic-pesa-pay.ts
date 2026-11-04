@@ -60,7 +60,7 @@ async function savePaidOrder(opts: {
       .single();
     if (error) {
       console.error("[Order] save failed:", error.message);
-      return null;
+      return await saveViaRpc(opts);
     }
     if (data?.id) {
       try {
@@ -71,6 +71,54 @@ async function savePaidOrder(opts: {
     return data?.id ?? null;
   } catch (err) {
     console.error("[Order] save error:", err);
+    return await saveViaRpc(opts);
+  }
+}
+
+// Fallback when the service key is unavailable on the host: public key + DB function.
+async function saveViaRpc(opts: {
+  request: Request;
+  payload: SonicPesaPayload;
+  amount: number;
+  phone: string;
+  customerName: string;
+  reference: string;
+}): Promise<string | null> {
+  try {
+    const url = process.env["SUPABASE_URL"] || process.env["VITE_SUPABASE_URL"];
+    const key =
+      process.env["SUPABASE_PUBLISHABLE_KEY"] ||
+      process.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
+      import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const base = url || import.meta.env.VITE_SUPABASE_URL;
+    if (!base || !key) return null;
+    const auth = opts.request.headers.get("authorization");
+    const rec = opts.payload.orderRecord ?? {};
+    const res = await fetch(`${base}/rest/v1/rpc/record_paid_food_order`, {
+      method: "POST",
+      headers: {
+        apikey: key,
+        "Content-Type": "application/json",
+        ...(auth ? { Authorization: auth } : key.startsWith("sb_") ? {} : { Authorization: `Bearer ${key}` }),
+      },
+      body: JSON.stringify({
+        _reference: opts.reference,
+        _items: Array.isArray(rec.items) ? rec.items.slice(0, 30) : [],
+        _total: opts.amount,
+        _area: String(rec.area ?? ""),
+        _room: String(rec.room ?? ""),
+        _phone: opts.phone,
+        _name: opts.customerName,
+      }),
+    });
+    const id = await res.json().catch(() => null);
+    if (!res.ok || typeof id !== "string") {
+      console.error("[Order] rpc save failed", res.status, id);
+      return null;
+    }
+    return id;
+  } catch (e) {
+    console.error("[Order] rpc save error", e);
     return null;
   }
 }
