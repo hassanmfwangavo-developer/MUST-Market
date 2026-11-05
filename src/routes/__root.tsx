@@ -18,6 +18,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthModal } from "@/components/auth-modal";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { registerAppServiceWorker } from "@/lib/pwa";
+import { installPromptBootstrap } from "@/lib/install-prompt";
 
 function NotFoundComponent() {
   return (
@@ -99,7 +100,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "MUST Market" },
-      { property: "og:image", content: "https://mustmarket.store/og-image.png" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "MUST Market – Campus Super-App | Sokoni & Msosi Fasta" },
       {
@@ -107,7 +107,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Agiza msosi kutoka cafeterias za chuo au nunua/uza vitu used kwa wanafunzi wa MUST.",
       },
-      { name: "twitter:image", content: "https://mustmarket.store/og-image.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -131,6 +130,7 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: installPromptBootstrap }} />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
