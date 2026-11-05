@@ -1,11 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { fetchOrdersByPhone, loadMsosiCustomer, saveMsosiCustomer, clearMsosiCustomer } from "@/lib/msosi-customer";
+import { sanitizeTzPhoneStrict } from "@/lib/formatters";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ClipboardList, ShoppingBag, Star, Utensils, X } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { Footer } from "@/components/footer";
-import { openAuthModal, useAuthUser } from "@/lib/auth-store";
+import { useAuthUser } from "@/lib/auth-store";
 import { fetchOrders, type FoodOrder } from "@/lib/orders";
 import { fetchMyReviews, submitReview, type OrderReview } from "@/lib/reviews";
 import { setCartItems } from "@/lib/cart";
@@ -74,35 +76,8 @@ function OrdersPage() {
     enabled: !!user,
   });
 
-  useEffect(() => {
-    if (initialized && !user) {
-      openAuthModal("/orders");
-    }
-  }, [initialized, user]);
 
-  if (initialized && !user) {
-    return (
-      <div className="flex min-h-screen flex-col bg-white">
-        <TopBar />
-        <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col items-center justify-center px-4 py-20 text-center">
-          <ClipboardList className="h-12 w-12 text-slate-300" />
-          <h1 className="mt-4 text-xl font-bold tracking-tight text-slate-900">
-            Sign in to your account
-          </h1>
-          <p className="mt-2 text-sm text-slate-500">
-            You need to sign in to view your recent orders.
-          </p>
-          <button
-            onClick={() => openAuthModal("/orders")}
-            className="mt-6 rounded-full bg-[#2ECC71] px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#27ae60]"
-          >
-            Sign In / Join
-          </button>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  if (initialized && !user) return <PhoneHistory />;
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -376,6 +351,96 @@ function ReviewModal({
           {saving ? "Sending..." : "Submit Review"}
         </button>
       </div>
+    </div>
+  );
+}
+
+function PhoneHistory() {
+  const [phone, setPhone] = useState<string | null>(null);
+  const [input, setInput] = useState("");
+  useEffect(() => {
+    setPhone(loadMsosiCustomer()?.phone ?? null);
+  }, []);
+  const { data: orders, isLoading } = useQuery({
+    queryKey: ["orders-by-phone", phone],
+    queryFn: () => fetchOrdersByPhone(phone!),
+    enabled: !!phone,
+  });
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = sanitizeTzPhoneStrict(input);
+    if (!clean) {
+      toast.warning("Weka namba sahihi ya simu (mfano: 07XXXXXXXX).");
+      return;
+    }
+    saveMsosiCustomer({ name: loadMsosiCustomer()?.name ?? "", phone: clean });
+    setPhone(clean);
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-white">
+      <TopBar />
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-6 sm:px-6">
+        <h1 className="mb-2 text-xl font-bold text-slate-900 md:text-2xl">Historia ya Oda</h1>
+        {!phone ? (
+          <form onSubmit={submit} className="mt-4 space-y-3 rounded-2xl border border-slate-200 bg-[#F8F9FA] p-5">
+            <p className="text-sm text-slate-600">Weka namba ya simu uliyotumia kuagiza kuona oda zako zote.</p>
+            <input
+              type="tel"
+              inputMode="tel"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="07XXXXXXXX"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-base focus:border-[#008542] focus:outline-none"
+            />
+            <button type="submit" className="w-full rounded-full bg-[#2ECC71] px-6 py-3 font-bold text-white hover:bg-[#27ae60]">
+              Ona Oda Zangu
+            </button>
+          </form>
+        ) : (
+          <>
+            <div className="mb-5 flex items-center justify-between text-xs text-slate-500">
+              <span>Namba: <b className="text-slate-800">{phone}</b></span>
+              <button
+                onClick={() => { clearMsosiCustomer(); setPhone(null); setInput(""); }}
+                className="font-semibold text-[#008542] underline"
+              >
+                Badilisha namba
+              </button>
+            </div>
+            {isLoading ? (
+              <div className="h-32 animate-pulse rounded-2xl bg-[#F8F9FA]" />
+            ) : orders && orders.length > 0 ? (
+              <div className="space-y-3">
+                {orders.map((o) => (
+                  <article key={o.id} className="rounded-2xl border border-slate-200 bg-white p-4">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-500">{formatOrderDate(o.created_at)}</span>
+                      <span className={`rounded-full px-3 py-1 font-semibold ${o.kind === "paid" ? "bg-emerald-100/60 text-emerald-600" : "bg-amber-100 text-amber-700"}`}>
+                        {o.kind === "paid" ? "Imelipwa" : "Pre-Order"}
+                      </span>
+                    </div>
+                    <h2 className="mt-2 font-bold text-slate-900">
+                      {o.items.map((i) => `${i.quantity && i.quantity > 1 ? i.quantity + "× " : ""}${i.name ?? ""}${i.addSoda ? " + Soda" : ""}`).join(", ") || "Oda"}
+                    </h2>
+                    {o.total_tsh > 0 ? <p className="mt-1 font-bold text-slate-900">{formatTsh(o.total_tsh, "TZS")}</p> : null}
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-200 bg-[#F8F9FA] p-10 text-center">
+                <ShoppingBag className="mx-auto h-8 w-8 text-slate-300" />
+                <p className="mt-3 text-sm font-semibold text-slate-900">Hakuna oda kwa namba hii bado.</p>
+                <Link to="/msosi" className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#2ECC71] px-5 py-2.5 text-sm font-bold text-white">
+                  <Utensils className="h-4 w-4" /> Agiza Sasa
+                </Link>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 }

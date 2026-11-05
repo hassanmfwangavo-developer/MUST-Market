@@ -22,6 +22,7 @@ import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
 import { fetchActiveVoucher, redeemVoucher, type UserVoucher } from "@/lib/vouchers";
 import { HelpDrawer } from "@/components/help-drawer";
+import { loadMsosiCustomer, saveMsosiCustomer } from "@/lib/msosi-customer";
 
 
 import { DEFAULT_DELIVERY_FEE } from "@/lib/menu";
@@ -114,6 +115,16 @@ function MsosiCheckout() {
   const [voucher, setVoucher] = useState<UserVoucher | null>(null);
   const [useSodaVoucher, setUseSodaVoucher] = useState(false);
 
+  // Remember returning Msosi customers by phone — prefill their details.
+  useEffect(() => {
+    const c = loadMsosiCustomer();
+    if (!c) return;
+    setFullName((v) => v || c.name);
+    setPhone((v) => v || c.phone);
+    if (c.room) setRoom((v) => v || c.room!);
+    if (c.area && (DELIVERY_AREAS as readonly string[]).includes(c.area)) setArea(c.area as typeof area);
+  }, []);
+
   // Free-soda voucher available to the signed-in student.
   useEffect(() => {
     let cancelled = false;
@@ -175,6 +186,7 @@ function MsosiCheckout() {
       toast.error("Please enter your street name / room number.");
       return;
     }
+    saveMsosiCustomer({ name: cleanName, phone: cleanPhone, room: room.trim(), area });
     setSubmitting(true);
     try {
       // Resolve the signed-in user first so we can pass their email to Sonic Pesa.

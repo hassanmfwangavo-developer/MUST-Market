@@ -65,6 +65,7 @@ const SECTIONS: { title: string; items: NavItem[] }[] = [
       { to: "/admin/food", label: "Migahawa & Logos", icon: Store, search: { tab: "vendors" } },
       { to: "/admin/food", label: "Testimonials & Reviews", icon: Star, search: { tab: "reviews" } },
       { to: "/admin/preorders", label: "Batch Pre-Orders Queue", icon: ClipboardList },
+      { to: "/admin/customers", label: "Wateja wa Msosi", icon: ChefHat },
     ],
   },
   { title: "Services & Books", items: [{ to: "/admin/services", label: "Service Mall", icon: Wrench }] },
