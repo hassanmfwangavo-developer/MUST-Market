@@ -576,6 +576,39 @@ export type Database = {
           },
         ]
       }
+      msosi_customers: {
+        Row: {
+          created_at: string
+          full_name: string
+          id: string
+          last_order_at: string
+          location: string
+          phone: string
+          phone_key: string
+          total_orders: number
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          last_order_at?: string
+          location?: string
+          phone: string
+          phone_key: string
+          total_orders?: number
+        }
+        Update: {
+          created_at?: string
+          full_name?: string
+          id?: string
+          last_order_at?: string
+          location?: string
+          phone?: string
+          phone_key?: string
+          total_orders?: number
+        }
+        Relationships: []
+      }
       msosi_pre_orders: {
         Row: {
           created_at: string
@@ -1101,6 +1134,19 @@ export type Database = {
         Args: { _product_id: string }
         Returns: undefined
       }
+      msosi_orders_by_phone: {
+        Args: { _phone: string }
+        Returns: {
+          created_at: string
+          id: string
+          items: Json
+          kind: string
+          status: string
+          summary: string
+          total_tsh: number
+        }[]
+      }
+      msosi_phone_key: { Args: { _phone: string }; Returns: string }
       record_paid_food_order: {
         Args: {
           _area: string
@@ -1112,6 +1158,10 @@ export type Database = {
           _total: number
         }
         Returns: string
+      }
+      upsert_msosi_customer: {
+        Args: { _location: string; _name: string; _phone: string }
+        Returns: undefined
       }
       vendor_id_for: { Args: { _user_id: string }; Returns: string }
     }
