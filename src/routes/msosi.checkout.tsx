@@ -47,6 +47,7 @@ type CheckoutState = {
   price?: number;
   imageUrl?: string;
   vendorName?: string;
+  vendorId?: string;
   quantity?: number;
   addSoda?: boolean;
   /** Customer's special instructions for the kitchen. */
