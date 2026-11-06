@@ -97,6 +97,7 @@ function MsosiCheckout() {
       price: locationState?.price ?? 7500,
       imageUrl: locationState?.imageUrl ?? "",
       vendorName: locationState?.vendorName ?? "",
+      vendorId: locationState?.vendorId ?? "",
       quantity: locationState?.quantity ?? 1,
       addSoda: locationState?.addSoda ?? false,
       notes: locationState?.notes ?? "",
