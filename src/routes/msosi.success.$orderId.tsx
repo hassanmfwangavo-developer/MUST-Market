@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Check,
-  User,
   MessageCircle,
   MapPin,
   Clock,
