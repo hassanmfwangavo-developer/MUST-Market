@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Check,
-  Home,
   MessageCircle,
   MapPin,
   Clock,
@@ -298,11 +297,11 @@ function MsosiSuccess() {
         {/* ===================== ACTION BUTTONS ===================== */}
         <div className="mt-8 grid w-full gap-3 sm:grid-cols-2">
           <Link
-            to="/msosi"
+            to="/profile"
             className="flex w-full items-center justify-center gap-2 rounded-full bg-[#008542] px-6 py-3.5 font-bold text-white shadow-md transition-colors hover:bg-[#006e36]"
           >
-            <Home className="h-5 w-5 shrink-0" />
-            <span className="text-sm">Back to Home / Market</span>
+            <User className="h-5 w-5 shrink-0" />
+            <span className="text-sm">My Account</span>
           </Link>
 
           <a
