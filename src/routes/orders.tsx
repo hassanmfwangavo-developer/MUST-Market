@@ -126,15 +126,6 @@ function OrdersPage() {
           </div>
         )}
       </main>
-      {reviewId && phone ? (
-        <ReviewModal
-          orderId={reviewId}
-          userId=""
-          phone={phone}
-          onClose={() => setReviewId(null)}
-          onSaved={() => {}}
-        />
-      ) : null}
       <Footer />
     </div>
   );
