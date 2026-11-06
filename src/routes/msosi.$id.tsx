@@ -306,6 +306,7 @@ function MsosiDetail() {
                 promoCode: offer?.promoCode ?? undefined,
                 imageUrl: dish.image_url ?? undefined,
                 vendorName: dish.vendor_name,
+                vendorId: dish.vendor_id ?? undefined,
                 deliveryFee: dish.delivery_fee,
                 quantity,
                 addSoda,
