@@ -65,7 +65,7 @@ export async function fetchAllReviews(): Promise<AdminReview[]> {
     return {
       id: row.id,
       order_id: row.order_id,
-      user_id: row.user_id,
+      user_id: row.user_id ?? "",
       rating: row.rating,
       comment: row.comment,
       created_at: row.created_at,
