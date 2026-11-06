@@ -49,3 +49,10 @@ export async function fetchOrdersByPhone(phone: string): Promise<PhoneOrder[]> {
     items: Array.isArray(r.items) ? r.items : [],
   })) as PhoneOrder[];
 }
+
+export async function submitPhoneReview(phone: string, orderId: string, rating: number, comment: string) {
+  const { error } = await supabase.rpc("msosi_submit_review", {
+    _phone: phone, _order_id: orderId, _rating: rating, _comment: comment,
+  });
+  if (error) throw error;
+}

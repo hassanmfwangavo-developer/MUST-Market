@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { fetchOrdersByPhone, loadMsosiCustomer, saveMsosiCustomer, clearMsosiCustomer } from "@/lib/msosi-customer";
+import { fetchOrdersByPhone, loadMsosiCustomer, saveMsosiCustomer, clearMsosiCustomer, submitPhoneReview } from "@/lib/msosi-customer";
 import { sanitizeTzPhoneStrict } from "@/lib/formatters";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ClipboardList, ShoppingBag, Star, Utensils, X } from "lucide-react";
@@ -266,9 +266,11 @@ function ReviewModal({
   existing,
   onClose,
   onSaved,
+  phone,
 }: {
   orderId: string;
   userId: string;
+  phone?: string;
   existing?: OrderReview;
   onClose: () => void;
   onSaved: () => void;
@@ -280,7 +282,8 @@ function ReviewModal({
   const save = async () => {
     setSaving(true);
     try {
-      await submitReview({ orderId, userId, rating, comment: comment.trim() });
+      if (phone) await submitPhoneReview(phone, orderId, rating, comment.trim());
+      else await submitReview({ orderId, userId, rating, comment: comment.trim() });
       toast.success("Thank you! Your review has been sent. 🙌");
       onSaved();
       onClose();
@@ -358,6 +361,8 @@ function ReviewModal({
 function PhoneHistory() {
   const [phone, setPhone] = useState<string | null>(null);
   const [input, setInput] = useState("");
+  const [reviewId, setReviewId] = useState<string | null>(null);
+  const navigate = useNavigate();
   useEffect(() => {
     setPhone(loadMsosiCustomer()?.phone ?? null);
   }, []);
@@ -425,6 +430,32 @@ function PhoneHistory() {
                       {o.items.map((i) => `${i.quantity && i.quantity > 1 ? i.quantity + "× " : ""}${i.name ?? ""}${i.addSoda ? " + Soda" : ""}`).join(", ") || "Oda"}
                     </h2>
                     {o.total_tsh > 0 ? <p className="mt-1 font-bold text-slate-900">{formatTsh(o.total_tsh, "TZS")}</p> : null}
+                    <div className={`mt-3 grid gap-2 ${o.kind === "paid" ? "grid-cols-2" : "grid-cols-1"}`}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (o.kind === "paid" && o.items.length > 0) {
+                            setCartItems(o.items as never);
+                            toast.success("Oda imewekwa tena kwenye kapu!");
+                            navigate({ to: "/msosi/checkout" });
+                          } else {
+                            navigate({ to: "/msosi/preorder" });
+                          }
+                        }}
+                        className="w-full rounded-full bg-[#2ECC71] px-4 py-3 text-sm font-bold text-white hover:bg-[#27ae60]"
+                      >
+                        {o.kind === "paid" ? "Reorder" : "Pre-Order Tena"}
+                      </button>
+                      {o.kind === "paid" ? (
+                        <button
+                          type="button"
+                          onClick={() => setReviewId(o.id)}
+                          className="w-full rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 hover:border-[#008542] hover:text-[#008542]"
+                        >
+                          Weka Maoni
+                        </button>
+                      ) : null}
+                    </div>
                   </article>
                 ))}
               </div>
@@ -440,6 +471,15 @@ function PhoneHistory() {
           </>
         )}
       </main>
+      {reviewId && phone ? (
+        <ReviewModal
+          orderId={reviewId}
+          userId=""
+          phone={phone}
+          onClose={() => setReviewId(null)}
+          onSaved={() => {}}
+        />
+      ) : null}
       <Footer />
     </div>
   );

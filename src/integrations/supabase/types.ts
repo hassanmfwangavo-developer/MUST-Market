@@ -697,7 +697,7 @@ export type Database = {
           id: string
           order_id: string
           rating: number
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           comment?: string
@@ -705,7 +705,7 @@ export type Database = {
           id?: string
           order_id: string
           rating: number
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           comment?: string
@@ -713,7 +713,7 @@ export type Database = {
           id?: string
           order_id?: string
           rating?: number
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -1147,6 +1147,15 @@ export type Database = {
         }[]
       }
       msosi_phone_key: { Args: { _phone: string }; Returns: string }
+      msosi_submit_review: {
+        Args: {
+          _comment: string
+          _order_id: string
+          _phone: string
+          _rating: number
+        }
+        Returns: string
+      }
       record_paid_food_order: {
         Args: {
           _area: string
