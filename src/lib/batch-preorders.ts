@@ -1,5 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { notifyAdmin } from "./admin-notify.functions";
 import type { BatchSlot, HostelZone } from "./order-batches";
 
 export interface PreorderMeal {
@@ -71,10 +70,5 @@ export async function submitBatchPreorder(input: {
     vendor_id: input.vendorId ?? null,
   });
   if (error) throw new Error(error.message);
-  // Wait for the admin alert (max 8s) so it isn't dropped if the visitor closes the page.
-  await Promise.race([
-    notifyAdmin({ data: { kind: "batch_preorder", id } }).catch((e) => console.error("[PreOrder] alert failed", e)),
-    new Promise((r) => setTimeout(r, 8000)),
-  ]);
   return id;
 }
