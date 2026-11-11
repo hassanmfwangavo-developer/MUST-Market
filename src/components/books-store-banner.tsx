@@ -4,7 +4,6 @@ import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import booksImage from "@/assets/books-store.jpg";
 import readingImage from "@/assets/books-banner-reading.jpg";
 import libraryImage from "@/assets/books-banner-library.jpg";
-import { BOOKS24_URL } from "@/lib/site";
 import { BOOKS_BANNER_QUERY_KEY, fetchBooksBanners } from "@/lib/books-banners";
 import { Button } from "@/components/ui/button";
 
@@ -72,7 +71,7 @@ export function BooksStoreBanner() {
             </p>
 
             <Button asChild className="mt-4 h-10 w-fit rounded-md bg-accent px-4 text-sm font-bold text-accent-foreground [text-shadow:none] hover:bg-accent/90 sm:mt-5 sm:h-11 sm:px-6">
-              <a href={BOOKS24_URL} target="_blank" rel="noopener noreferrer">
+              <a href="#" onClick={(event) => event.preventDefault()}>
                 Explore Books
                 <ArrowUpRight aria-hidden="true" />
               </a>

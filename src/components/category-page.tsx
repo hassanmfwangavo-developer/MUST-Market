@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
 import { fetchProducts, type MarketProduct } from "@/lib/products";
 import { useSearchQuery } from "@/lib/search-store";
-import { BOOKS24_URL, MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
+import { MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
 
 /** Full listing page pre-filtered to one permanent marketplace category. */
 const PAGE_SIZE = 24;
@@ -67,9 +67,8 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
             s === "books-stationery" ? (
               <a
                 key={s}
-                href={BOOKS24_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#"
+                onClick={(event) => event.preventDefault()}
                 className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-primary/30 hover:text-foreground"
               >
                 {MARKET_CATEGORY_PAGES[s].heading.trim()} <ArrowUpRight className="h-3.5 w-3.5" />

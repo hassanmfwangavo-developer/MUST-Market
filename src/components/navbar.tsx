@@ -26,7 +26,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
 import { useLanguage } from "@/context/LanguageContext";
-import { BOOKS24_URL, INSTAGRAM_URL } from "@/lib/site";
+import { INSTAGRAM_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
 import { InstallAppButton } from "@/components/install-app-button";
 
@@ -170,9 +170,8 @@ export function Navbar() {
             </Link>
           ))}
           <a
-            href={BOOKS24_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
+            onClick={(event) => event.preventDefault()}
             className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-1.5 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:bg-primary-soft hover:text-primary sm:px-2 sm:text-sm lg:max-xl:px-1.5 lg:max-xl:text-[13px] xl:px-3 xl:text-sm"
           >
             Books <ArrowUpRight className="h-3.5 w-3.5" />
@@ -319,10 +318,11 @@ export function Navbar() {
                 </Link>
               ))}
               <a
-                href={BOOKS24_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setDrawerOpen(false)}
+                href="#"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setDrawerOpen(false);
+                }}
                 className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-surface-2"
               >
                 <BookOpen className="h-[18px] w-[18px] shrink-0 text-muted-foreground" />

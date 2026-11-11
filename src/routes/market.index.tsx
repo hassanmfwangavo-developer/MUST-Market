@@ -8,7 +8,7 @@ import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
 import { Footer } from "@/components/footer";
 import { ArrowUpRight } from "lucide-react";
-import { BOOKS24_URL, canonical, MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
+import { canonical, MARKET_CATEGORY_PAGES, type MarketCategorySlug } from "@/lib/site";
 
 export const Route = createFileRoute("/market/")({
   head: () => ({
@@ -52,9 +52,8 @@ function Market() {
               slug === "books-stationery" ? (
                 <a
                   key={slug}
-                  href={BOOKS24_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="#"
+                  onClick={(event) => event.preventDefault()}
                   className="inline-flex items-center gap-1 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:border-primary/30 hover:text-foreground"
                 >
                   {MARKET_CATEGORY_PAGES[slug].heading} <ArrowUpRight className="h-3.5 w-3.5" />

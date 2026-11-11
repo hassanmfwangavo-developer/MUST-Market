@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  BOOKS24_URL,
   MSOSI_INSTAGRAM_URL,
   WHATSAPP_COMMUNITY_URL,
 } from "@/lib/site";
@@ -95,9 +94,8 @@ function FooterLinkColumn({ title, links }: { title: string; links: FooterLink[]
         {title === "Marketplace" && (
           <li>
             <a
-              href={BOOKS24_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#"
+              onClick={(event) => event.preventDefault()}
               className="inline-flex items-center gap-1 text-sm text-slate-400 transition-colors hover:text-[#008542]"
             >
               Books &amp; Study Supplies <ArrowUpRight className="h-3.5 w-3.5" />
