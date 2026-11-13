@@ -22,7 +22,7 @@ import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
 import { fetchActiveBanners, claimOffer } from "@/lib/offers";
 import { fetchVendors } from "@/lib/vendors";
 import { matchesCategory } from "@/lib/category-match";
-import { HowItWorks, ReferralCard } from "@/components/msosi-sections";
+import { HowItWorks, WhatsAppGroupCard } from "@/components/msosi-sections";
 import { HelpDrawer } from "@/components/help-drawer";
 import { PartnerModal } from "@/components/partner-modal";
 
@@ -611,7 +611,8 @@ function MsosiFasta() {
 
       {/* ============ HOW IT WORKS + REFERRAL ============ */}
       <HowItWorks />
-      <ReferralCard />
+      <WhatsAppGroupCard />
+      {/* <ReferralCard /> */}
 
       <div className="relative z-10 hidden md:block">
         <Footer />
