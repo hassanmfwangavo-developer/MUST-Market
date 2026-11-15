@@ -32,9 +32,10 @@ export function BookingModal({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (saving) return;
+    const whatsappWindow = window.open("about:blank", "_blank");
     setSaving(true);
     try {
-      await createPreOrder({
+      const orderId = await createPreOrder({
         itemId,
         itemName,
         customerName,
@@ -45,7 +46,33 @@ export function BookingModal({
       });
       toast.success("Oda yako ya booking imepokelewa!");
       onClose();
+      const location = quickReservation
+        ? reservationType === "pickup"
+          ? "Pickup"
+          : "Dine-In"
+        : deliveryLocation.trim();
+      const notes = quickReservation
+        ? message.trim() || `${reservationType === "pickup" ? "Pickup" : "Dine-In"} reservation`
+        : message.trim();
+      const lines = [
+        "🍽️ *BOOKING YA CHAKULA (MUST MARKET)*",
+        `Order ID: #${orderId.slice(0, 8).toUpperCase()}`,
+        `Chakula: ${itemName}${dayBadge ? ` (${dayBadge})` : ""}`,
+        `Jina la Mteja: ${customerName.trim()}`,
+        `Namba ya Simu: ${phoneNumber.trim()}`,
+        `Eneo: ${location}`,
+        ...(arrivalTime ? [`Muda wa Kufika: ${arrivalTime}`] : []),
+        `Maelezo: ${notes || "Hakuna"}`,
+      ];
+      const whatsappUrl = `https://wa.me/255797248831?text=${encodeURIComponent(lines.join("\n"))}`;
+      if (whatsappWindow) {
+        whatsappWindow.opener = null;
+        whatsappWindow.location.href = whatsappUrl;
+      } else {
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      }
     } catch (err) {
+      whatsappWindow?.close();
       toast.error(err instanceof Error ? err.message : "Booking imeshindikana.");
     } finally {
       setSaving(false);

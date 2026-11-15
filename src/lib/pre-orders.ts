@@ -27,7 +27,7 @@ export interface PreOrderInput {
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Save a day-specific booking request for a Msosi Fasta dish. */
-export async function createPreOrder(input: PreOrderInput): Promise<void> {
+export async function createPreOrder(input: PreOrderInput): Promise<string> {
   if (!input.customerName.trim()) throw new Error("Tafadhali weka jina lako kamili.");
   if (!input.phoneNumber.trim()) throw new Error("Tafadhali weka namba ya simu.");
   if (!input.deliveryLocation.trim()) throw new Error("Tafadhali weka eneo la delivery.");
@@ -46,6 +46,7 @@ export async function createPreOrder(input: PreOrderInput): Promise<void> {
   });
   if (error) throw new Error(error.message);
   await notifyAdmin({ data: { kind: "pre_order", id } }).catch((e) => console.error("[PreOrder] alert failed", e));
+  return id;
 }
 
 /** Admin listing of every booking request, newest first. */
