@@ -64,7 +64,7 @@ export function VendorPreorderDialog({
         `Hostel Zone & Room: ${zoneInfo?.title ?? zone} · ${room.trim()}`,
         `Batch Slot: ${batchInfo?.title ?? batch} (${batchInfo?.deliveryAt ?? ""})`,
       ].join("\n");
-      const whatsappUrl = `https://wa.me/255797248831?text=${encodeURIComponent(message)}`;
+      const whatsappUrl = `https://wa.me/255746949278?text=${encodeURIComponent(message)}`;
       if (whatsappWindow) {
         whatsappWindow.opener = null;
         whatsappWindow.location.href = whatsappUrl;
