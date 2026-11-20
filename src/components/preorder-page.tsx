@@ -34,7 +34,7 @@ type Receipt = {
   total: number;
 };
 
-const PREORDER_WHATSAPP_NUMBER = "255797248831";
+const PREORDER_WHATSAPP_NUMBER = "255746949278";
 
 function preorderWhatsAppUrl(message: string) {
   return `https://wa.me/${PREORDER_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
