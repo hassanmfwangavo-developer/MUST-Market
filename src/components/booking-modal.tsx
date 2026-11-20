@@ -64,7 +64,7 @@ export function BookingModal({
         ...(arrivalTime ? [`Muda wa Kufika: ${arrivalTime}`] : []),
         `Maelezo: ${notes || "Hakuna"}`,
       ];
-      const whatsappUrl = `https://wa.me/255797248831?text=${encodeURIComponent(lines.join("\n"))}`;
+      const whatsappUrl = `https://wa.me/255658280528?text=${encodeURIComponent(lines.join("\n"))}`;
       if (whatsappWindow) {
         whatsappWindow.opener = null;
         whatsappWindow.location.href = whatsappUrl;
