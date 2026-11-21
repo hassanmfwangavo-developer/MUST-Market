@@ -34,6 +34,7 @@ export interface AdminMenuItem {
   addons: MenuAddon[];
   delivery_fee: number;
   day_badge: string | null;
+  display_order?: number;
 }
 
 export async function fetchVendors(): Promise<Vendor[]> {
@@ -68,6 +69,7 @@ export async function fetchAdminMenuItems(): Promise<AdminMenuItem[]> {
   const { data, error } = await supabase
     .from("menu_items")
     .select("*")
+    .order("display_order", { ascending: true })
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   return (data ?? []).map((row) => ({
@@ -86,6 +88,9 @@ export async function fetchAdminMenuItems(): Promise<AdminMenuItem[]> {
     addons: parseAddons(row.addons),
     delivery_fee: Number(row.delivery_fee ?? 1000),
     day_badge: (row as { day_badge?: string | null }).day_badge ?? null,
+    display_order: (row as { display_order?: number | null }).display_order == null
+      ? undefined
+      : Number((row as { display_order?: number | null }).display_order),
   }));
 }
 

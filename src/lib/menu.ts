@@ -60,6 +60,7 @@ export async function fetchMenuItems(): Promise<MenuItem[]> {
     const { data, error } = await (supabase as any)
       .from("menu_items")
       .select("*")
+      .order("display_order", { ascending: true })
       .order("is_popular", { ascending: false })
       .order("created_at", { ascending: false });
 

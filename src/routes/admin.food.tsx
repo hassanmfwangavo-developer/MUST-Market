@@ -135,6 +135,7 @@ interface FoodDraft {
   addons: MenuAddon[];
   deliveryFee: string;
   dayBadge: string;
+  displayOrder: string;
 }
 
 const emptyDraft = (): FoodDraft => ({
@@ -149,6 +150,7 @@ const emptyDraft = (): FoodDraft => ({
   addons: [],
   deliveryFee: "1000",
   dayBadge: "",
+  displayOrder: "100",
 });
 
 function FoodTab() {
@@ -225,11 +227,12 @@ function FoodTab() {
         addons: d.addons.filter((a) => a.title.trim()) as unknown as never,
         delivery_fee: Math.max(0, Math.round(Number(d.deliveryFee) || 0)),
         day_badge: d.dayBadge.trim() || null,
+        display_order: Math.max(1, Math.round(Number(d.displayOrder) || 100)),
       };
 
       const { error } = d.id
-        ? await supabase.from("menu_items").update(payload).eq("id", d.id)
-        : await supabase.from("menu_items").insert(payload);
+        ? await (supabase as any).from("menu_items").update(payload).eq("id", d.id)
+        : await (supabase as any).from("menu_items").insert(payload);
       if (error) {
         throw new Error(
           error.code === "42501"
@@ -273,6 +276,7 @@ function FoodTab() {
       addons: item.addons,
       deliveryFee: String(item.delivery_fee ?? 1000),
       dayBadge: item.day_badge ?? "",
+      displayOrder: String(item.display_order ?? 100),
     });
   };
 
@@ -530,6 +534,16 @@ function FoodModal({
                 inputMode="decimal"
                 value={draft.rating}
                 onChange={(e) => set("rating", e.target.value)}
+                className={inputClass}
+              />
+            </div>
+            <div>
+              <label className={labelClass}>Mpangilio (Order #)</label>
+              <input
+                inputMode="numeric"
+                value={draft.displayOrder}
+                onChange={(e) => set("displayOrder", e.target.value)}
+                placeholder="1, 2, 3..."
                 className={inputClass}
               />
             </div>
