@@ -196,9 +196,10 @@ async function dispatchOrderSms(opts: {
       `Eneo: ${opts.deliveryLocation}.${notePart} ` +
       `TSh ${opts.amount}.`;
 
+    const cookPhoneDisplay = cookPhone.replace(/^255/, "0");
     const customerMessage =
-      `Asante kwa kutumia MUST Market! Oda yako #${opts.orderRef} ` +
-      `(${opts.itemSummary}) imepokelewa. Namba ya Mpishi: ${cookPhone}. ` +
+      `Asante kwa kutumia MUST Market! Oda yako (${opts.itemSummary}) ` +
+      `imepokelewa. Mpishi: ${cookPhoneDisplay}. ` +
       `Msaada: 0797248831.`;
 
     await Promise.all([
