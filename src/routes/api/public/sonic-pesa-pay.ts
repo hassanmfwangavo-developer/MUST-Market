@@ -185,11 +185,16 @@ async function dispatchOrderSms(opts: {
     const cookPhone =
       formatTzPhone(opts.cookPhone) ?? "255797248831";
 
+    const clientPhone = opts.customerPhone.replace(/^255/, "0");
+    const notePart = opts.notes && opts.notes.trim() !== "-" && opts.notes.trim() !== ""
+      ? ` Note: ${opts.notes.trim()}.`
+      : "";
+
     const cookMessage =
-      `[MUST MARKET] ODA MPYA! #${opts.orderRef}: ${opts.itemSummary}. ` +
-      `Mteja: ${opts.customerName} (${opts.customerPhone}). ` +
-      `Mahali: ${opts.deliveryLocation}. Maelekezo: ${opts.notes}. ` +
-      `Jumla: TSh ${opts.amount} (IMELIPWA).`;
+      `ODA: ${opts.itemSummary}. ` +
+      `Mteja: ${opts.customerName} (${clientPhone}). ` +
+      `Eneo: ${opts.deliveryLocation}.${notePart} ` +
+      `TSh ${opts.amount}.`;
 
     const customerMessage =
       `Asante kwa kutumia MUST Market! Oda yako #${opts.orderRef} ` +
