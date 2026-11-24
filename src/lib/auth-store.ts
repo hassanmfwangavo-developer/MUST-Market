@@ -4,6 +4,7 @@ import type { User } from "@supabase/supabase-js";
 import { claimReferral, touchLoginStreak } from "@/lib/rewards.functions";
 import { syncBrevoContact } from "@/lib/brevo.functions";
 import { captureReferralFromUrl, clearStoredReferral, getStoredReferral } from "@/lib/referral";
+import { createDailyStreakGuard } from "./daily-streak";
 
 let open = false;
 let pendingRedirect: string | null = null;
@@ -70,13 +71,13 @@ function tryClaimReferral() {
     });
 }
 
-/** Daily login streak — safe to call on every session load (same-day = no-op). */
-let streakTouched = false;
-function tryTouchStreak() {
-  if (streakTouched) return;
-  streakTouched = true;
-  void touchLoginStreak({ data: undefined }).catch(() => {
-    streakTouched = false;
+/** Daily login streak — successful touches are cached per user and UTC day. */
+const touchOnceDaily = createDailyStreakGuard();
+function tryTouchStreak(u: User) {
+  let storage: Storage | undefined;
+  try { storage = window.localStorage; } catch { /* Restricted browser storage. */ }
+  void touchOnceDaily(u.id, () => touchLoginStreak({ data: undefined }), storage).catch(() => {
+    /* Retry on the next session load; failed attempts never stamp the date. */
   });
 }
 
@@ -119,7 +120,7 @@ if (typeof window !== "undefined") {
     // Already-signed-in visitor arriving via a referral link.
     if (user) {
       tryClaimReferral();
-      tryTouchStreak();
+      tryTouchStreak(user);
       trySyncBrevo(user);
     }
   });
@@ -131,13 +132,21 @@ if (typeof window !== "undefined") {
     if (event === "SIGNED_IN" && user) {
       void upsertProfile(user);
       tryClaimReferral();
-      tryTouchStreak();
+      tryTouchStreak(user);
       trySyncBrevo(user);
     }
   });
 }
 
 export function useAuthUser() {
+  const ready = useSyncExternalStore(
+    (cb) => {
+      userListeners.add(cb);
+      return () => userListeners.delete(cb);
+    },
+    () => initialized,
+    () => false,
+  );
   const u = useSyncExternalStore(
     (cb) => {
       userListeners.add(cb);
@@ -146,5 +155,5 @@ export function useAuthUser() {
     () => user,
     () => null,
   );
-  return { user: u, initialized };
+  return { user: u, initialized: ready };
 }

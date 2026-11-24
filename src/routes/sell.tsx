@@ -168,7 +168,7 @@ function SellPage() {
         const path = `${userId}/${Date.now()}-${i}.${ext}`;
         const { error: upErr } = await supabase.storage
           .from("product-images")
-          .upload(path, img.file, { contentType: img.file.type, upsert: false });
+          .upload(path, img.file, { contentType: img.file.type, upsert: false, cacheControl: "31536000" });
         if (upErr) throw upErr;
         const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
         const { data: signed, error: signErr } = await supabase.storage

@@ -365,7 +365,7 @@ function EditModal({
       const path = `${userId}/${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage
         .from("product-images")
-        .upload(path, compressedFile, { contentType: compressedFile.type });
+        .upload(path, compressedFile, { contentType: compressedFile.type, upsert: false, cacheControl: "31536000" });
       if (upErr) throw upErr;
       const { data: signed, error: sErr } = await supabase.storage
         .from("product-images")

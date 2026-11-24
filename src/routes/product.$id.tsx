@@ -143,7 +143,8 @@ function ProductGallery({ product }: { product: MarketProduct }) {
           sizes="(max-width: 768px) 100vw, 50vw"
           alt={product.title}
           aspect="aspect-[4/5]"
-          eager
+          loading="lazy"
+          decoding="async"
           fallback={
             <>
               <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient}`} />

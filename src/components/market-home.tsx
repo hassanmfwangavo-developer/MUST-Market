@@ -4,7 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Search } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories, categoryEmoji, categoryLabel } from "@/lib/demo-data";
-import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useProductListings } from "@/lib/use-product-listings";
 import { fetchMarketBanners, type MarketBanner } from "@/lib/market-banners";
 import { setSearchQuery, useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
@@ -38,9 +38,9 @@ export function MarketHome() {
     else openAuthModal("/sell");
   };
 
-  const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
+  const { products, isLoading, hasNextPage } = useProductListings({
+    category: active === "All" ? "" : active,
+    search: query,
   });
 
   const { data: bannerRows = [], isLoading: bannersLoading } = useQuery<MarketBanner[]>({
@@ -65,17 +65,7 @@ export function MarketHome() {
 
   const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);
 
-  const filtered = useMemo(() => {
-    const byCat = active === "All" ? shuffled : shuffled.filter((p) => p.category === active);
-    const q = query.trim().toLowerCase();
-    if (!q) return byCat;
-    return byCat.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q),
-    );
-  }, [active, shuffled, query]);
+  const filtered = shuffled;
 
   const FEATURED_LIMIT = 6;
   const featured = useMemo(() => {
@@ -85,7 +75,7 @@ export function MarketHome() {
     const rest = filtered.filter((p) => !p.pinnedAt);
     return [...pinned, ...rest].slice(0, FEATURED_LIMIT);
   }, [filtered]);
-  const hasMore = filtered.length > FEATURED_LIMIT;
+  const hasMore = hasNextPage || filtered.length > FEATURED_LIMIT;
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
@@ -209,7 +199,7 @@ export function MarketHome() {
               </Link>
               {hasMore && (
                 <p className="text-xs text-muted-foreground">
-                  Showing {featured.length} of {filtered.length} items
+                  Showing {featured.length} of {filtered.length}{hasNextPage ? "+" : ""} items
                 </p>
               )}
             </div>

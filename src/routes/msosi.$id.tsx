@@ -31,6 +31,7 @@ export const Route = createFileRoute("/msosi/$id")({
         content: "Order food delivered to your doorstep in minutes.",
       },
       { property: "og:type", content: "product" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: MsosiDetail,
@@ -104,6 +105,7 @@ function MsosiDetail() {
           <img
             src={dish.image_url}
             alt={dish.name}
+            loading="lazy"
             decoding="async"
             className="h-full w-full object-cover"
           />

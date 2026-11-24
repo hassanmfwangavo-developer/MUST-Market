@@ -25,3 +25,6 @@
 - Share user-keyed access/profile/voucher queries and reset caches on identity changes, not token refresh; this prevents account-dependent contacts, roles and orders from surviving account switches.
 - Vendor order feeds use unique, vendor-scoped INSERT/UPDATE subscriptions with burst-debounced exact-key invalidation and reconnect recovery; always remove channels and pending timers on unmount or vendor change.
 - Product detail uses a query under the products invalidation prefix; this keeps cached detail data synchronized with listing edits and moderation.
+- Public listing feeds use filter-keyed infinite queries with 16-row active summary pages and deterministic ordering; category/search filtering happens before pagination so later matches remain discoverable.
+- Cache successful login-streak touches by user and UTC date, matching the server calendar; never stamp failures or share an account's daily guard with another account.
+- Listing image uploads use new object paths, no overwrite, and year-long cache headers; changed photos get new URLs instead of stale cached bytes.

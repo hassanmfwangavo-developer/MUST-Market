@@ -147,7 +147,7 @@ export function PreOrderWizard({
                 const q = qty[m.id] ?? 0;
                 return (
                   <div key={m.id} className={card(q > 0)}>
-                    {m.image_url && <img src={m.image_url} alt={m.name} className="h-12 w-12 rounded-lg object-cover" />}
+                    {m.image_url && <img src={m.image_url} alt={m.name} loading="lazy" decoding="async" className="h-12 w-12 rounded-lg object-cover" />}
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-slate-900">{m.name}</p>
                       <p className="text-xs text-slate-500">{formatTsh(m.price_tsh, "TSh")}</p>

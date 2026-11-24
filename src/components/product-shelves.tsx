@@ -1,44 +1,25 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Plus, ArrowRight } from "lucide-react";
 import { ProductCard } from "./product-card";
-import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useProductListings } from "@/lib/use-product-listings";
+import { ListingPagination } from "./listing-pagination";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { fetchShelves, type HomepageShelf } from "@/lib/shelves";
 import { ServiceMallBanner } from "./service-mall-banner";
-
-const FRESHER_KEYWORDS = [
-  "kettle",
-  "laptop",
-  "desk",
-  "bed",
-  "mattress",
-  "bucket",
-  "iron",
-  "chair",
-  "table",
-  "lamp",
-  "fan",
-  "stove",
-  "cooker",
-  "book",
-  "blanket",
-  "shelf",
-  "hanger",
-];
 
 interface Shelf {
   key: string;
   title: string;
   subtitle: string;
   category?: string;
-  items: MarketProduct[];
 }
 
 function ShelfRow({ shelf }: { shelf: Shelf }) {
-  if (shelf.items.length === 0) return null;
+  const { products: items } = useProductListings({ shelf: shelf.key, category: shelf.category ?? "" });
+  if (items.length === 0) return null;
   return (
     <section className="mt-10 first:mt-0">
       <div className="mx-auto flex max-w-7xl items-end justify-between gap-4 px-4 sm:px-6 lg:px-8">
@@ -63,7 +44,7 @@ function ShelfRow({ shelf }: { shelf: Shelf }) {
       {/* Horizontal snap rail with an edge peek so mobile users see there's more */}
       <div className="scrollbar-none mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3 sm:px-6 lg:px-8 [&>*]:snap-start">
         <div className="hidden shrink-0 lg:block lg:w-[max(0px,calc((100vw-80rem)/2))]" />
-        {shelf.items.map((p) => (
+        {items.slice(0, 12).map((p) => (
           <div key={p.id} className="w-[160px] shrink-0 sm:w-[180px] lg:w-[220px]">
             <ProductCard product={p} />
           </div>
@@ -83,10 +64,8 @@ export function ProductShelves() {
     else openAuthModal("/sell");
   };
 
-  const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
+  const listings = useProductListings({ search: query });
+  const { products, isLoading } = listings;
 
   const { data: shelfConfig = [], isLoading: shelvesLoading } = useQuery<HomepageShelf[]>({
     queryKey: ["homepage-shelves"],
@@ -94,68 +73,13 @@ export function ProductShelves() {
   });
 
   const q = query.trim().toLowerCase();
-  const searchResults = useMemo(() => {
-    if (!q) return [];
-    return products.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q),
-    );
-  }, [products, q]);
-
-  const shelves = useMemo<Shelf[]>(() => {
-    const take = 12;
-
-    // Admin-pinned items always win; each shelf falls back to a smart query
-    // so a brand-new/empty shelf never renders as a blank row.
-    const pinned = (key: string) => products.filter((p) => p.featuredShelf === key);
-
-    const fallback = (key: string): MarketProduct[] => {
-      switch (key) {
-        case "hot_deals":
-          return [...products].sort((a, b) => a.price - b.price);
-        case "rooms":
-          return products.filter(
-            (p) => p.category === "Rooms / Gheto" || p.category === "Room/Hostel Gear",
-          );
-        case "freshers_pack": {
-          const matches = products.filter((p) => {
-            const text = `${p.title} ${p.description}`.toLowerCase();
-            return FRESHER_KEYWORDS.some((k) => text.includes(k));
-          });
-          return matches.length > 0
-            ? matches
-            : products.filter(
-                (p) => p.category === "Room/Hostel Gear" || p.category === "Books/Stationery",
-              );
-        }
-        case "trending": {
-          const tech = products.filter((p) => p.category === "Electronics");
-          // Page-view tracking was removed, so "trending" falls back to newest first.
-          return (tech.length > 0 ? tech : products)
-            .slice()
-            .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
-        }
-        default:
-          return products;
-      }
-    };
-
-    return shelfConfig
-      .filter((s) => s.is_visible)
-      .map((s) => {
-        const own = pinned(s.shelf_key);
-        const items = (own.length > 0 ? own : fallback(s.shelf_key)).slice(0, take);
-        return {
-          key: s.shelf_key,
-          title: s.display_name,
-          subtitle: s.subtitle,
-          category: s.category ?? undefined,
-          items,
-        };
-      });
-  }, [products, shelfConfig]);
+  const searchResults = products;
+  const shelves: Shelf[] = shelfConfig.filter((s) => s.is_visible).map((s) => ({
+    key: s.shelf_key,
+    title: s.display_name,
+    subtitle: s.subtitle,
+    category: s.category ?? undefined,
+  }));
 
   return (
     <section id="browse" className="py-12 sm:py-16">
@@ -198,6 +122,7 @@ export function ProductShelves() {
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
+          <ListingPagination hasMore={listings.hasNextPage} pending={listings.isFetchingNextPage} failed={listings.isFetchNextPageError} onMore={() => { void listings.fetchNextPage(); }} />
         </div>
       ) : (
         <div className="mt-8">

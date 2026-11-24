@@ -283,7 +283,7 @@ function AdminPreorders() {
               {(meals.data ?? []).map((m) => (
                 <li key={m.id} className="flex items-center gap-3 py-3">
                   {m.image_url ? (
-                    <img src={m.image_url} alt={m.name} className="h-12 w-12 rounded-lg object-cover" />
+                    <img src={m.image_url} alt={m.name} loading="lazy" decoding="async" className="h-12 w-12 rounded-lg object-cover" />
                   ) : (
                     <div className="h-12 w-12 rounded-lg bg-muted" />
                   )}
@@ -364,7 +364,7 @@ function AdminPreorders() {
               <input className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm" placeholder="Price (TZS)" inputMode="numeric" value={draft.price} onChange={(e) => setDraft({ ...draft, price: e.target.value.replace(/\D/g, "") })} />
               <textarea className="w-full rounded-lg border border-border bg-background p-3 text-sm" rows={2} placeholder="Short description (optional)" value={draft.description} maxLength={300} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
               <div className="flex items-center gap-3">
-                {draft.image_url && <img src={draft.image_url} alt="" className="h-14 w-14 rounded-lg object-cover" />}
+                {draft.image_url && <img src={draft.image_url} alt="" loading="lazy" decoding="async" className="h-14 w-14 rounded-lg object-cover" />}
                 <label className="cursor-pointer text-sm font-medium text-primary">
                   {uploading ? "Uploading…" : draft.image_url ? "Change photo" : "Upload photo"}
                   <input type="file" accept={ALLOWED_IMAGE_ACCEPT} className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />

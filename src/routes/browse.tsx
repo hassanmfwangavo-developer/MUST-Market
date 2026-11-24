@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
 import { categories, categoryLabel, categoryEmoji } from "@/lib/demo-data";
-import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useProductListings } from "@/lib/use-product-listings";
+import { ListingPagination } from "@/components/listing-pagination";
 import { useSearchQuery } from "@/lib/search-store";
 
 export const Route = createFileRoute("/browse")({
@@ -45,26 +45,12 @@ function BrowsePage() {
       : "All";
   const [active, setActive] = useState<string>(initialCategory);
   const query = useSearchQuery();
-  const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
+  const listings = useProductListings({
+    category: active === "All" ? "" : active,
+    search: query,
+    shelf: search.shelf ?? "",
   });
-
-  const filtered = useMemo(() => {
-    // A shelf link ("View All" on a homepage shelf) narrows to the pinned items
-    // when the admin has pinned any; otherwise it falls back to the category.
-    const pinned = search.shelf ? products.filter((p) => p.featuredShelf === search.shelf) : [];
-    const base = pinned.length > 0 ? pinned : products;
-    const byCat = active === "All" ? base : base.filter((p) => p.category === active);
-    const q = query.trim().toLowerCase();
-    if (!q) return byCat;
-    return byCat.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q),
-    );
-  }, [active, products, query, search.shelf]);
+  const { products: filtered, isLoading } = listings;
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
@@ -90,7 +76,7 @@ function BrowsePage() {
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
             {isLoading
               ? "Loading listings…"
-              : `${filtered.length} ${filtered.length === 1 ? "item" : "items"} available right now.`}
+              : `${filtered.length}${listings.hasNextPage ? "+" : ""} ${filtered.length === 1 ? "item" : "items"} available right now.`}
           </p>
         </div>
 
@@ -120,6 +106,11 @@ function BrowsePage() {
               <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl bg-surface-2" />
             ))}
           </div>
+        ) : listings.isError && filtered.length === 0 ? (
+          <div className="mt-8 text-center">
+            <p className="text-sm text-muted-foreground">Listings could not be loaded.</p>
+            <ListingPagination hasMore pending={listings.isFetching} failed onMore={() => { void listings.refetch(); }} />
+          </div>
         ) : filtered.length === 0 ? (
           <div className="mt-16 rounded-3xl border border-dashed border-border bg-surface p-12 text-center">
             <p className="text-sm text-muted-foreground">
@@ -133,6 +124,7 @@ function BrowsePage() {
             ))}
           </div>
         )}
+        <ListingPagination hasMore={listings.hasNextPage} pending={listings.isFetchingNextPage} failed={listings.isFetchNextPageError} onMore={() => { void listings.fetchNextPage(); }} />
       </main>
       <Footer />
     </div>

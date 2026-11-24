@@ -26,10 +26,10 @@ interface DbProductRow {
   price_tsh: number;
   condition: ProductCondition;
   location: string;
-  description: string;
+  description?: string;
   images: string[] | null;
   whatsapp_number?: string | null;
-  delivery_timeframe: string | null;
+  delivery_timeframe?: string | null;
   featured_shelf?: string | null;
   is_verified?: boolean | null;
   pinned_at?: string | null;
@@ -51,7 +51,7 @@ function rowToProduct(row: DbProductRow, idx: number): MarketProduct {
     image,
     gradient: FALLBACK_GRADIENTS[idx % FALLBACK_GRADIENTS.length],
     emoji: "📦",
-    description: row.description,
+    description: row.description ?? "",
     status: row.status ?? "active",
     whatsapp: row.whatsapp_number ?? undefined,
     deliveryTimeframe: row.delivery_timeframe ?? undefined,
@@ -74,17 +74,64 @@ async function selectColumns(): Promise<string> {
   return data.session ? `${BASE_COLUMNS},whatsapp_number` : BASE_COLUMNS;
 }
 
-export async function fetchProducts(): Promise<MarketProduct[]> {
-  const { data, error } = await supabase
+export const PRODUCT_PAGE_SIZE = 16;
+export const PRODUCT_SUMMARY_COLUMNS =
+  "id,title,price_tsh,condition,location,images,featured_shelf,is_verified,pinned_at,status,created_at,categories(name,slug)";
+
+export interface ProductFilters {
+  category?: string;
+  search?: string;
+  shelf?: string;
+  fallbackShelf?: string;
+}
+
+export interface ProductPage {
+  items: MarketProduct[];
+  nextPage: number | null;
+  effectiveShelf: string;
+  fallbackShelf: string;
+}
+
+export async function fetchProducts({ page = 0, category = "", search = "", shelf = "", fallbackShelf = "" }: ProductFilters & { page?: number } = {}): Promise<ProductPage> {
+  const offset = Math.max(0, Math.floor(page)) * PRODUCT_PAGE_SIZE;
+  const fallbackCategories = category ? [] : fallbackShelf === "rooms" ? ["Rooms / Gheto", "Room/Hostel Gear"] : fallbackShelf === "trending" ? ["Electronics"] : fallbackShelf === "freshers_categories" ? ["Room/Hostel Gear", "Books/Stationery"] : [];
+  let request = supabase
     .from("products")
-    .select(await selectColumns())
-    // Sold items stay visible (with a SOLD OUT overlay) — only hidden ones drop out.
-    .in("status", ["active", "sold"])
-    // Enum order puts 'active' before 'sold', so live listings surface first.
-    .order("status", { ascending: true })
-    .order("created_at", { ascending: false });
+    .select(category || fallbackCategories.length ? PRODUCT_SUMMARY_COLUMNS.replace("categories(", "categories!inner(") : PRODUCT_SUMMARY_COLUMNS)
+    .eq("status", "active");
+  if (category) request = request.eq("categories.name", category);
+  if (fallbackCategories.length) request = request.in("categories.name", fallbackCategories);
+  if (shelf) request = request.eq("featured_shelf", shelf);
+  if (fallbackShelf === "freshers_pack" && !category) {
+    const words = ["kettle", "laptop", "desk", "bed", "mattress", "bucket", "iron", "chair", "table", "lamp", "fan", "stove", "cooker", "book", "blanket", "shelf", "hanger"];
+    request = request.or(words.flatMap((word) => [`title.ilike.%${word}%`, `description.ilike.%${word}%`]).join(","));
+  }
+  const term = search.trim();
+  if (term) {
+    // Quote PostgREST operands so punctuation cannot inject extra filters.
+    const pattern = `"%${term.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/[%_]/g, "\\$&")}%"`;
+    request = request.or(`title.ilike.${pattern},description.ilike.${pattern}`);
+  }
+  if (fallbackShelf === "hot_deals") request = request.order("price_tsh", { ascending: true });
+  const { data, error } = await request
+    .order("pinned_at", { ascending: false, nullsFirst: false })
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range(offset, offset + PRODUCT_PAGE_SIZE - 1)
+    .limit(PRODUCT_PAGE_SIZE);
   if (error) throw error;
-  return (data ?? []).map((r, i) => rowToProduct(r as unknown as DbProductRow, i));
+  // Preserve shelf links' category fallback without reading the whole catalog.
+  if (page === 0 && shelf && !data?.length) {
+    return fetchProducts({ page, category, search, shelf: "", fallbackShelf: shelf });
+  }
+  if (page === 0 && !data?.length && fallbackShelf === "freshers_pack" && !category) {
+    return fetchProducts({ page, category, search, fallbackShelf: "freshers_categories" });
+  }
+  if (page === 0 && !data?.length && fallbackShelf === "trending" && !category) {
+    return fetchProducts({ page, category, search });
+  }
+  const items = (data ?? []).map((r, i) => rowToProduct(r as unknown as DbProductRow, i));
+  return { items, nextPage: items.length === PRODUCT_PAGE_SIZE ? page + 1 : null, effectiveShelf: shelf, fallbackShelf };
 }
 
 export async function fetchProduct(id: string): Promise<MarketProduct | null> {

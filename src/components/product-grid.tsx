@@ -1,10 +1,9 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { Plus, ArrowRight } from "lucide-react";
 import { ProductCard } from "./product-card";
 import { categories, categoryLabel, categoryEmoji } from "@/lib/demo-data";
-import { fetchProducts, type MarketProduct } from "@/lib/products";
+import { useProductListings } from "@/lib/use-product-listings";
 import { useSearchQuery } from "@/lib/search-store";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 
@@ -33,24 +32,14 @@ export function ProductGrid() {
     if (user) navigate({ to: "/sell" });
     else openAuthModal("/sell");
   };
-  const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
+  const { products, isLoading, hasNextPage } = useProductListings({
+    category: active === "All" ? "" : active,
+    search: query,
   });
 
   const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);
 
-  const filtered = useMemo(() => {
-    const byCat = active === "All" ? shuffled : shuffled.filter((p) => p.category === active);
-    const q = query.trim().toLowerCase();
-    if (!q) return byCat;
-    return byCat.filter(
-      (p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q),
-    );
-  }, [active, shuffled, query]);
+  const filtered = shuffled;
 
   const FEATURED_LIMIT = 6;
   const featured = useMemo(() => {
@@ -60,7 +49,7 @@ export function ProductGrid() {
     const rest = filtered.filter((p) => !p.pinnedAt);
     return [...pinned, ...rest].slice(0, FEATURED_LIMIT);
   }, [filtered]);
-  const hasMore = filtered.length > FEATURED_LIMIT;
+  const hasMore = hasNextPage || filtered.length > FEATURED_LIMIT;
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
@@ -123,7 +112,7 @@ export function ProductGrid() {
           <div className="mt-10 flex flex-col items-center gap-2">
             <Link
               to="/browse"
-              search={{ category: undefined, shelf: undefined }}
+              search={{ category: active === "All" ? undefined : active, shelf: undefined }}
               className="btn-shine inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-lift transition-transform hover:-translate-y-0.5"
             >
               View All Products
@@ -131,7 +120,7 @@ export function ProductGrid() {
             </Link>
             {hasMore && (
               <p className="text-xs text-muted-foreground">
-                Showing {featured.length} of {filtered.length} items
+                Showing {featured.length} of {filtered.length}{hasNextPage ? "+" : ""} items
               </p>
             )}
           </div>

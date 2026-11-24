@@ -268,6 +268,8 @@ export function PreorderPage() {
                         <img
                           src={meal.image_url}
                           alt={meal.name}
+                          loading="lazy"
+                          decoding="async"
                           className="h-20 w-20 shrink-0 rounded-md object-cover"
                         />
                       ) : (
