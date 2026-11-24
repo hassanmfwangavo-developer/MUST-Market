@@ -137,7 +137,7 @@ export function Hero() {
         {/* Social proof strip */}
         <div className="mt-6 grid grid-cols-3 gap-3 sm:mt-10 sm:gap-6">
           {[
-            { node: <CountUp target={90} suffix="+" />, v: t.hero.activeListings },
+            { node: <>Live</>, v: t.hero.activeListings },
             { node: <CountUp target={1700} suffix="+" />, v: t.hero.mustStudents },
             { node: <>&lt; 2 min</>, v: t.hero.avgReply },
           ].map((s) => (
