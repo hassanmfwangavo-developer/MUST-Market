@@ -1,4 +1,5 @@
 # Order notifications
+- [x] Compress listing creation/edit and food/pre-order photo uploads; verified four rules and a real food photo upload with cleanup.
 - [x] Add admin phone registration with enable/disable/test controls.
 - [x] Connect notifications to paid food orders and both pre-order flows; preserve emails and payment outcomes.
 - [x] Verify credential access, payload rules (six tests), signed-in admin control, permission denial and embedded preview guidance.

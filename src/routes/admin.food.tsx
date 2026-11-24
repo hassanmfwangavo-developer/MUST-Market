@@ -41,6 +41,10 @@ export const Route = createFileRoute("/admin/food")({
           "Manage Msosi Fasta dishes with add-ons and ratings, and curate campus restaurant logos.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Food & Vendor Manager — MUST Market Admin" },
+      { property: "og:description", content: "Manage Msosi Fasta dishes and campus restaurant logos." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   validateSearch: (s: Record<string, unknown>): { tab?: string } =>

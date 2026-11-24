@@ -20,3 +20,4 @@
 - Admin order push uses Firebase Messaging with a separate /firebase-push/ worker scope, admin-owned device records and per-event/device send logs; this preserves app-shell caching and prevents duplicate alerts or notifications to demoted admins.
 
 - Capture the native install event in the root document head and consume it only from the install button click; this prevents hydration timing from losing Chrome prompts without showing automatic popups.
+- Use the shared browser image compressor for listing creation/edits and admin food/pre-order photo uploads; one implementation enforces WebP output and upload size limits without changing other admin artwork.

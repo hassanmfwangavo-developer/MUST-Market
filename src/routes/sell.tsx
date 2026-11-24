@@ -1,5 +1,6 @@
 import { openAuthModal } from "@/lib/auth-store";
 import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
+import { compressUploadImage } from "@/lib/image-compression";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,76 +19,10 @@ type Condition = (typeof CONDITIONS)[number];
 const DELIVERY_OPTIONS = ["Within 1 Hour", "Same Day", "Next Day", "This Week"] as const;
 const MAX_IMAGES = 1;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const TARGET_IMAGE_SIZE = 150 * 1024;
 
 interface PickedImage {
   file: File;
   preview: string;
-}
-
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error("Failed to read image"));
-    img.src = src;
-  });
-}
-
-async function compressImageFile(file: File, maxBytes = TARGET_IMAGE_SIZE): Promise<File> {
-  if (file.size <= maxBytes) return file;
-
-  const objectUrl = URL.createObjectURL(file);
-  try {
-    const img = await loadImage(objectUrl);
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    if (!context) return file;
-
-    const maxDimension = 1600;
-    let width = img.width;
-    let height = img.height;
-
-    if (width > maxDimension || height > maxDimension) {
-      const scale = Math.min(maxDimension / width, maxDimension / height);
-      width = Math.max(1, Math.round(width * scale));
-      height = Math.max(1, Math.round(height * scale));
-    }
-
-    canvas.width = width;
-    canvas.height = height;
-    context.drawImage(img, 0, 0, width, height);
-
-    const mimeType = file.type === "image/png" ? "image/jpeg" : file.type;
-    const extension = mimeType.split("/")[1] ?? "jpg";
-    const baseName = file.name.replace(/\.[^.]+$/, "");
-
-    let quality = 0.92;
-    let blob: Blob | null = null;
-
-    while (quality >= 0.2) {
-      blob = await new Promise<Blob | null>((resolve) => {
-        canvas.toBlob(resolve, mimeType, quality);
-      });
-      if (blob && blob.size <= maxBytes) break;
-      quality -= 0.1;
-    }
-
-    if (!blob || blob.size > maxBytes) {
-      blob = await new Promise<Blob | null>((resolve) => {
-        canvas.toBlob(resolve, mimeType, 0.75);
-      });
-    }
-
-    if (!blob) return file;
-
-    return new File([blob], `${baseName}.${extension}`, {
-      type: mimeType,
-      lastModified: Date.now(),
-    });
-  } finally {
-    URL.revokeObjectURL(objectUrl);
-  }
 }
 
 export const Route = createFileRoute("/sell")({
@@ -105,6 +40,8 @@ export const Route = createFileRoute("/sell")({
         content: "List an item on MUST Market in under a minute.",
       },
       { property: "og:url", content: "https://mustmarket.store/sell" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/sell" }],
   }),
@@ -152,7 +89,7 @@ function SellPage() {
     }
 
     try {
-      const compressedFile = await compressImageFile(file);
+      const compressedFile = await compressUploadImage(file);
       const nextImage = {
         file: compressedFile,
         preview: URL.createObjectURL(compressedFile),

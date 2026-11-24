@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { requireAdminUser } from "@/lib/admin";
+import { compressUploadImage } from "@/lib/image-compression";
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
@@ -17,12 +18,15 @@ export async function uploadAdminImage(
   folder: "banners" | "books-banners" | "category-icons" | "food-items" | "vendor-logos" | "services" | "preorder-meals" | "events",
 ): Promise<UploadedAdminImage> {
   const user = await requireAdminUser();
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
+  const uploadFile = folder === "food-items" || folder === "preorder-meals"
+    ? await compressUploadImage(file)
+    : file;
+  const ext = uploadFile.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const path = `${user.id}/${folder}/${crypto.randomUUID()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from("product-images")
-    .upload(path, file, { contentType: file.type, upsert: false });
+    .upload(path, uploadFile, { contentType: uploadFile.type, upsert: false });
   if (uploadError) throw new Error(`Image upload failed: ${uploadError.message}`);
 
   const { data, error } = await supabase.storage

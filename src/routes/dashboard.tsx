@@ -1,5 +1,6 @@
 import { ALLOWED_IMAGE_TYPES, ALLOWED_IMAGE_ACCEPT } from "@/lib/uploads";
 import { microUrl } from "@/lib/images";
+import { compressUploadImage } from "@/lib/image-compression";
 
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
@@ -359,11 +360,12 @@ function EditModal({
     if (file.size > 5 * 1024 * 1024) return toast.error("Image must be under 5MB");
     setUploading(true);
     try {
-      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const compressedFile = await compressUploadImage(file);
+      const ext = "webp";
       const path = `${userId}/${Date.now()}.${ext}`;
       const { error: upErr } = await supabase.storage
         .from("product-images")
-        .upload(path, file, { contentType: file.type });
+        .upload(path, compressedFile, { contentType: compressedFile.type });
       if (upErr) throw upErr;
       const { data: signed, error: sErr } = await supabase.storage
         .from("product-images")
