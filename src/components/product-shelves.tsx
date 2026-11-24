@@ -86,13 +86,11 @@ export function ProductShelves() {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
-    staleTime: 30_000,
   });
 
   const { data: shelfConfig = [], isLoading: shelvesLoading } = useQuery<HomepageShelf[]>({
     queryKey: ["homepage-shelves"],
     queryFn: fetchShelves,
-    staleTime: 30_000,
   });
 
   const q = query.trim().toLowerCase();

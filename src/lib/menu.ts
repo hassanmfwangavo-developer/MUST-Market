@@ -56,7 +56,6 @@ export async function fetchVendorMenuItems(vendorId: string): Promise<MenuItem[]
 
 /** Fetch the live menu without substituting legacy sample dishes. */
 export async function fetchMenuItems(): Promise<MenuItem[]> {
-  try {
     const { data, error } = await (supabase as any)
       .from("menu_items")
       .select("*")
@@ -64,11 +63,9 @@ export async function fetchMenuItems(): Promise<MenuItem[]> {
       .order("is_popular", { ascending: false })
       .order("created_at", { ascending: false });
 
-    if (error || !data || data.length === 0) return [];
+    if (error) throw error;
+    if (!data || data.length === 0) return [];
     return (data as Record<string, unknown>[]).map(normalize);
-  } catch {
-    return [];
-  }
 }
 
 export async function fetchMenuItem(id: string): Promise<MenuItem | null> {
@@ -76,7 +73,6 @@ export async function fetchMenuItem(id: string): Promise<MenuItem | null> {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
   if (!isUuid) return null;
 
-  try {
     const { data, error } = await (supabase as any)
       .from("menu_items")
       .select("*")
@@ -85,7 +81,4 @@ export async function fetchMenuItem(id: string): Promise<MenuItem | null> {
     if (error) throw error;
     if (!data) return null;
     return normalize(data as Record<string, unknown>);
-  } catch {
-    return null;
-  }
 }

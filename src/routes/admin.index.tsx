@@ -28,7 +28,10 @@ export const Route = createFileRoute("/admin/")({
         content: "Private moderation console for MUST Market listings, views and WhatsApp clicks.",
       },
       { name: "robots", content: "noindex, nofollow" },
-      { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Admin Panel — MUST Market" },
+      { property: "og:description", content: "Private MUST Market listing moderation console." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AdminConsole,
@@ -153,7 +156,8 @@ function AdminConsole() {
       return next;
     },
     onSuccess: (next) => {
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: ["products"] });
       toast.success(next ? "Pinned to top" : "Unpinned");
     },
     onError: (e: Error) => toast.error(e.message),

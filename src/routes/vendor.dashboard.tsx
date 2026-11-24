@@ -9,19 +9,23 @@ import {
   Coins,
   Loader2,
   Phone,
+  RefreshCw,
   ShoppingBag,
   Timer,
   UtensilsCrossed,
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useVendorOrderFeed } from "@/lib/use-vendor-order-feed";
+import { invalidateMenuQueries } from "@/lib/query-policy";
+import { portalAccessOptions } from "@/lib/account-queries";
+import { useAuthUser } from "@/lib/auth-store";
 import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/footer";
 import { SmartImage } from "@/components/smart-image";
 import { microUrl } from "@/lib/images";
 import { formatTsh } from "@/lib/menu";
 import { fetchVendors } from "@/lib/vendors";
 import {
-  fetchPortalAccess,
   fetchVendorMenu,
   fetchVendorOrders,
   fetchVendorPreOrders,
@@ -72,7 +76,8 @@ function VendorDashboard() {
   const [tab, setTab] = useState<TabKey>("orders");
   const [selectedVendor, setSelectedVendor] = useState<string>("all");
 
-  const access = useQuery({ queryKey: ["portal-access"], queryFn: fetchPortalAccess });
+  const { user, initialized } = useAuthUser();
+  const access = useQuery({ ...portalAccessOptions(user?.id ?? null), enabled: initialized });
   const role = access.data?.role ?? "none";
   const isAdmin = role === "admin";
 
@@ -103,7 +108,6 @@ function VendorDashboard() {
     queryKey: ["vendor-orders", activeVendorId ?? "all"],
     queryFn: () => fetchVendorOrders(activeVendorId),
     enabled,
-    refetchInterval: 60_000,
   });
   const preOrders = useQuery({
     queryKey: ["vendor-pre-orders", activeVendorId ?? "all"],
@@ -121,30 +125,14 @@ function VendorDashboard() {
     enabled,
   });
 
-  // Live order feed
-  useEffect(() => {
-    if (!enabled) return;
-    const channel = supabase
-      .channel("vendor-orders-feed")
-      .on("postgres_changes", { event: "*", schema: "public", table: "food_orders" }, () => {
-        void queryClient.invalidateQueries({ queryKey: ["vendor-orders"] });
-      })
-      .on("postgres_changes", { event: "*", schema: "public", table: "batch_preorders" }, () => {
-        void queryClient.invalidateQueries({ queryKey: ["vendor-batch-preorders"] });
-      })
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [enabled, queryClient]);
+  useVendorOrderFeed(enabled, activeVendorId);
 
   const availabilityMutation = useMutation({
 
     mutationFn: ({ id, next }: { id: string; next: boolean }) => setMenuAvailability(id, next),
     onSuccess: (_d, vars) => {
       toast.success(vars.next ? "In Stock" : "Chakula kwa sasa Kimeisha");
-      void queryClient.invalidateQueries({ queryKey: ["vendor-menu"] });
-      void queryClient.invalidateQueries({ queryKey: ["menu-items"] });
+      void invalidateMenuQueries(queryClient);
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -194,6 +182,16 @@ function VendorDashboard() {
             </p>
           </div>
 
+          <div className="flex flex-wrap items-end gap-3">
+          <Button variant="outline" size="icon" aria-label="Refresh orders" title="Refresh orders"
+            disabled={orders.isFetching || preOrders.isFetching || batchPreorders.isFetching}
+            onClick={() => {
+              void orders.refetch();
+              void preOrders.refetch();
+              void batchPreorders.refetch();
+            }}>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
           {isAdmin && (
             <label className="text-xs font-semibold text-muted-foreground">
               Switch Restaurant
@@ -211,6 +209,7 @@ function VendorDashboard() {
               </select>
             </label>
           )}
+          </div>
         </header>
 
         {role === "vendor" && !access.data?.vendorId && (

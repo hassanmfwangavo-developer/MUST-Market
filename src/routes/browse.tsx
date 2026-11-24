@@ -29,6 +29,8 @@ export const Route = createFileRoute("/browse")({
         content: "Every active listing from MUST students, in one place.",
       },
       { property: "og:url", content: "https://mustmarket.store/browse" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/browse" }],
   }),
@@ -46,7 +48,6 @@ function BrowsePage() {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
-    staleTime: 30_000,
   });
 
   const filtered = useMemo(() => {

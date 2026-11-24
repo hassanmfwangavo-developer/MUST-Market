@@ -13,7 +13,6 @@ export function BooksStoreBanner() {
   const { data: banners = [], isLoading } = useQuery({
     queryKey: BOOKS_BANNER_QUERY_KEY,
     queryFn: fetchBooksBanners,
-    staleTime: 30_000,
   });
   const images = banners.length ? banners.map((banner) => banner.image_url) : fallbackImages;
   const [slide, setSlide] = useState(0);

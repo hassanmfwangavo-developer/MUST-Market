@@ -18,7 +18,6 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
-    staleTime: 30_000,
   });
 
   const items = useMemo(() => {

@@ -19,6 +19,7 @@ import { AuthModal } from "@/components/auth-modal";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { registerAppServiceWorker } from "@/lib/pwa";
 import { installPromptBootstrap } from "@/lib/install-prompt";
+import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -152,6 +153,25 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  useEffect(() => {
+    let previousUserId: string | null | undefined;
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      const id = session?.user.id ?? null;
+      if (previousUserId !== undefined && previousUserId !== id) {
+        // Drop account-dependent contact/role/order data; token refreshes do not refetch.
+        queueMicrotask(() => {
+          void (async () => {
+            await queryClient.cancelQueries();
+            await queryClient.resetQueries();
+            await router.invalidate();
+          })();
+        });
+      }
+      previousUserId = id;
+    });
+    return () => data.subscription.unsubscribe();
+  }, [queryClient, router]);
   useEffect(() => {
     registerAppServiceWorker();
   }, []);

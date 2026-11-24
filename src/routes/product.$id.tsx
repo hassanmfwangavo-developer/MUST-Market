@@ -1,19 +1,20 @@
 import { openAuthModal } from "@/lib/auth-store";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { productDetailOptions } from "@/lib/catalog-queries";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, ArrowLeft, MapPin, MessageCircle, ShieldCheck, Truck } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { formatTsh, categoryEmoji } from "@/lib/demo-data";
-import { fetchProduct, whatsappUrl, recordWhatsappClick, type MarketProduct } from "@/lib/products";
+import { whatsappUrl, recordWhatsappClick, type MarketProduct } from "@/lib/products";
 import { SmartImage } from "@/components/smart-image";
 import { BlueTick } from "@/components/blue-tick";
 import { detailUrl, microUrl, imageSrcSet } from "@/lib/images";
 
 
 export const Route = createFileRoute("/product/$id")({
-  loader: async ({ params }) => {
-    const product = await fetchProduct(params.id);
-    if (!product) throw notFound();
+  loader: async ({ params, context }) => {
+    const product = await context.queryClient.ensureQueryData({ ...productDetailOptions(params.id), revalidateIfStale: true });
     return { product };
   },
   head: ({ loaderData }) => {
@@ -32,8 +33,12 @@ export const Route = createFileRoute("/product/$id")({
         { property: "og:title", content: product.title },
         { property: "og:description", content: desc },
         { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
         { property: "og:url", content: `https://mustmarket.store/product/${product.id}` },
-        ...(product.image ? [{ property: "og:image", content: product.image }] : []),
+        ...(product.image.startsWith("https://") ? [
+          { property: "og:image", content: product.image },
+          { name: "twitter:image", content: product.image },
+        ] : []),
       ],
       links: [{ rel: "canonical", href: `https://mustmarket.store/product/${product.id}` }],
       scripts: [
@@ -99,7 +104,8 @@ function NotFoundPage() {
 }
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { id } = Route.useParams();
+  const { data: product } = useSuspenseQuery(productDetailOptions(id));
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

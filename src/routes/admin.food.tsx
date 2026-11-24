@@ -22,6 +22,7 @@ import { fetchAllReviews } from "@/lib/reviews";
 import { fetchPreOrders } from "@/lib/pre-orders";
 import { ALLOWED_IMAGE_ACCEPT, ALLOWED_IMAGE_TYPES } from "@/lib/uploads";
 import { uploadAdminImage } from "@/lib/admin-media";
+import { invalidateMenuQueries } from "@/lib/query-policy";
 import {
   fetchAdminMenuItems,
   fetchVendors,
@@ -180,9 +181,7 @@ function FoodTab() {
   }, [items, search, vendorFilter]);
 
   const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: ["admin-menu-items"] });
-    queryClient.invalidateQueries({ queryKey: ["menu-items"] });
-    queryClient.invalidateQueries({ queryKey: ["menu_items"] });
+    void invalidateMenuQueries(queryClient);
   };
 
   const toggleAvailability = useMutation({
@@ -661,6 +660,9 @@ function VendorsTab() {
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["admin-vendors"] });
     queryClient.invalidateQueries({ queryKey: ["admin-menu-items"] });
+    queryClient.invalidateQueries({ queryKey: ["vendors_public"] });
+    queryClient.invalidateQueries({ queryKey: ["vendors"] });
+    queryClient.invalidateQueries({ queryKey: ["vendor"] });
   };
 
   const create = useMutation({

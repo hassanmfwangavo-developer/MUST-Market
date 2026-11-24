@@ -21,3 +21,7 @@
 
 - Capture the native install event in the root document head and consume it only from the install button click; this prevents hydration timing from losing Chrome prompts without showing automatic popups.
 - Use the shared browser image compressor for listing creation/edits and admin food/pre-order photo uploads; one implementation enforces WebP output and upload size limits without changing other admin artwork.
+- Create per-router QueryClients through the shared query policy: public catalogs cache for five minutes, operational reads for one minute, with no timer/focus/reconnect polling; mutations invalidate the relevant keys so edits still appear immediately.
+- Share user-keyed access/profile/voucher queries and reset caches on identity changes, not token refresh; this prevents account-dependent contacts, roles and orders from surviving account switches.
+- Vendor order feeds use unique, vendor-scoped INSERT/UPDATE subscriptions with burst-debounced exact-key invalidation and reconnect recovery; always remove channels and pending timers on unmount or vendor change.
+- Product detail uses a query under the products invalidation prefix; this keeps cached detail data synchronized with listing edits and moderation.

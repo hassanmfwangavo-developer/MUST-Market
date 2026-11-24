@@ -36,7 +36,6 @@ export function ProductGrid() {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
-    staleTime: 30_000,
   });
 
   const shuffled = useMemo(() => shuffle(products, seed), [products, seed]);

@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { profileOptions, vouchersOptions } from "@/lib/account-queries";
 import {
   ArrowLeft,
   Copy,
@@ -14,7 +16,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
 import { sanitizeTzPhone } from "@/lib/phone";
-import { fetchVouchers, voucherLabel, type UserVoucher } from "@/lib/vouchers";
+import { voucherLabel, type UserVoucher } from "@/lib/vouchers";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -32,6 +34,7 @@ export const Route = createFileRoute("/profile")({
         content: "Track your day streak, reward points and invite roommates for bonuses.",
       },
       { property: "og:type", content: "profile" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ProfilePage,
@@ -58,12 +61,14 @@ const HOSTELS = [
 ];
 
 function ProfilePage() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { user, initialized } = useAuthUser();
   const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [vouchers, setVouchers] = useState<UserVoucher[]>([]);
   const [refStats, setRefStats] = useState({ friends: 0, pointsEarned: 0 });
   const [loading, setLoading] = useState(true);
+  const loadSequence = useRef(0);
   
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -75,17 +80,19 @@ function ProfilePage() {
   }, []);
 
   const load = useCallback(async (userId: string) => {
+    const sequence = ++loadSequence.current;
     setLoading(true);
     try {
-      const [{ data: p }, { data: refs }, vouchersList] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("full_name, avatar_url, whatsapp_number, hostel, current_streak, reward_points, referral_code, referral_count")
-          .eq("id", userId)
-          .maybeSingle(),
-        supabase.from("referrals").select("order_counted").eq("inviter_id", userId),
-        fetchVouchers(userId).catch(() => [] as UserVoucher[]),
+      const [p, refs, vouchersList] = await Promise.all([
+        queryClient.fetchQuery(profileOptions(userId)),
+        queryClient.fetchQuery({ queryKey: ["referrals", userId], queryFn: async () => {
+          const { data, error } = await supabase.from("referrals").select("order_counted").eq("inviter_id", userId);
+          if (error) throw error;
+          return data;
+        } }),
+        queryClient.fetchQuery(vouchersOptions(userId)),
       ]);
+      if (sequence !== loadSequence.current) return;
       setProfile((p as ProfileRow | null) ?? null);
       setVouchers(vouchersList);
       const rows = refs ?? [];
@@ -96,11 +103,15 @@ function ProfilePage() {
     } catch {
       toast.error("Could not load your details. Please try again.");
     } finally {
-      setLoading(false);
+      if (sequence === loadSequence.current) setLoading(false);
     }
-  }, []);
+  }, [queryClient]);
 
   useEffect(() => {
+    ++loadSequence.current;
+    setProfile(null);
+    setVouchers([]);
+    setRefStats({ friends: 0, pointsEarned: 0 });
     if (!initialized) return;
     if (!user) {
       setLoading(false);
@@ -108,6 +119,7 @@ function ProfilePage() {
       return;
     }
     void load(user.id);
+    return () => { ++loadSequence.current; };
   }, [initialized, user, load]);
 
   const handleLogout = async () => {
@@ -167,6 +179,7 @@ function ProfilePage() {
     }
     toast.success("Profile updated.");
     setEditing(false);
+    await queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
     void load(user.id);
   };
 

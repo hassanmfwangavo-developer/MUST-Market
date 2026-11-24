@@ -24,7 +24,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { fetchPortalAccess } from "@/lib/vendor-portal";
+import { portalAccessOptions } from "@/lib/account-queries";
+import { useAuthUser } from "@/lib/auth-store";
 import { AdminPushControl } from "@/components/admin-push-control";
 
 export const Route = createFileRoute("/admin")({
@@ -80,34 +81,20 @@ async function countOf(q: PromiseLike<{ count: number | null; error: unknown }>)
 
 function AdminLayout() {
   const navigate = useNavigate();
-  const [allowed, setAllowed] = useState<boolean | null>(null);
-  const [email, setEmail] = useState("");
+  const { user, initialized } = useAuthUser();
+  const access = useQuery({ ...portalAccessOptions(user?.id ?? null), enabled: initialized });
+  const allowed = access.data ? access.data.role === "admin" : null;
+  const email = user?.email ?? "";
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const access = await fetchPortalAccess();
-      if (cancelled) return;
-      const ok = access.role === "admin";
-      setAllowed(ok);
-      if (ok) {
-        const { data } = await supabase.auth.getUser();
-        if (!cancelled) setEmail(data.user?.email ?? "");
-        return;
-      }
-      toast.error("Unauthorized Access: Administrator rights required.");
-      navigate({ to: access.role === "vendor" ? "/vendor/dashboard" : "/", replace: true });
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [navigate]);
+    if (!access.data || access.data.role === "admin") return;
+    toast.error("Unauthorized Access: Administrator rights required.");
+    navigate({ to: access.data.role === "vendor" ? "/vendor/dashboard" : "/", replace: true });
+  }, [access.data, navigate]);
 
   const { data: metrics } = useQuery({
     queryKey: ["admin-top-metrics"],
-    refetchInterval: 30_000,
-    refetchOnWindowFocus: true,
     enabled: allowed === true,
     queryFn: async () => {
       const start = new Date();

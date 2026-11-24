@@ -41,13 +41,11 @@ export function MarketHome() {
   const { data: products = [], isLoading } = useQuery<MarketProduct[]>({
     queryKey: ["products"],
     queryFn: fetchProducts,
-    staleTime: 30_000,
   });
 
   const { data: bannerRows = [], isLoading: bannersLoading } = useQuery<MarketBanner[]>({
     queryKey: ["market-banners"],
     queryFn: fetchMarketBanners,
-    staleTime: 60_000,
   });
   const marketBanners = useMemo(
     () => bannerRows.filter((b) => b.is_active).slice(0, 3),

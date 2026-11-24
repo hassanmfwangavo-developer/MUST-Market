@@ -24,7 +24,8 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { openAuthModal, useAuthUser } from "@/lib/auth-store";
-import { fetchPortalAccess, type PortalRole } from "@/lib/vendor-portal";
+import { useQuery } from "@tanstack/react-query";
+import { portalAccessOptions, profileOptions } from "@/lib/account-queries";
 import { useLanguage } from "@/context/LanguageContext";
 import { INSTAGRAM_URL } from "@/lib/site";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -61,8 +62,13 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [followOpen, setFollowOpen] = useState(false);
-  const [portalRole, setPortalRole] = useState<PortalRole>("none");
-  const [rewards, setRewards] = useState({ streak: 0, points: 0 });
+  const access = useQuery({ ...portalAccessOptions(user?.id ?? null), enabled: Boolean(user) });
+  const profile = useQuery({ ...profileOptions(user?.id ?? "anon"), enabled: Boolean(user) && showRewards });
+  const portalRole = user ? (access.data?.role ?? "none") : "none";
+  const rewards = {
+    streak: user && showRewards ? (profile.data?.current_streak ?? 0) : 0,
+    points: user && showRewards ? (profile.data?.reward_points ?? 0) : 0,
+  };
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,37 +88,6 @@ export function Navbar() {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
-
-  useEffect(() => {
-    let cancelled = false;
-    if (!user) {
-      setPortalRole("none");
-      setRewards({ streak: 0, points: 0 });
-      return;
-    }
-    if (!showRewards) {
-      setRewards({ streak: 0, points: 0 });
-    }
-    void fetchPortalAccess().then((access) => {
-      if (!cancelled) setPortalRole(access.role);
-    });
-    if (!showRewards) return () => { cancelled = true; };
-    void supabase
-      .from("profiles")
-      .select("current_streak, reward_points")
-      .eq("id", user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (cancelled || !data) return;
-        setRewards({
-          streak: data.current_streak ?? 0,
-          points: data.reward_points ?? 0,
-        });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [user, showRewards]);
 
   async function handleSignOut() {
     setMenuOpen(false);

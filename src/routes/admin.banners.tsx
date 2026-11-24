@@ -26,6 +26,10 @@ export const Route = createFileRoute("/admin/banners")({
         content: "Create, schedule and switch promotional banners on and off across MUST Market.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Banner Manager — MUST Market Admin" },
+      { property: "og:description", content: "Manage promotional banners across MUST Market." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AdminBannersPage,
@@ -57,7 +61,10 @@ function AdminBannersPage() {
     queryFn: fetchMenuItems,
   });
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+  const invalidate = () => {
+    void queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+    void queryClient.invalidateQueries({ queryKey: ["active_banners"] });
+  };
 
   const pickFile = (f: File | null) => {
     if (!f) return;

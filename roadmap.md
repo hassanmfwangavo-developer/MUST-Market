@@ -1,4 +1,5 @@
 # Order notifications
+- [x] Audit database reads and live subscriptions; remove polling, verify five-minute catalog caching and scoped paid-order updates; pre-orders use manual refresh because their tables are not live-enabled.
 - [x] Compress listing creation/edit and food/pre-order photo uploads; verified four rules and a real food photo upload with cleanup.
 - [x] Add admin phone registration with enable/disable/test controls.
 - [x] Connect notifications to paid food orders and both pre-order flows; preserve emails and payment outcomes.

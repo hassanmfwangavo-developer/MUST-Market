@@ -15,6 +15,10 @@ export const Route = createFileRoute("/admin/staff")({
         content: "Assign restaurant partners to their Msosi Fasta vendor dashboard.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Vendor Access — MUST Market Admin" },
+      { property: "og:description", content: "Manage access for Msosi Fasta restaurant partners." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: VendorAccessManager,
@@ -78,6 +82,7 @@ function VendorAccessManager() {
       setEmail("");
       setVendorId("");
       void queryClient.invalidateQueries({ queryKey: ["vendor-members"] });
+      void queryClient.invalidateQueries({ queryKey: ["portal-access"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -91,6 +96,7 @@ function VendorAccessManager() {
     onSuccess: () => {
       toast.success("Vendor access removed.");
       void queryClient.invalidateQueries({ queryKey: ["vendor-members"] });
+      void queryClient.invalidateQueries({ queryKey: ["portal-access"] });
     },
     onError: (e: Error) => toast.error(e.message),
   });

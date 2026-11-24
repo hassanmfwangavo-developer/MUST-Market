@@ -1,5 +1,8 @@
 import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { activeVoucherOptions } from "@/lib/account-queries";
+import { useAuthUser } from "@/lib/auth-store";
 import {
   ArrowLeft,
   HelpCircle,
@@ -20,7 +23,7 @@ import { useCart } from "@/lib/cart";
 import { clearPendingOffer } from "@/lib/offers";
 import { initiateSonicPesaPayment } from "@/lib/sonic-pesa";
 import { completeOrderRewards } from "@/lib/rewards.functions";
-import { fetchActiveVoucher, redeemVoucher, type UserVoucher } from "@/lib/vouchers";
+import { redeemVoucher } from "@/lib/vouchers";
 import { HelpDrawer } from "@/components/help-drawer";
 import { loadMsosiCustomer, saveMsosiCustomer } from "@/lib/msosi-customer";
 
@@ -85,6 +88,8 @@ export const Route = createFileRoute("/msosi/checkout")({
 });
 
 function MsosiCheckout() {
+  const { user } = useAuthUser();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const locationState = useRouterState({
     select: (s) => s.location.state as CheckoutState | undefined,
@@ -114,7 +119,8 @@ function MsosiCheckout() {
   const [room, setRoom] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const [voucher, setVoucher] = useState<UserVoucher | null>(null);
+  const voucherQuery = useQuery({ ...activeVoucherOptions(user?.id ?? "anon"), enabled: Boolean(user) });
+  const voucher = user ? (voucherQuery.data ?? null) : null;
   const [useSodaVoucher, setUseSodaVoucher] = useState(false);
 
   // Remember returning Msosi customers by phone — prefill their details.
@@ -125,21 +131,6 @@ function MsosiCheckout() {
     setPhone((v) => v || c.phone);
     if (c.room) setRoom((v) => v || c.room!);
     if (c.area && (DELIVERY_AREAS as readonly string[]).includes(c.area)) setArea(c.area as typeof area);
-  }, []);
-
-  // Free-soda voucher available to the signed-in student.
-  useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      const { data } = await supabase.auth.getUser();
-      const uid = data.user && !data.user.is_anonymous ? data.user.id : null;
-      if (!uid) return;
-      const v = await fetchActiveVoucher(uid).catch(() => null);
-      if (!cancelled) setVoucher(v);
-    })();
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   // Discounts are never persisted — they only exist for this navigation.
@@ -303,7 +294,10 @@ function MsosiCheckout() {
       if (voucherApplied && voucher) {
         const redeemed = await redeemVoucher(voucher.id, orderId).catch(() => false);
         if (redeemed) {
-          setVoucher(null);
+          if (user) {
+            queryClient.setQueryData(activeVoucherOptions(user.id).queryKey, null);
+            void queryClient.invalidateQueries({ queryKey: ["vouchers", user.id] });
+          }
           setUseSodaVoucher(false);
           toast.success("Free soda added to your order 🥤");
         }

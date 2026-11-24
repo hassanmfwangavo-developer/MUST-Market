@@ -23,6 +23,10 @@ export const Route = createFileRoute("/admin/categories")({
         content: "Curate the five food category icon cards students see on the Msosi Fasta home rail.",
       },
       { name: "robots", content: "noindex, nofollow" },
+      { property: "og:title", content: "Category Manager — MUST Market Admin" },
+      { property: "og:description", content: "Manage the Msosi Fasta food categories." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AdminCategoriesPage,
@@ -46,7 +50,10 @@ function AdminCategoriesPage() {
   const active = useMemo(() => categories.filter((c) => c.is_active), [categories]);
   const atLimit = active.length >= MAX_ACTIVE_CATEGORIES;
 
-  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin-food-categories"] });
+  const invalidate = () => {
+    void queryClient.invalidateQueries({ queryKey: ["admin-food-categories"] });
+    void queryClient.invalidateQueries({ queryKey: ["food_categories_public"] });
+  };
 
   const pickFile = (f: File | null) => {
     if (!f) return;
