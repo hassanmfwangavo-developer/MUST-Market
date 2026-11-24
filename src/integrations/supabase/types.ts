@@ -517,6 +517,7 @@ export type Database = {
           day_badge: string | null
           delivery_fee: number
           description: string
+          display_order: number | null
           id: string
           image_url: string | null
           is_available: boolean
@@ -536,6 +537,7 @@ export type Database = {
           day_badge?: string | null
           delivery_fee?: number
           description?: string
+          display_order?: number | null
           id?: string
           image_url?: string | null
           is_available?: boolean
@@ -555,6 +557,7 @@ export type Database = {
           day_badge?: string | null
           delivery_fee?: number
           description?: string
+          display_order?: number | null
           id?: string
           image_url?: string | null
           is_available?: boolean
