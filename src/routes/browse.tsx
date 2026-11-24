@@ -76,7 +76,7 @@ function BrowsePage() {
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
             {isLoading
               ? "Loading listings…"
-              : `${filtered.length}${listings.hasNextPage ? "+" : ""} ${filtered.length === 1 ? "item" : "items"} available right now.`}
+              : "Fresh listings from MUST students, updated as new items are posted."}
           </p>
         </div>
 

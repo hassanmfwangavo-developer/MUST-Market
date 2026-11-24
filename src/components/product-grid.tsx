@@ -32,7 +32,7 @@ export function ProductGrid() {
     if (user) navigate({ to: "/sell" });
     else openAuthModal("/sell");
   };
-  const { products, isLoading, hasNextPage } = useProductListings({
+  const { products, isLoading } = useProductListings({
     category: active === "All" ? "" : active,
     search: query,
   });
@@ -49,7 +49,6 @@ export function ProductGrid() {
     const rest = filtered.filter((p) => !p.pinnedAt);
     return [...pinned, ...rest].slice(0, FEATURED_LIMIT);
   }, [filtered]);
-  const hasMore = hasNextPage || filtered.length > FEATURED_LIMIT;
 
   const tabs = ["All", ...categories.map((c) => c.dbName)];
 
@@ -118,11 +117,6 @@ export function ProductGrid() {
               View All Products
               <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-            {hasMore && (
-              <p className="text-xs text-muted-foreground">
-                Showing {featured.length} of {filtered.length}{hasNextPage ? "+" : ""} items
-              </p>
-            )}
           </div>
         </>
       )}

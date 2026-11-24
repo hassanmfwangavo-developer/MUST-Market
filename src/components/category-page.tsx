@@ -40,7 +40,7 @@ export function CategoryPage({ slug }: { slug: MarketCategorySlug }) {
           <p className="mt-3 text-sm text-muted-foreground">
             {isLoading
               ? "Loading listings…"
-              : `${items.length}${listings.hasNextPage ? "+" : ""} ${items.length === 1 ? "item" : "items"} available right now.`}
+              : "Fresh listings from MUST students, updated as new items are posted."}
           </p>
         </div>
 
