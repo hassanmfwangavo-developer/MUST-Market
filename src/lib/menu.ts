@@ -58,7 +58,7 @@ export async function fetchVendorMenuItems(vendorId: string): Promise<MenuItem[]
 export async function fetchMenuItems(): Promise<MenuItem[]> {
     const { data, error } = await (supabase as any)
       .from("menu_items")
-      .select("id,name,price,vendor_name,vendor_id,rating,image_url,category,prep_time,is_popular,description,delivery_fee,is_available,day_badge")
+      .select("*")
       .order("display_order", { ascending: true })
       .order("is_popular", { ascending: false })
       .order("created_at", { ascending: false });

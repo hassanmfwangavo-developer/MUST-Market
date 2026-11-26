@@ -26,7 +26,7 @@ export async function uploadAdminImage(
 
   const { error: uploadError } = await supabase.storage
     .from("product-images")
-    .upload(path, uploadFile, { contentType: uploadFile.type, upsert: false, cacheControl: "31536000" });
+    .upload(path, uploadFile, { contentType: uploadFile.type, upsert: false });
   if (uploadError) throw new Error(`Image upload failed: ${uploadError.message}`);
 
   const { data, error } = await supabase.storage
