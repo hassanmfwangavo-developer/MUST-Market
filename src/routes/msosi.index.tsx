@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -47,8 +47,68 @@ export const Route = createFileRoute("/msosi/")({
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/msosi" }],
   }),
+  loader: async ({ context }) => {
+    const [menu, banners, dbCategories, vendors] = await Promise.all([
+      context.queryClient.ensureQueryData({
+        queryKey: ["menu_items"],
+        queryFn: fetchMenuItems,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["active_banners"],
+        queryFn: fetchActiveBanners,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["food_categories_public"],
+        queryFn: fetchFoodCategories,
+      }),
+      context.queryClient.ensureQueryData({
+        queryKey: ["vendors_public"],
+        queryFn: fetchVendors,
+      }),
+    ]);
+    return { menu, banners, dbCategories, vendors };
+  },
+  errorComponent: MsosiError,
+  notFoundComponent: MsosiNotFound,
   component: MsosiFasta,
 });
+
+function MsosiError() {
+  const router = useRouter();
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#FAFBF6] px-4">
+      <div className="max-w-sm text-center">
+        <h1 className="text-lg font-bold text-slate-900">Imeshindwa kupakia menu ya Msosi</h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Tafadhali jaribu tena baada ya sekunde chache.
+        </p>
+        <button
+          type="button"
+          onClick={() => void router.invalidate()}
+          className="mt-4 rounded-xl bg-[#008542] px-5 py-2.5 text-sm font-bold text-white"
+        >
+          Jaribu tena
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function MsosiNotFound() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#FAFBF6] px-4">
+      <div className="max-w-sm text-center">
+        <h1 className="text-lg font-bold text-slate-900">Ukurasa haupatikani</h1>
+        <Link
+          to="/"
+          className="mt-4 inline-flex rounded-xl bg-[#008542] px-5 py-2.5 text-sm font-bold text-white"
+        >
+          Rudi Mwanzo
+        </Link>
+      </div>
+    </div>
+  );
+}
 
 
 
@@ -94,6 +154,7 @@ const BOTTOM_TABS = [
 
 function MsosiFasta() {
   const navigate = useNavigate();
+  const initial = Route.useLoaderData();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
@@ -104,21 +165,25 @@ function MsosiFasta() {
   const { data: menu = [], isLoading } = useQuery({
     queryKey: ["menu_items"],
     queryFn: fetchMenuItems,
+    initialData: initial.menu,
   });
 
   const { data: banners = [], isLoading: bannersLoading } = useQuery({
     queryKey: ["active_banners"],
     queryFn: fetchActiveBanners,
+    initialData: initial.banners,
   });
 
   const { data: dbCategories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ["food_categories_public"],
     queryFn: fetchFoodCategories,
+    initialData: initial.dbCategories,
   });
 
   const { data: vendors = [] } = useQuery({
     queryKey: ["vendors_public"],
     queryFn: fetchVendors,
+    initialData: initial.vendors,
   });
 
   const categories = useMemo(() => {
