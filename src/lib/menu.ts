@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { menuPhotoUrl } from "./menu-photo";
 
 export interface MenuItem {
   id: string;
@@ -32,7 +33,7 @@ function normalize(row: Record<string, unknown>): MenuItem {
     vendor_name: String(row.vendor_name ?? ""),
     vendor_id: (row.vendor_id as string) ?? null,
     rating: Number(row.rating ?? 4.5),
-    image_url: (row.image_url as string) ?? null,
+    image_url: menuPhotoUrl((row.image_url as string) ?? null),
     category: String(row.category ?? "All"),
     prep_time: String(row.prep_time ?? "15-20 min"),
     is_popular: Boolean(row.is_popular),
