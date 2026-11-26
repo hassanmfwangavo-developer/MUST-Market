@@ -28,5 +28,3 @@
 - Public listing feeds use filter-keyed infinite queries with 16-row active summary pages and deterministic ordering; category/search filtering happens before pagination so later matches remain discoverable.
 - Cache successful login-streak touches by user and UTC date, matching the server calendar; never stamp failures or share an account's daily guard with another account.
 - Listing image uploads use new object paths, no overwrite, and year-long cache headers; changed photos get new URLs instead of stale cached bytes.
-- Msosi primes the existing five-minute catalog query keys in parallel from public server functions and reveals cached menu windows locally; this starts reads before rendering without querying again for Load more.
-- Resolve legacy food photos to immutable optimized asset pointers by original storage object path, not dish ID; this preserves fresh admin photo edits and avoids opening private storage or rewriting live menu records.

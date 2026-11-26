@@ -1,6 +1,6 @@
-import { createFileRoute, Link, useNavigate, useRouter, type SearchSchemaInput } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   ArrowLeft,
@@ -16,33 +16,18 @@ import {
   Store,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { formatTsh, type MenuItem } from "@/lib/menu";
+import { fetchMenuItems, formatTsh, type MenuItem } from "@/lib/menu";
 import { BookingModal } from "@/components/booking-modal";
-import { claimOffer } from "@/lib/offers";
+import { fetchFoodCategories, type FoodCategory } from "@/lib/admin-media";
+import { fetchActiveBanners, claimOffer } from "@/lib/offers";
+import { fetchVendors } from "@/lib/vendors";
 import { matchesCategory } from "@/lib/category-match";
 import { HowItWorks, WhatsAppGroupCard } from "@/components/msosi-sections";
 import { HelpDrawer } from "@/components/help-drawer";
 import { PartnerModal } from "@/components/partner-modal";
-import { Button } from "@/components/ui/button";
-import { menuWindow } from "@/lib/menu-window";
-import { msosiMenuOptions, msosiBannersOptions, msosiCategoriesOptions, msosiVendorsOptions } from "@/lib/msosi-catalog";
 
 
 export const Route = createFileRoute("/msosi/")({
-  validateSearch: (search: SearchSchemaInput & { q?: unknown; category?: unknown }) => ({
-    q: typeof search['q'] === "string" ? search['q'] : "",
-    category: typeof search['category'] === "string" ? search['category'] : "",
-  }),
-  loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(msosiMenuOptions),
-      context.queryClient.ensureQueryData(msosiBannersOptions),
-      context.queryClient.ensureQueryData(msosiCategoriesOptions),
-      context.queryClient.ensureQueryData(msosiVendorsOptions),
-    ]);
-  },
-  errorComponent: MsosiLoadError,
-  notFoundComponent: () => <div className="p-6 text-center text-muted-foreground">Menyu haijapatikana.</div>,
   head: () => ({
     meta: [
       { title: "Msosi Fasta | Campus Food Delivery at Mbeya University" },
@@ -65,15 +50,6 @@ export const Route = createFileRoute("/msosi/")({
   component: MsosiFasta,
 });
 
-function MsosiLoadError() {
-  const router = useRouter();
-  return (
-    <div role="alert" className="flex min-h-64 flex-col items-center justify-center gap-4 px-4 text-foreground">
-      <p>Menyu haijafunguka. Tafadhali jaribu tena.</p>
-      <Button onClick={() => void router.invalidate()}>Jaribu tena</Button>
-    </div>
-  );
-}
 
 
 const BANNER_GRADIENTS: Record<string, string> = {
@@ -118,30 +94,32 @@ const BOTTOM_TABS = [
 
 function MsosiFasta() {
   const navigate = useNavigate();
-  const { q: query, category: activeCategory } = Route.useSearch();
-  const filterKey = JSON.stringify([activeCategory, query]);
-  const [windowState, setWindowState] = useState({ key: filterKey, page: 1 });
-  const currentPage = windowState.key === filterKey ? windowState.page : 1;
-  const setQuery = (q: string) => {
-    setWindowState({ key: JSON.stringify([activeCategory, q]), page: 1 });
-    void navigate({ to: "/msosi", search: { q, category: activeCategory }, replace: true });
-  };
-  const setActiveCategory = (category: string | null) => {
-    setWindowState({ key: JSON.stringify([category ?? "", query]), page: 1 });
-    void navigate({ to: "/msosi", search: { q: query, category: category ?? "" }, replace: true });
-  };
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
   const [activeSlide, setActiveSlide] = useState(0);
   const [helpOpen, setHelpOpen] = useState(false);
   const [booking, setBooking] = useState<MenuItem | null>(null);
   const [partnerOpen, setPartnerOpen] = useState(false);
 
-  const { data: menu } = useSuspenseQuery(msosiMenuOptions);
-  const { data: banners } = useSuspenseQuery(msosiBannersOptions);
-  const { data: dbCategories } = useSuspenseQuery(msosiCategoriesOptions);
-  const { data: vendors } = useSuspenseQuery(msosiVendorsOptions);
-  const isLoading = false;
-  const bannersLoading = false;
-  const categoriesLoading = false;
+  const { data: menu = [], isLoading } = useQuery({
+    queryKey: ["menu_items"],
+    queryFn: fetchMenuItems,
+  });
+
+  const { data: banners = [], isLoading: bannersLoading } = useQuery({
+    queryKey: ["active_banners"],
+    queryFn: fetchActiveBanners,
+  });
+
+  const { data: dbCategories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ["food_categories_public"],
+    queryFn: fetchFoodCategories,
+  });
+
+  const { data: vendors = [] } = useQuery({
+    queryKey: ["vendors_public"],
+    queryFn: fetchVendors,
+  });
 
   const categories = useMemo(() => {
     return dbCategories.filter((c) => c.is_active).slice(0, 5);
@@ -172,7 +150,6 @@ function MsosiFasta() {
       return catOk && qOk;
     });
   }, [menu, activeCategory, query]);
-  const displayed = menuWindow(visible, currentPage);
 
   const openDish = (id: string) => navigate({ to: "/msosi/$id", params: { id } });
 
@@ -284,8 +261,7 @@ function MsosiFasta() {
               <img
                 src={slide.image_url}
                 alt={slide.title || "Advertisement"}
-                loading="eager"
-                fetchPriority="high"
+                loading="lazy"
                 decoding="async"
                 className="w-full object-cover"
               />
@@ -436,8 +412,8 @@ function MsosiFasta() {
           </h2>
           <button
             onClick={() => {
-              setWindowState({ key: JSON.stringify(["", ""]), page: 1 });
-              void navigate({ to: "/msosi", search: { q: "", category: "" }, replace: true });
+              setActiveCategory(null);
+              setQuery("");
             }}
             className="inline-flex items-center gap-1 text-xs font-semibold text-[#008542] hover:underline"
           >
@@ -464,7 +440,7 @@ function MsosiFasta() {
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
-            {displayed.map((food) => {
+            {visible.map((food) => {
               const soldOut = food.is_available === false;
               return (
               <article
@@ -560,17 +536,6 @@ function MsosiFasta() {
               );
             })}
 
-          </div>
-        )}
-        {displayed.length < visible.length && (
-          <div className="mt-5 flex justify-center">
-            <Button
-              variant="outline"
-              className="gap-2 border-primary/30 text-primary"
-              onClick={() => setWindowState({ key: filterKey, page: currentPage + 1 })}
-            >
-              Ona Vyakula Zaidi <ChevronRight aria-hidden="true" />
-            </Button>
           </div>
         )}
       </section>
