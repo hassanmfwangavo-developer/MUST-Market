@@ -40,6 +40,7 @@ const DELIVERY_AREAS = [
   "Inyara",
   "dampo",
   "Lupeta",
+  "Sistila",
   "Hosteli Block 8C",
   "Hosteli Block 8D",
 ];
