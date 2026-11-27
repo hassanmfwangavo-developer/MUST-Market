@@ -6,6 +6,7 @@ import {
   CalendarClock,
   ChefHat,
   ClipboardList,
+  Clock,
   Coins,
   Loader2,
   Phone,
@@ -37,6 +38,7 @@ import {
 } from "@/lib/vendor-portal";
 
 import { batchSlotLabel, hostelZoneLabel } from "@/lib/order-batches";
+import { formatOrderStamp } from "@/lib/order-stamp";
 
 export const Route = createFileRoute("/vendor/dashboard")({
   head: () => ({
@@ -339,6 +341,12 @@ function VendorDashboard() {
                           </p>
                         )}
                       </div>
+                      <div className="shrink-0 rounded-full border border-border bg-surface px-2.5 py-1 text-right">
+                        <p className="flex items-center gap-1 text-xs font-semibold text-foreground">
+                          <Clock className="h-3 w-3 text-primary" />
+                          {formatOrderStamp(o.created_at)}
+                        </p>
+                      </div>
                     </div>
 
                     <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -403,7 +411,7 @@ function VendorDashboard() {
                     <p className="text-xs text-muted-foreground">
                       {b.batch_slot === "lunch" ? "☀️ Lunch" : b.batch_slot === "dinner" ? "🌙 Dinner" : b.batch_slot} · {b.hostel_zone} · {b.room}
                     </p>
-                    <p className="text-xs text-muted-foreground">{new Date(b.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground">{formatOrderStamp(b.created_at)}</p>
                     <p className="mt-1 text-sm font-bold text-primary">{formatTsh(b.total_tsh, "TSh")}</p>
                   </article>
                 ))}
