@@ -148,6 +148,13 @@
       "when": 1793935757033,
       "tag": "0020_phone_order_reviews",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1795858487361,
+      "tag": "0021_daily_sales_report_delivery_log",
+      "breakpoints": true
     }
   ]
 }

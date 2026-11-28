@@ -341,6 +341,36 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_sales_report_deliveries: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          cutoff_at: string
+          provider_message_id: string | null
+          report_date: string
+          report_key: string
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          cutoff_at: string
+          provider_message_id?: string | null
+          report_date: string
+          report_key: string
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          cutoff_at?: string
+          provider_message_id?: string | null
+          report_date?: string
+          report_key?: string
+          status?: string
+        }
+        Relationships: []
+      }
       food_categories: {
         Row: {
           created_at: string

@@ -21,6 +21,10 @@ export const Route = createFileRoute("/report/$id")({
     meta: [
       { title: "Report a listing — MUST Market" },
       { name: "description", content: "Report a problematic listing to MUST Market admins." },
+      { property: "og:title", content: "Report a listing — MUST Market" },
+      { property: "og:description", content: "Report a problematic listing to MUST Market admins." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

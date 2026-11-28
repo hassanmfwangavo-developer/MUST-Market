@@ -28,3 +28,4 @@
 - Public listing feeds use filter-keyed infinite queries with 16-row active summary pages and deterministic ordering; category/search filtering happens before pagination so later matches remain discoverable.
 - Cache successful login-streak touches by user and UTC date, matching the server calendar; never stamp failures or share an account's daily guard with another account.
 - Listing image uploads use new object paths, no overwrite, and year-long cache headers; changed photos get new URLs instead of stale cached bytes.
+- Daily sales reports read stored orders in bounded pages, split at the EAT cutoff with prior-day late adjustments, and claim a service-only delivery key before emailing; this prevents truncated totals, missed late orders and automatic duplicate financial reports.

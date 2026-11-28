@@ -1,4 +1,7 @@
 # Order notifications
+- [x] Build and verify a clean daily sales email: TSh 500 per paid order, separate restaurant shares and both pre-order counts; sent the real 27 November report and confirmed duplicate-send protection, mobile layout and 17 tests.
+- [x] Create the daily 23:58 EAT schedule, with the previous day's final two minutes shown as a separate adjustment.
+- [ ] Activate and confirm scheduled delivery on the published site: requires Hassani to publish the new report endpoint; the authenticated callback and email delivery were verified locally.
 - [x] Add year-long listing-upload caching and lazy/async product/menu images without editing payment or SMS files; verified a temporary listing-edit upload's stored cache header and removed the photo without saving a listing.
 - [x] Paginate public Sokoni summary queries in 16-row pages with usable filtering and load-more controls; verified 16 then 32 distinct listings, database category filters, search and phone layouts.
 - [x] Throttle login streak updates per user per day in localStorage; verified account switches/retries in tests and zero streak calls on a signed-in reload; 21 targeted tests passed.
