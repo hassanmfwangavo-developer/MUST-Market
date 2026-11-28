@@ -1,4 +1,5 @@
 # Order notifications
+- [x] Simplify daily report emails to overview tables only, with no order lists, buttons or links; retained accounting and separate late adjustments, passed 14 existing tests and checked phone/desktop email layouts.
 - [x] Build and verify a clean daily sales email: TSh 500 per paid order, separate restaurant shares and both pre-order counts; sent the real 27 November report and confirmed duplicate-send protection, mobile layout and 17 tests.
 - [x] Create the daily 23:58 EAT schedule, with the previous day's final two minutes shown as a separate adjustment.
 - [ ] Activate and confirm scheduled delivery on the published site: requires Hassani to publish the new report endpoint; the authenticated callback and email delivery were verified locally.
