@@ -29,6 +29,7 @@ export const Route = createFileRoute("/orders")({
         content: "View and reorder your past MUST Food Fasta orders.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/orders" }],
   }),

@@ -23,6 +23,8 @@ export const Route = createFileRoute("/feedback")({
           "Help us improve MUST Market. Your feedback goes straight to the team on WhatsApp.",
       },
       { property: "og:url", content: "https://mustmarket.store/feedback" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://mustmarket.store/feedback" }],
   }),

@@ -49,6 +49,7 @@ export const Route = createFileRoute("/msosi/success/$orderId")({
         content: "Your order has been received. MUST Food Fasta.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MsosiSuccess,
